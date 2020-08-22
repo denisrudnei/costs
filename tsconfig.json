@@ -1,32 +1,37 @@
 {
   "compilerOptions": {
     "target": "ES2018",
-    "module": "ESNext",
-    "moduleResolution": "Node",
     "lib": [
       "ESNext",
       "ESNext.AsyncIterable",
       "DOM"
     ],
     "esModuleInterop": true,
+    "moduleResolution": "node",
     "allowJs": true,
     "sourceMap": true,
     "strict": true,
-    "noEmit": true,
     "experimentalDecorators": true,
+    "emitDecoratorMetadata": true,
     "baseUrl": ".",
     "paths": {
       "~/*": [
-        "./*"
+        "./*",
+        "./server/*"
       ],
       "@/*": [
-        "./*"
+        "./*",
+        "./server/*"
       ]
     },
     "types": [
       "@types/node",
       "@nuxt/types"
     ]
+  },
+  "cli": {
+    "entitiesDir": "server/models",
+    "migrationsDir": "server/db/migrations"
   },
   "exclude": [
     "node_modules",
