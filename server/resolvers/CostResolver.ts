@@ -1,4 +1,5 @@
 import { Resolver, Query, Arg, Mutation } from 'type-graphql'
+import CostCreateInput from '../inputs/CostCreateInput'
 import Cost from '~/models/Cost'
 import CostService from '~/services/CostService'
 
@@ -15,8 +16,8 @@ class CostResolver {
   }
 
   @Mutation(() => Cost)
-  CreateNewCost() {
-    return CostService.createCost(new Cost())
+  CreateNewCost(@Arg('cost', () => CostCreateInput) cost: CostCreateInput) {
+    return CostService.createCost(new Cost(cost))
   }
 }
 

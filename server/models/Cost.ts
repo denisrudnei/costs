@@ -1,5 +1,5 @@
-import { Field, Int, ObjectType, ID } from 'type-graphql'
-import { BaseEntity, Entity, Column, PrimaryGeneratedColumn } from 'typeorm'
+import { Field, ID, ObjectType } from 'type-graphql'
+import { BaseEntity, Column, Entity, PrimaryGeneratedColumn } from 'typeorm'
 
 import CostType from '../enums/CostType'
 
@@ -19,8 +19,8 @@ class Cost extends BaseEntity {
   @Column()
   public date: Date = new Date()
 
-  @Column()
-  @Field(() => Int)
+  @Column({ type: 'decimal' })
+  @Field(() => Number)
   public value: number = 0
 
   @Column({ type: 'enum', enum: CostType })

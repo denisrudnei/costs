@@ -1,5 +1,6 @@
 import { isSameDay } from 'date-fns'
 import Cost from '~/models/Cost'
+
 class CostService {
   public static getAllCosts(): Promise<Cost[]> {
     return Cost.find()
