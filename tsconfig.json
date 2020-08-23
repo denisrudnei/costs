@@ -11,17 +11,20 @@
     "allowJs": true,
     "sourceMap": true,
     "strict": true,
+    "outDir": "dist/",
     "experimentalDecorators": true,
     "emitDecoratorMetadata": true,
     "baseUrl": ".",
     "paths": {
       "~/*": [
         "./*",
-        "./server/*"
+        "./server/*",
+        "./dist/server/*"
       ],
       "@/*": [
         "./*",
-        "./server/*"
+        "./server/*",
+        "./dist/server/*"
       ]
     },
     "types": [

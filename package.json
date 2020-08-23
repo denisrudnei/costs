@@ -7,6 +7,9 @@
     "dev:server": "ts-node-dev --transpile-only --respawn -r tsconfig-paths/register server/index.ts",
     "build": "nuxt-ts build",
     "start": "nuxt-ts start",
+    "heroku-postbuild": "npm run build-server",
+    "start-server": "node -r tsconfig-paths/register dist/server/index.js",
+    "build-server": "tsc -p tsconfig-build.json",
     "generate": "nuxt-ts generate",
     "lint:js": "eslint --ext .js,.vue --ignore-path .gitignore .",
     "lint": "npm run lint:js"
