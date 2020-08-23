@@ -42,7 +42,13 @@ export default {
   },
   created() {
     this.currencies = values.currency
-    this.locales = values.locale
+    this.locales = Object.entries(values.locale).map((locale) => {
+      const [value, text] = locale
+      return {
+        text,
+        value,
+      }
+    })
   },
   mounted() {
     this.$apollo
@@ -93,6 +99,9 @@ export default {
           const { currency, locale } = response.data.CreateUserSettings
           this.$store.commit('settings/setCurrency', currency)
           this.$store.commit('settings/setLocale', locale)
+          this.$toast.show('Settgings updated', {
+            duration: 2500,
+          })
         })
     },
   },
