@@ -1,0 +1,38 @@
+<template>
+  <v-row>
+    <v-col cols="12">
+      <v-text-field v-model="user.email" filled placeholder="Email" />
+    </v-col>
+    <v-col cols="12">
+      <v-text-field
+        v-model="user.password"
+        filled
+        placeholder="Password"
+        type="password"
+      />
+    </v-col>
+    <v-col>
+      <v-btn @click="login">
+        Login
+      </v-btn>
+    </v-col>
+  </v-row>
+</template>
+
+<script>
+export default {
+  data() {
+    return {
+      user: {
+        email: '',
+        password: '',
+      },
+    }
+  },
+  methods: {
+    login() {},
+  },
+}
+</script>
+
+<style></style>
