@@ -2,7 +2,7 @@
   <v-row>
     <v-col cols="12">
       <v-row>
-        <v-col cols="8">
+        <v-col md="8" cols="12">
           <v-row>
             <v-col cols="12">
               <v-text-field v-model="cost.name" placeholder="Name" filled />
@@ -20,7 +20,7 @@
             </v-col>
           </v-row>
         </v-col>
-        <v-col cols="4">
+        <v-col md="4" cols="12">
           <v-card>
             <v-card-title>
               <h3>

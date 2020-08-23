@@ -1,6 +1,6 @@
 <template>
   <v-row>
-    <v-col>
+    <v-col cols="12" md="6">
       <v-autocomplete
         v-model="settings.currency"
         :items="currencies"
@@ -9,7 +9,7 @@
         clearable
       />
     </v-col>
-    <v-col>
+    <v-col cols="12" md="6">
       <v-autocomplete
         v-model="settings.locale"
         :items="locales"

@@ -1,6 +1,6 @@
 <template>
   <v-row>
-    <v-col v-for="cost in costs" :key="cost.id" cols="4">
+    <v-col v-for="cost in costs" :key="cost.id" md="4" cols="12">
       <v-card>
         <v-card-title :class="type(cost)">
           {{ cost.name }}

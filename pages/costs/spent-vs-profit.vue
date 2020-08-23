@@ -1,6 +1,6 @@
 <template>
   <v-row>
-    <v-col cols="6">
+    <v-col sm="12" md="6">
       <v-data-table :items="spent" :headers="headers">
         <template v-slot:item.value="{ item }">
           {{ item.value | dinero }}
@@ -18,7 +18,7 @@
         </template>
       </v-data-table>
     </v-col>
-    <v-col cols="6">
+    <v-col cols="12" md="6">
       <v-data-table :items="profit" :headers="headers">
         <template v-slot:item.value="{ item }">
           {{ item.value | dinero }}
