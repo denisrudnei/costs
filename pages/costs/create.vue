@@ -5,6 +5,9 @@
         <v-col cols="8">
           <v-row>
             <v-col cols="12">
+              <v-text-field v-model="cost.name" placeholder="Name" filled />
+            </v-col>
+            <v-col cols="12">
               <v-text-field
                 v-model="cost.value"
                 type="number"
@@ -51,6 +54,7 @@ export default {
       types: ['PROFIT', 'SPENT'],
       date: '',
       cost: {
+        name: '',
         type: 'PROFIT',
         date: new Date(),
         value: 0,
@@ -73,6 +77,7 @@ export default {
           mutation CreateNewCost($cost: CostCreateInput!){
             CreateNewCost(cost: $cost) {
               id
+              name
               value
               type
             }
@@ -80,6 +85,7 @@ export default {
         `,
         variables: {
           cost: {
+            name: this.cost.name,
             value: parseInt(this.cost.value),
             type: this.cost.type,
             date: this.date,

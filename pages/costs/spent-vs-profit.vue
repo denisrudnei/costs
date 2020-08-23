@@ -52,6 +52,10 @@ export default {
       spent: [],
       headers: [
         {
+          value: 'name',
+          text: 'Name',
+        },
+        {
           value: 'date',
           text: 'Date',
         },
@@ -89,12 +93,14 @@ export default {
         query {
           profit: GetProfits {
             id
+            name
             value
             type
             date
           }
           spent: GetSpending {
             id
+            name
             value
             type
             date

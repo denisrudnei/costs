@@ -3,9 +3,10 @@
     <v-col v-for="cost in costs" :key="cost.id" cols="4">
       <v-card>
         <v-card-title :class="type(cost)">
-          <p>Type: {{ cost.type }}</p>
+          {{ cost.name }}
         </v-card-title>
         <v-card-text>
+          <h2 :class="type(cost)">Type: {{ cost.type }}</h2>
           <h3>Value: {{ cost.value | dinero }}</h3>
           <p>Date {{ cost.date | date }}</p>
         </v-card-text>
@@ -41,6 +42,7 @@ export default {
           query {
             Costs {
               id
+              name
               value
               type
               date

@@ -15,6 +15,10 @@ class Cost extends BaseEntity {
   @Field(() => ID)
   public id!: number
 
+  @Field()
+  @Column()
+  public name!: string
+
   @Field(() => Date)
   @Column()
   public date: Date = new Date()
