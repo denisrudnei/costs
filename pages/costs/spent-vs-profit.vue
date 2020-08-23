@@ -2,9 +2,13 @@
   <v-row>
     <v-col cols="6">
       <v-data-table :items="spent" :headers="headers">
+        <template v-slot:item.value="{ item }">
+          {{ item.value | dinero }}
+        </template>
         <template v-slot:item.date="{ item }">
           {{ item.date | date }}
         </template>
+
         <template v-slot:item.actions="{ item }">
           <v-btn icon class="red--text" @click="remove(item)">
             <v-icon>
@@ -16,6 +20,9 @@
     </v-col>
     <v-col cols="6">
       <v-data-table :items="profit" :headers="headers">
+        <template v-slot:item.value="{ item }">
+          {{ item.value | dinero }}
+        </template>
         <template v-slot:item.date="{ item }">
           {{ item.date | date }}
         </template>

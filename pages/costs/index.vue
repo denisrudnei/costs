@@ -6,7 +6,7 @@
           <p>Type: {{ cost.type }}</p>
         </v-card-title>
         <v-card-text>
-          <h3>Value: {{ cost.value }}</h3>
+          <h3>Value: {{ cost.value | dinero }}</h3>
           <p>Date {{ cost.date | date }}</p>
         </v-card-text>
         <v-card-actions>
