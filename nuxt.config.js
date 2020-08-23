@@ -50,7 +50,7 @@ export default {
   /*
    ** Nuxt.js modules
    */
-  modules: ['@nuxtjs/apollo'],
+  modules: ['@nuxtjs/apollo', '@nuxtjs/toast'],
   /*
    ** vuetify module configuration
    ** https://github.com/nuxt-community/vuetify-module

@@ -157,6 +157,9 @@ export default {
           ].filter((item) => {
             return item.id !== value.id
           })
+          this.$toast.show('Cost removed', {
+            duration: 1000,
+          })
         })
     },
     isNegative(amount) {

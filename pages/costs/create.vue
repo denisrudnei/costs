@@ -109,6 +109,9 @@ export default {
           }
         ]
       }).then(() => {
+        this.$toast.show('New cost created', {
+          duration: 25000
+        })
         this.$router.push('/costs')
       })
     },
