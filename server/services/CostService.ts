@@ -1,4 +1,5 @@
 import { isSameDay } from 'date-fns'
+import CostType from '../enums/CostType'
 import Cost from '~/models/Cost'
 
 class CostService {
@@ -7,7 +8,11 @@ class CostService {
   }
 
   public static getProfits(): Promise<Cost[]> {
-    return Cost.find()
+    return Cost.find({
+      where: {
+        type: CostType.PROFIT,
+      },
+    })
   }
 
   public static async getCostsByDate(date: Date): Promise<Cost[]> {
@@ -20,12 +25,23 @@ class CostService {
     return sameDayCosts
   }
 
-  public static getSpending(): Cost[] {
-    return [new Cost()]
+  public static getSpending(): Promise<Cost[]> {
+    return Cost.find({
+      where: {
+        type: CostType.SPENT,
+      },
+    })
   }
 
   public static createCost(cost: Cost): Promise<Cost> {
     return Cost.create(cost).save()
+  }
+
+  public static async remove(id: Cost['id']): Promise<boolean> {
+    const cost = await Cost.findOne(id)
+    if (!cost) throw new Error('Cost not found')
+    await Cost.remove(cost)
+    return true
   }
 }
 
