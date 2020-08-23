@@ -57,6 +57,9 @@ export default {
       },
     }
   },
+  created() {
+    this.setDate(this.getIsoDate(new Date()))
+  },
   methods: {
     getIsoDate(value) {
       return format(value, 'yyyy-MM-dd')
