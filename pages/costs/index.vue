@@ -63,6 +63,27 @@ export default {
           variables: {
             id: value.id,
           },
+          awaitRefetchQueries: true,
+          refetchQueries: [
+            {
+              query: ggl`
+                query {
+                  Costs {
+                    id
+                    value
+                  }
+                  GetProfits {
+                    id
+                    value
+                  }
+                  GetSpending {
+                    id
+                    value
+                  }
+                }
+              `,
+            },
+          ],
         })
         .then(() => {
           this.costs = this.costs.filter((item) => {

@@ -37,7 +37,7 @@
     </v-col>
     <v-row>
       <v-col class="ma-1">
-        <h2 :class="isNegative(total)">Total: {{ total }}</h2>
+        <h2 :class="isNegative(total)">Total: {{ total | dinero }}</h2>
       </v-col>
     </v-row>
   </v-row>
@@ -124,6 +124,32 @@ export default {
           variables: {
             id: value.id,
           },
+          awaitRefetchQueries: true,
+          refetchQueries: [
+            {
+              query: ggl`
+                query {
+                  GetProfits {
+                    id
+                    value
+                    type
+                    date
+                  }
+                  GetSpending {
+                    id
+                    value
+                    type
+                    date
+                  }
+                  Costs {
+                    id
+                    value
+                    type
+                  }
+                }
+              `,
+            },
+          ],
         })
         .then(() => {
           this[value.type.toLowerCase()] = this[

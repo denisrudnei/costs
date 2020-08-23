@@ -1,6 +1,7 @@
 import Vue from 'vue'
 import { format, parse } from 'date-fns'
 import Dinero from 'dinero.js'
+import { Context } from '@nuxt/types'
 
 Vue.filter('date', (value: string) => {
   return format(
@@ -9,11 +10,14 @@ Vue.filter('date', (value: string) => {
   )
 })
 
-Vue.filter('dinero', (value: string | number) => {
-  return Dinero({
-    amount: parseInt(value.toString(), 10) * 100,
-    currency: 'BRL',
+export default (context: Context) => {
+  Vue.filter('dinero', (value: string | number) => {
+    const { currency, locale } = context.store.state.settings
+    return Dinero({
+      amount: parseInt(value.toString(), 10) * 100,
+      currency: currency || 'USD',
+    })
+      .setLocale(locale || '')
+      .toFormat('$0.00')
   })
-    .setLocale(navigator.languages[0])
-    .toFormat('$0.00')
-})
+}

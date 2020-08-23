@@ -30,6 +30,7 @@
 </template>
 
 <script>
+import ggl from 'graphql-tag'
 export default {
   data() {
     return {
@@ -47,9 +48,32 @@ export default {
           title: 'Costs',
           to: '/costs',
         },
+        {
+          icon: 'mdi-cog',
+          title: 'Settings',
+          to: '/settings',
+        },
       ],
       miniVariant: false,
     }
+  },
+  created() {
+    this.$apollo
+      .query({
+        query: ggl`
+        query {
+          UserSettings {
+            locale
+            currency
+          }
+        }
+      `,
+      })
+      .then((response) => {
+        const { currency, locale } = response.data.UserSettings
+        this.$store.commit('settings/setCurrency', currency)
+        this.$store.commit('settings/setLocale', locale)
+      })
   },
 }
 </script>

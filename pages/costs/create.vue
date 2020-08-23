@@ -82,6 +82,32 @@ export default {
             date: this.date,
           },
         },
+        awaitRefetchQueries: true,
+        refetchQueries: [
+          {
+            query: ggl`
+              query {
+                Costs {
+                  id
+                  value
+                  type
+                }
+                GetProfits {
+                  id
+                  value
+                  type
+                  date
+                }
+                GetSpending {
+                  id
+                  value
+                  type
+                  date
+                }
+              }
+            `
+          }
+        ]
       }).then(() => {
         this.$router.push('/costs')
       })
