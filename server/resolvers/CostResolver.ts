@@ -9,6 +9,7 @@ import {
 } from 'type-graphql'
 import { ExpressContext } from 'apollo-server-express/dist/ApolloServer'
 import CostCreateInput from '../inputs/CostCreateInput'
+import { BasicSummary } from '../types/BasicSummary'
 import Cost from '~/models/Cost'
 import CostService from '~/services/CostService'
 
@@ -51,6 +52,14 @@ class CostResolver {
   ) {
     const user = req.session!.authUser
     return CostService.remove(id, user.id)
+  }
+
+  @Query(() => BasicSummary)
+  @Authorized('user')
+  BasicSummary(@Ctx() { req }: ExpressContext) {
+    const { id } = req.session!.authUser
+
+    return CostService.basicSummary(id)
   }
 
   @Mutation(() => Cost)

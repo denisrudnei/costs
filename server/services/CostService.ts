@@ -1,6 +1,8 @@
 import { isSameDay } from 'date-fns'
+
 import CostType from '../enums/CostType'
 import User from '../models/User'
+import { Profit, Spent, BasicSummary } from '../types/BasicSummary'
 import Cost from '~/models/Cost'
 
 class CostService {
@@ -57,6 +59,41 @@ class CostService {
     Object.assign(newCost, cost)
     newCost.user = user
     return newCost.save()
+  }
+
+  public static async basicSummary(userId: User['id']): Promise<BasicSummary> {
+    const profits = (await Cost.find({
+      where: {
+        user: userId,
+        type: CostType.PROFIT,
+      },
+    })) as Profit[]
+
+    const spending = (await Cost.find({
+      where: {
+        user: userId,
+        type: CostType.SPENT,
+      },
+    })) as Spent[]
+
+    const sumProfits = profits.reduce((acc, profit) => {
+      return acc + profit.value
+    }, 0)
+    const sumSpending = spending.reduce((acc, spent) => {
+      return acc + spent.value
+    }, 0)
+
+    return {
+      spending: {
+        sum: sumSpending,
+        values: spending,
+      },
+      profits: {
+        sum: sumProfits,
+        values: profits,
+      },
+      total: sumProfits - sumSpending,
+    }
   }
 
   public static async remove(
