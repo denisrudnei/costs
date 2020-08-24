@@ -9,6 +9,7 @@ import { buildSchema } from 'type-graphql'
 
 import Connection from './db/Connection'
 import routes from './routes'
+import customAuthChecker from './customAuthChecker'
 
 async function main() {
   await Connection
@@ -17,9 +18,11 @@ async function main() {
   const server = new ApolloServer({
     schema: await buildSchema({
       resolvers: [path.resolve(__dirname, 'resolvers/**/*')],
+      authChecker: customAuthChecker,
     }),
     context: (context) => ({
       req: context.req,
+      res: context.res,
     }),
   })
 

@@ -54,7 +54,6 @@ export default {
 
   axios: {
     baseURL: process.env.API,
-    proxyHeaders: false,
   },
 
   router: {

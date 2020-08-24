@@ -1,4 +1,4 @@
-import { Resolver, Query, Arg, Mutation, ID } from 'type-graphql'
+import { Resolver, Query, Arg, Mutation, ID, Authorized } from 'type-graphql'
 import CostCreateInput from '../inputs/CostCreateInput'
 import Cost from '~/models/Cost'
 import CostService from '~/services/CostService'
@@ -6,21 +6,25 @@ import CostService from '~/services/CostService'
 @Resolver()
 class CostResolver {
   @Query(() => [Cost])
+  @Authorized('user')
   Costs() {
     return CostService.getAllCosts()
   }
 
   @Query(() => [Cost])
+  @Authorized('user')
   GetProfits() {
     return CostService.getProfits()
   }
 
   @Query(() => [Cost])
+  @Authorized('user')
   GetSpending() {
     return CostService.getSpending()
   }
 
   @Query(() => [Cost])
+  @Authorized('user')
   CostsByDate(@Arg('date') date: Date) {
     return CostService.getCostsByDate(date)
   }
