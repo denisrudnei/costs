@@ -1,4 +1,5 @@
-import { Query, Resolver, Mutation, Arg } from 'type-graphql'
+import { Query, Resolver, Mutation, Arg, Authorized, Ctx } from 'type-graphql'
+import { ExpressContext } from 'apollo-server-express/dist/ApolloServer'
 import UserSettingsInput from '../inputs/UserSettingsInput'
 import UserSettingsService from '~/services/UserSettingsService'
 import UserSettings from '~/models/UserSettings'
@@ -6,14 +7,21 @@ import UserSettings from '~/models/UserSettings'
 @Resolver()
 class UserSettingsResolver {
   @Query(() => UserSettings)
-  UserSettings() {
-    return UserSettingsService.getUserSettings()
+  @Authorized('user')
+  UserSettings(@Ctx() { req }: ExpressContext) {
+    const { id } = req.session!.authUser
+    return UserSettingsService.getUserSettings(id)
   }
 
   @Mutation(() => UserSettings)
-  CreateUserSettings(@Arg('userSettings') userSettings: UserSettingsInput) {
+  @Authorized('user')
+  CreateUserSettings(
+    @Arg('userSettings') userSettings: UserSettingsInput,
+    @Ctx() { req }: ExpressContext
+  ) {
+    const { id } = req.session!.authUser
     const toCreate = new UserSettings(userSettings)
-    return UserSettingsService.create(toCreate)
+    return UserSettingsService.create(toCreate, id)
   }
 }
 

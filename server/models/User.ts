@@ -6,11 +6,15 @@ import {
   BeforeUpdate,
   Column,
   Entity,
+  JoinColumn,
   OneToMany,
+  OneToOne,
   PrimaryGeneratedColumn,
+  AfterLoad,
 } from 'typeorm'
 
 import Cost from './Cost'
+import UserSettings from './UserSettings'
 
 @Entity()
 @ObjectType()
@@ -30,14 +34,31 @@ class User extends BaseEntity {
   @Column()
   public password!: string
 
+  @Column()
+  private tempPassword!: string
+
   @OneToMany(() => Cost, (Cost) => Cost.user)
   @Field(() => [Cost])
   public costs!: Cost[]
 
+  @OneToOne(() => UserSettings, (UserSettings) => UserSettings.user)
+  @JoinColumn()
+  @Field(() => UserSettings)
+  public settings!: UserSettings
+
+  @AfterLoad()
+  checkPasswordChanged() {
+    this.tempPassword = this.password
+  }
+
   @BeforeInsert()
   @BeforeUpdate()
-  private hashPassword() {
-    this.password = bcrypt.hashSync(this.password)
+  hashPassword() {
+    if (this.password && this.password !== this.tempPassword) {
+      const salt = bcrypt.genSaltSync(12)
+      this.password = bcrypt.hashSync(this.password, salt)
+    }
+    this.tempPassword = ''
   }
 }
 
