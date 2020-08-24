@@ -1,6 +1,6 @@
 <template>
   <v-app dark>
-    <v-navigation-drawer clipped fixed app>
+    <v-navigation-drawer v-if="logged" clipped fixed app>
       <v-list>
         <v-list-item
           v-for="(item, i) in items"
@@ -27,6 +27,7 @@
       </v-list>
     </v-navigation-drawer>
     <v-main>
+      <pre>{{ user }}</pre>
       <v-container>
         <nuxt />
       </v-container>
@@ -39,6 +40,7 @@
 
 <script>
 import ggl from 'graphql-tag'
+import { mapGetters } from 'vuex'
 export default {
   data() {
     return {
@@ -65,6 +67,9 @@ export default {
       miniVariant: false,
     }
   },
+  computed: mapGetters({
+    logged: 'auth/getLoggedIn',
+  }),
   created() {
     this.$apollo
       .query({
