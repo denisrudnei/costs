@@ -1,15 +1,23 @@
 import { Router } from 'express'
+import jwt from 'jsonwebtoken'
 import AuthService from '../services/AuthService'
-
 const router = Router()
 
 router.post('/auth/login', (req, res) => {
   const { email, password } = req.body
+
   AuthService.login(email, password)
     .then((logged) => {
+      const token = jwt.sign(
+        {
+          email: logged.email,
+          name: logged.name,
+        },
+        process.env.JWT_KEY!
+      )
       req.session!.authUser = logged
       res.status(200).json({
-        user: logged,
+        user: token,
       })
     })
     .catch((e) => {
@@ -20,14 +28,20 @@ router.post('/auth/login', (req, res) => {
     })
 })
 
-router.post('/auth/logout', (req, _) => {
+router.post('/auth/logout', (req, res) => {
   delete req.session!.authUser
+  res.set('authorization', undefined)
+  res.sendStatus(200)
 })
 
 router.post('/auth/user', (req, res) => {
-  res.status(200).json({
-    user: req.session!.authUser,
-  })
+  if (req.headers.authorization) {
+    const token = req.headers.authorization.split('Bearer ')[1]
+    const user = jwt.decode(token)
+    res.status(200).json({
+      user,
+    })
+  }
 })
 
 export default router

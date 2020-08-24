@@ -30,7 +30,22 @@ export default {
     }
   },
   methods: {
-    login() {},
+    login() {
+      this.$auth
+        .loginWith('local', {
+          data: this.user,
+        })
+        .then(() => {
+          this.$toast.show('Logged', {
+            duration: 1000,
+          })
+        })
+        .catch(() => {
+          this.$toast.error('Login failed', {
+            duration: 5000,
+          })
+        })
+    },
   },
 }
 </script>

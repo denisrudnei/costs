@@ -50,7 +50,12 @@ export default {
   /*
    ** Nuxt.js modules
    */
-  modules: ['@nuxtjs/apollo', '@nuxtjs/toast', '@nuxtjs/auth'],
+  modules: ['@nuxtjs/apollo', '@nuxtjs/toast', '@nuxtjs/auth', '@nuxtjs/axios'],
+
+  axios: {
+    baseURL: process.env.API,
+    proxyHeaders: false,
+  },
 
   router: {
     middleware: ['auth'],
@@ -59,8 +64,8 @@ export default {
   auth: {
     redirect: {
       login: '/auth/login',
-      logout: '/auth/logout',
-      callback: '/auth/callback',
+      logout: '/auth/login',
+      callback: '/auth/login',
       home: '/',
     },
     strategies: {
@@ -72,7 +77,7 @@ export default {
             propertyName: 'user',
           },
           logout: { url: '/api/auth/logout', method: 'post' },
-          user: { url: '/api/auth/user', method: 'get', propertyName: 'user' },
+          user: { url: '/api/auth/user', method: 'post', propertyName: 'user' },
         },
       },
     },
