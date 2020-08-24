@@ -10,6 +10,7 @@ router.post('/auth/login', (req, res) => {
     .then((logged) => {
       const token = jwt.sign(
         {
+          id: logged.id,
           email: logged.email,
           name: logged.name,
         },

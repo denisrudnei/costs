@@ -27,7 +27,6 @@
       </v-list>
     </v-navigation-drawer>
     <v-main>
-      <pre>{{ user }}</pre>
       <v-container>
         <nuxt />
       </v-container>

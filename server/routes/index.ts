@@ -19,11 +19,4 @@ router.use(bodyParser.json())
 
 router.use('/api/', AuthController)
 
-router.use('*', (_, res) => {
-  res.status(404).json({
-    status: 404,
-    message: 'Not found',
-  })
-})
-
 export default router

@@ -21,8 +21,8 @@ class AuthResolver {
       },
       process.env.JWT_KEY!
     )
-
-    context.res.set('authorization', `Bearer ${token}`)
+    context.req.session!.authUser = user
+    context.res.setHeader('authorization', `Bearer ${token}`)
     return user
   }
 

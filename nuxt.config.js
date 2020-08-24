@@ -109,6 +109,8 @@ export default {
         httpEndpoint: process.env.GRAPHQL || 'http://localhost:3000/graphql',
       },
     },
+    tokenName: 'auth._token.local',
+    authenticationType: 'Bearer',
   },
   /*
    ** Build configuration

@@ -6,8 +6,11 @@ import {
   BeforeUpdate,
   Column,
   Entity,
+  OneToMany,
   PrimaryGeneratedColumn,
 } from 'typeorm'
+
+import Cost from './Cost'
 
 @Entity()
 @ObjectType()
@@ -26,6 +29,10 @@ class User extends BaseEntity {
 
   @Column()
   public password!: string
+
+  @OneToMany(() => Cost, (Cost) => Cost.user)
+  @Field(() => [Cost])
+  public costs!: Cost[]
 
   @BeforeInsert()
   @BeforeUpdate()

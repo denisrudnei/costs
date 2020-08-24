@@ -28,10 +28,17 @@ async function main() {
 
   const httpServer = http.createServer(app)
 
+  app.use(routes)
+
   server.applyMiddleware({ app })
   server.installSubscriptionHandlers(httpServer)
 
-  app.use(routes)
+  app.use('*', (_, res) => {
+    res.status(404).json({
+      status: 404,
+      message: 'Not found',
+    })
+  })
 
   httpServer.listen(process.env.PORT || 4000, () => {
     consola.ready({

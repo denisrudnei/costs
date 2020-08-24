@@ -1,7 +1,14 @@
 import { Field, ID, ObjectType } from 'type-graphql'
-import { BaseEntity, Column, Entity, PrimaryGeneratedColumn } from 'typeorm'
+import {
+  BaseEntity,
+  Column,
+  Entity,
+  ManyToOne,
+  PrimaryGeneratedColumn,
+} from 'typeorm'
 
 import CostType from '../enums/CostType'
+import User from './User'
 
 @ObjectType()
 @Entity()
@@ -26,6 +33,9 @@ class Cost extends BaseEntity {
   @Column({ type: 'decimal' })
   @Field(() => Number)
   public value: number = 0
+
+  @ManyToOne(() => User)
+  public user!: User
 
   @Column({ type: 'enum', enum: CostType })
   @Field(() => CostType)
