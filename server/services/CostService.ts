@@ -113,13 +113,16 @@ class CostService {
     return true
   }
 
-  public static async summaryByDate(): Promise<SummaryGroupedByDate> {
+  public static async summaryByDate(
+    id: User['id']
+  ): Promise<SummaryGroupedByDate> {
     const result = await getConnection()
       .createQueryBuilder()
       .select('SUM(value) as total')
       .addSelect('CAST(date as DATE) as date')
       .addSelect('type')
       .from(Cost, 'cost')
+      .where('cost.user = :userId', { userId: id })
       .groupBy('type')
       .addGroupBy('date')
       .getRawMany()

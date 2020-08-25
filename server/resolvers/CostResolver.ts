@@ -65,8 +65,9 @@ class CostResolver {
 
   @Query(() => SummaryGroupedByDate)
   @Authorized('user')
-  SummaryGroupedByDate() {
-    return CostService.summaryByDate()
+  SummaryGroupedByDate(@Ctx() { req }: ExpressContext) {
+    const { id } = req.session!.authUser
+    return CostService.summaryByDate(id)
   }
 
   @Mutation(() => Cost)
