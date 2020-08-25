@@ -1,15 +1,16 @@
+import { ExpressContext } from 'apollo-server-express/dist/ApolloServer'
 import {
-  Resolver,
-  Query,
   Arg,
-  Mutation,
-  ID,
   Authorized,
   Ctx,
+  ID,
+  Mutation,
+  Query,
+  Resolver,
 } from 'type-graphql'
-import { ExpressContext } from 'apollo-server-express/dist/ApolloServer'
 import CostCreateInput from '../inputs/CostCreateInput'
 import { BasicSummary } from '../types/BasicSummary'
+import SummaryGroupedByDate from '../types/SummaryGroupedByDate'
 import Cost from '~/models/Cost'
 import CostService from '~/services/CostService'
 
@@ -60,6 +61,12 @@ class CostResolver {
     const { id } = req.session!.authUser
 
     return CostService.basicSummary(id)
+  }
+
+  @Query(() => SummaryGroupedByDate)
+  @Authorized('user')
+  SummaryGroupedByDate() {
+    return CostService.summaryByDate()
   }
 
   @Mutation(() => Cost)

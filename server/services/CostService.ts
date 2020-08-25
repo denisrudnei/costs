@@ -1,8 +1,10 @@
-import { isSameDay } from 'date-fns'
+import { isSameDay, format } from 'date-fns'
 
+import _ from 'lodash'
 import CostType from '../enums/CostType'
 import User from '../models/User'
 import { Profit, Spent, BasicSummary } from '../types/BasicSummary'
+import SummaryGroupedByDate from '../types/SummaryGroupedByDate'
 import Cost from '~/models/Cost'
 
 class CostService {
@@ -109,6 +111,48 @@ class CostService {
     if (!cost) throw new Error('Cost not found')
     await Cost.remove(cost)
     return true
+  }
+
+  public static async summaryByDate(): Promise<SummaryGroupedByDate> {
+    const costs = await Cost.find()
+    const spending = costs.filter((cost) => {
+      return cost.type === CostType.SPENT
+    })
+    const profits = costs.filter((cost) => {
+      return cost.type === CostType.PROFIT
+    })
+
+    return {
+      profits: this.convertToTotalByDay(profits),
+      spending: this.convertToTotalByDay(spending),
+    }
+  }
+
+  private static convertToTotalByDay(costs: Cost[]) {
+    const withDateConverted = costs.map((cost) => {
+      const { date, ...rest } = cost
+      return {
+        ...rest,
+        date: format(date, 'yyyy-MM-dd'),
+      }
+    })
+    const grouped = _.groupBy(withDateConverted, 'date')
+
+    const converted = Object.keys(grouped).map((name) => {
+      const list = Object.values(grouped[name])
+
+      const sum = list
+        .map((value) => Number(value.value))
+        .reduce((acc, value) => {
+          return acc + value
+        }, 0)
+
+      return {
+        date: name,
+        total: sum,
+      }
+    })
+    return converted
   }
 }
 
