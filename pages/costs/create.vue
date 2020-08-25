@@ -121,7 +121,13 @@ export default {
         this.$toast.show('New cost created', {
           duration: 2500
         })
-        this.$router.push('/costs')
+        this.cost = {
+          name: '',
+          type: 'PROFIT',
+          date: new Date(),
+          value: 0,
+        }
+        // this.$router.push('/costs')
       })
     },
   },

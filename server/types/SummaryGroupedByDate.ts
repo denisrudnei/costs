@@ -14,8 +14,8 @@ class TotalValueSingleDay {
   @Field(() => Float)
   public total!: number
 
-  @Field(() => String)
-  date!: string
+  @Field(() => Date)
+  date!: Date
 }
 
 export default SummaryGroupedByDate

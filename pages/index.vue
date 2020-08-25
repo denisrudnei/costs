@@ -9,7 +9,7 @@
           <client-only>
             <apexchart
               :type="selectedType"
-              :options="options"
+              :options="mixedOptions"
               :series="series"
               width="100%"
               height="250px"
@@ -24,7 +24,7 @@
           <client-only>
             <apexchart
               :type="selectedType"
-              :options="options"
+              :options="spendingOptions"
               :series="spendigs"
               width="100%"
               height="250px"
@@ -39,7 +39,7 @@
           <client-only>
             <apexchart
               :type="selectedType"
-              :options="options"
+              :options="profitsOptions"
               :series="profits"
               width="100%"
               height="250px"
@@ -53,7 +53,7 @@
 
 <script>
 import ggl from 'graphql-tag'
-import { parse, lastDayOfMonth, startOfMonth } from 'date-fns'
+import { lastDayOfMonth, startOfMonth } from 'date-fns'
 export default {
   components: {
     apexchart: () => import('vue-apexcharts'),
@@ -62,16 +62,13 @@ export default {
     return {
       types: ['bar', 'line', 'area'],
       selectedType: 'area',
+      mixedOptions: {},
+      spendingOptions: {},
+      profitsOptions: {},
       options: {
         type: 'area',
         stroke: {
           curve: 'smooth',
-        },
-        colors: ['green', 'red', 'white'],
-        dataLabels: {
-          style: {
-            colors: ['green', 'red'],
-          },
         },
         xaxis: {
           type: 'datetime',
@@ -90,6 +87,15 @@ export default {
     }
   },
   created() {
+    Object.assign(this.mixedOptions, this.options)
+    this.mixedOptions.colors = ['green', 'red', 'white']
+
+    Object.assign(this.spendingOptions, this.options)
+    this.spendingOptions.colors = ['red']
+
+    Object.assign(this.profitsOptions, this.options)
+    this.profitsOptions.colors = ['green']
+
     this.$apollo
       .query({
         query: ggl`
@@ -111,10 +117,7 @@ export default {
         const profitsSeries = {
           name: 'Profits',
           data: profits
-            .map((p) => [
-              parse(p.date, 'yyyy-MM-dd', new Date()).getTime(),
-              p.total,
-            ])
+            .map((p) => [p.date, p.total])
             .sort((a, b) => {
               return a < b ? 1 : -1
             }),
@@ -124,10 +127,7 @@ export default {
         const spendingSeries = {
           name: 'Spendings',
           data: spending
-            .map((s) => [
-              parse(s.date, 'yyyy-MM-dd', new Date()).getTime(),
-              s.total,
-            ])
+            .map((s) => [s.date, s.total])
             .sort((a, b) => {
               return a < b ? 1 : -1
             }),
