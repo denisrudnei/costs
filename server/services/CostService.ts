@@ -124,7 +124,7 @@ class CostService {
       .from(Cost, 'cost')
       .where('cost.user = :userId', { userId: id })
       .groupBy('type')
-      .addGroupBy('date')
+      .addGroupBy('CAST(date as Date)')
       .getRawMany()
 
     const spending = result.filter((cost) => {
