@@ -12,7 +12,7 @@
               :options="mixedOptions"
               :series="series"
               width="100%"
-              height="250px"
+              height="350px"
             />
           </client-only>
         </v-card-text>
@@ -27,7 +27,7 @@
               :options="spendingOptions"
               :series="spendigs"
               width="100%"
-              height="250px"
+              height="350px"
             />
           </client-only>
         </v-card-text>
@@ -42,7 +42,7 @@
               :options="profitsOptions"
               :series="profits"
               width="100%"
-              height="250px"
+              height="350px"
             />
           </client-only>
         </v-card-text>
@@ -73,12 +73,12 @@ export default {
         xaxis: {
           type: 'datetime',
         },
-      },
-      tooltip: {
-        xaxis: {
-          format: 'dd MMM yyyy',
-          min: startOfMonth(new Date()).getTime(),
-          max: lastDayOfMonth(new Date()).getTime(),
+        tooltip: {
+          xaxis: {
+            format: 'dd MM yyyy',
+            min: startOfMonth(new Date()).getTime(),
+            max: lastDayOfMonth(new Date()).getTime(),
+          },
         },
       },
       series: [],
@@ -111,6 +111,7 @@ export default {
               }
             }
           }`,
+        fetchPolicy: 'no-cache',
       })
       .then((response) => {
         const { profits, spending } = response.data.SummaryGroupedByDate

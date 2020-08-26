@@ -11,6 +11,7 @@ import {
 import CostCreateInput from '../inputs/CostCreateInput'
 import { BasicSummary } from '../types/BasicSummary'
 import SummaryGroupedByDate from '../types/SummaryGroupedByDate'
+import CostEditInput from '../inputs/CostEditInput'
 import Cost from '~/models/Cost'
 import CostService from '~/services/CostService'
 
@@ -21,6 +22,27 @@ class CostResolver {
   Costs(@Ctx() { req }: ExpressContext) {
     const { id } = req.session!.authUser
     return CostService.getAllCosts(id)
+  }
+
+  @Query(() => Cost)
+  @Authorized('user')
+  GetOneCost(
+    @Arg('id', () => ID) id: Cost['id'],
+    @Ctx() { req }: ExpressContext
+  ) {
+    const userId = req.session!.authUser.id
+    return CostService.getOne(id, userId)
+  }
+
+  @Mutation(() => Cost)
+  @Authorized('user')
+  EditCost(
+    @Arg('id', () => ID) id: Cost['id'],
+    @Arg('cost') cost: CostEditInput,
+    @Ctx() { req }: ExpressContext
+  ) {
+    const userId = req.session!.authUser.id
+    return CostService.edit(id, userId, cost)
   }
 
   @Query(() => [Cost])

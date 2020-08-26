@@ -11,7 +11,7 @@
           <p>Date {{ cost.date | date }}</p>
         </v-card-text>
         <v-card-actions>
-          <v-btn icon>
+          <v-btn icon :to="`/costs/edit/${cost.id}`">
             <v-icon>
               mdi-clipboard-edit
             </v-icon>

@@ -5,6 +5,7 @@ import CostType from '../enums/CostType'
 import User from '../models/User'
 import { BasicSummary, Profit, Spent } from '../types/BasicSummary'
 import SummaryGroupedByDate from '../types/SummaryGroupedByDate'
+import CostEditInput from '../inputs/CostEditInput'
 import Cost from '~/models/Cost'
 
 class CostService {
@@ -14,6 +15,36 @@ class CostService {
         user: userId,
       },
     })
+  }
+
+  public static async getOne(
+    id: Cost['id'],
+    userId: User['id']
+  ): Promise<Cost> {
+    const cost = await Cost.findOne({
+      where: {
+        id,
+        user: userId,
+      },
+    })
+    if (!cost) throw new Error('Cost not found')
+    return cost
+  }
+
+  public static async edit(
+    id: Cost['id'],
+    userId: User['id'],
+    costToEdit: CostEditInput
+  ): Promise<Cost> {
+    const cost = await Cost.findOne({
+      where: {
+        id,
+        user: userId,
+      },
+    })
+    if (!cost) throw new Error('COst not found')
+    Object.assign(cost, costToEdit)
+    return cost.save()
   }
 
   public static getProfits(userId: User['id']): Promise<Cost[]> {
