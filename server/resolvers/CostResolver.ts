@@ -9,8 +9,6 @@ import {
   Resolver,
 } from 'type-graphql'
 import CostCreateInput from '../inputs/CostCreateInput'
-import { BasicSummary } from '../types/BasicSummary'
-import SummaryGroupedByDate from '../types/SummaryGroupedByDate'
 import CostEditInput from '../inputs/CostEditInput'
 import Cost from '~/models/Cost'
 import CostService from '~/services/CostService'
@@ -75,21 +73,6 @@ class CostResolver {
   ) {
     const user = req.session!.authUser
     return CostService.remove(id, user.id)
-  }
-
-  @Query(() => BasicSummary)
-  @Authorized('user')
-  BasicSummary(@Ctx() { req }: ExpressContext) {
-    const { id } = req.session!.authUser
-
-    return CostService.basicSummary(id)
-  }
-
-  @Query(() => SummaryGroupedByDate)
-  @Authorized('user')
-  SummaryGroupedByDate(@Ctx() { req }: ExpressContext) {
-    const { id } = req.session!.authUser
-    return CostService.summaryByDate(id)
   }
 
   @Mutation(() => Cost)

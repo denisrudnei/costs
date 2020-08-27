@@ -1,10 +1,7 @@
 <template>
   <v-row>
     <v-col>
-      <v-tabs>
-        <v-tab to="/charts">Charts</v-tab>
-      </v-tabs>
-      <nuxt-child />
+      <h2>Select a Year</h2>
     </v-col>
   </v-row>
 </template>
