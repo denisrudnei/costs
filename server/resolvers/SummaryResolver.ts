@@ -10,10 +10,14 @@ import { BasicSummary } from '../types/BasicSummary'
 class SummaryResolver {
   @Query(() => BasicSummary)
   @Authorized('user')
-  BasicSummary(@Ctx() { req }: ExpressContext) {
+  BasicSummary(
+    @Ctx() { req }: ExpressContext,
+    @Arg('month', () => Int, { nullable: true }) month?: number,
+    @Arg('year', () => Int, { nullable: true }) year?: number
+  ) {
     const { id } = req.session!.authUser
 
-    return SummaryService.basicSummary(id)
+    return SummaryService.basicSummary(id, month, year)
   }
 
   @Query(() => SummaryGroupedByDate)

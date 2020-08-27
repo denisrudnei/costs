@@ -17,7 +17,9 @@
 
 <script>
 import ggl from 'graphql-tag'
+import getYears from '@/mixins/getYears'
 export default {
+  mixins: [getYears],
   data() {
     return {
       years: [],
