@@ -1,9 +1,12 @@
 <template>
   <v-row>
     <v-col cols="12">
-      <v-card>
+      <v-card class="white">
         <client-only>
-          <v-card-text class="white">
+          <v-card-title>
+            Spending
+          </v-card-title>
+          <v-card-text>
             <apexchart
               :options="options"
               :series="spendingSeries"
@@ -15,9 +18,12 @@
       </v-card>
     </v-col>
     <v-col cols="12">
-      <v-card>
+      <v-card class="white">
+        <v-card-title>
+          Profits
+        </v-card-title>
         <client-only>
-          <v-card-text class="white">
+          <v-card-text>
             <apexchart
               :options="options"
               :series="profitsSeries"
