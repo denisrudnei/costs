@@ -73,6 +73,7 @@ export default {
               }
             }
           `,
+          fetchPolicy: 'no-cache',
         })
         .then((response) => {
           const summary = response.data.SummaryTotalByMonth
