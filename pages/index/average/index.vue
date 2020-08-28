@@ -26,8 +26,6 @@
             />
           </v-card-text>
         </client-only>
-        <pre>{{ spendingSeries }}</pre>
-        <pre>{{ profitsSeries }}</pre>
       </v-card>
     </v-col>
   </v-row>
