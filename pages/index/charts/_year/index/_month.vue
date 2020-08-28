@@ -4,8 +4,11 @@
       <v-select v-model="selectedType" :items="types" filled></v-select>
     </v-col>
     <v-col cols="12">
-      <v-card>
-        <v-card-text class="white">
+      <v-card class="white">
+        <v-card-title>
+          Profts vs Spending
+        </v-card-title>
+        <v-card-text>
           <client-only>
             <apexchart
               :type="selectedType"
@@ -19,8 +22,11 @@
       </v-card>
     </v-col>
     <v-col cols="12">
-      <v-card>
-        <v-card-text class="white">
+      <v-card class="white">
+        <v-card-title>
+          Spending
+        </v-card-title>
+        <v-card-text>
           <client-only>
             <apexchart
               :type="selectedType"
@@ -34,8 +40,11 @@
       </v-card>
     </v-col>
     <v-col cols="12">
-      <v-card>
-        <v-card-text class="white">
+      <v-card class="white">
+        <v-card-title>
+          Profits
+        </v-card-title>
+        <v-card-text>
           <client-only>
             <apexchart
               :type="selectedType"
@@ -54,6 +63,7 @@
 <script>
 import ggl from 'graphql-tag'
 import { mapGetters } from 'vuex'
+import { format } from 'date-fns'
 export default {
   components: {
     apexchart: () => import('vue-apexcharts'),
@@ -68,10 +78,10 @@ export default {
       options: {
         type: 'area',
         stroke: {
-          curve: 'smooth',
+          curve: 'stepline',
         },
         xaxis: {
-          type: 'datetime',
+          type: 'category',
         },
         tooltip: {
           xaxis: {
@@ -138,7 +148,10 @@ export default {
               .sort((a, b) => {
                 return a.date > b.date ? 1 : -1
               })
-              .map((p) => [p.date, p.total]),
+              .map((p) => ({
+                x: format(new Date(p.date), 'MM/dd/yyyy'),
+                y: p.total,
+              })),
           }
 
           this.series = []
@@ -153,7 +166,10 @@ export default {
               .sort((a, b) => {
                 return a.date > b.date ? 1 : -1
               })
-              .map((s) => [s.date, s.total]),
+              .map((s) => ({
+                x: format(new Date(s.date), 'MM/dd/yyyy'),
+                y: s.total,
+              })),
           }
           this.series.push(spendingSeries)
           this.spendigs.push(spendingSeries)
