@@ -47,8 +47,6 @@ class SummaryService {
       return cost.type === CostType.SPENT
     }) as Spent[]
 
-    console.log(spending)
-
     const sumProfits =
       sums.find((sum) => sum.type === CostType.PROFIT)?.sum ?? 0
     const sumSpending =
@@ -116,6 +114,8 @@ class SummaryService {
       .groupBy('type')
       .addGroupBy('year')
       .addGroupBy('month')
+      .addOrderBy('year')
+      .addOrderBy('month')
       .getRawMany()
     return result
   }
