@@ -135,10 +135,10 @@ export default {
           const profitsSeries = {
             name: 'Profits',
             data: profits
-              .map((p) => [p.date, p.total])
               .sort((a, b) => {
-                return a < b ? 1 : -1
-              }),
+                return a.date > b.date ? 1 : -1
+              })
+              .map((p) => [p.date, p.total]),
           }
 
           this.series = []
@@ -150,10 +150,10 @@ export default {
           const spendingSeries = {
             name: 'Spendings',
             data: spending
-              .map((s) => [s.date, s.total])
               .sort((a, b) => {
-                return a < b ? 1 : -1
-              }),
+                return a.date > b.date ? 1 : -1
+              })
+              .map((s) => [s.date, s.total]),
           }
           this.series.push(spendingSeries)
           this.spendigs.push(spendingSeries)
