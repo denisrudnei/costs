@@ -62,12 +62,13 @@
 
 <script>
 import ggl from 'graphql-tag'
-import { mapGetters } from 'vuex'
+import getDates from '@/mixins/getDates'
 import { format } from 'date-fns'
 export default {
   components: {
     apexchart: () => import('vue-apexcharts'),
   },
+  mixins: [getDates],
   data() {
     return {
       types: ['bar', 'line', 'area'],
@@ -94,10 +95,6 @@ export default {
       spendigs: [],
     }
   },
-  computed: mapGetters({
-    month: 'dates/getMonth',
-    year: 'dates/getYear',
-  }),
   watch: {
     month() {
       this.fetchData()
@@ -107,17 +104,20 @@ export default {
     },
   },
   created() {
-    Object.assign(this.mixedOptions, this.options)
-    this.mixedOptions.colors = ['green', 'red', 'white']
-
-    Object.assign(this.spendingOptions, this.options)
-    this.spendingOptions.colors = ['red']
-
-    Object.assign(this.profitsOptions, this.options)
-    this.profitsOptions.colors = ['green']
+    this.updateOptions()
     this.fetchData()
   },
   methods: {
+    updateOptions() {
+      Object.assign(this.mixedOptions, this.options)
+      this.mixedOptions.colors = ['green', 'red', 'white']
+
+      Object.assign(this.spendingOptions, this.options)
+      this.spendingOptions.colors = ['red']
+
+      Object.assign(this.profitsOptions, this.options)
+      this.profitsOptions.colors = ['green']
+    },
     fetchData() {
       this.$apollo
         .query({
@@ -138,7 +138,6 @@ export default {
             year: parseInt(this.year.value, 10),
             month: parseInt(this.month, 10),
           },
-          fetchPolicy: 'no-cache',
         })
         .then((response) => {
           const { profits, spending } = response.data.SummaryGroupedByDate

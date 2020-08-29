@@ -1,5 +1,6 @@
 export const state = () => ({
   year: {},
+  years: [],
   month: 0,
   months: [],
 })
@@ -14,6 +15,9 @@ export const getters = {
   getMonths(state) {
     return state.months
   },
+  getDates(state) {
+    return state.years
+  },
 }
 
 export const mutations = {
@@ -25,5 +29,8 @@ export const mutations = {
   },
   setMonths(state, months) {
     state.months = months
+  },
+  setYears(state, years) {
+    state.years = years
   },
 }

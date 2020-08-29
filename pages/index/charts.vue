@@ -16,35 +16,13 @@
 </template>
 
 <script>
-import ggl from 'graphql-tag'
-import getYears from '@/mixins/getYears'
+import getDates from '@/mixins/getDates'
 export default {
-  mixins: [getYears],
-  data() {
-    return {
-      years: [],
-    }
-  },
-  created() {
-    this.$apollo
-      .query({
-        query: ggl`
-        query {
-          GetUsedDates {
-            years {
-              value
-              months
-            }
-          }
-        }
-      `,
-        fetchPolicy: 'no-cache',
-      })
-      .then((response) => {
-        this.years = response.data.GetUsedDates.years.sort((a, b) =>
-          a > b ? 1 : -1
-        )
-      })
+  mixins: [getDates],
+  mounted() {
+    const path = this.$route.path
+    if (path === '/charts' && this.year.value)
+      this.$router.push(`/charts/${this.year.value}`)
   },
   methods: {
     selectMonths(year) {

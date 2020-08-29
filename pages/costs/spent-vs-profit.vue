@@ -18,6 +18,7 @@
             filled
             :items="months"
             :disabled="months.length === 0"
+            :value="month"
             @input="updateMonth"
           ></v-select>
         </v-col>
@@ -31,7 +32,6 @@
         <template v-slot:item.date="{ item }">
           {{ item.date | date }}
         </template>
-
         <template v-slot:item.actions="{ item }">
           <v-btn icon class="red--text" @click="remove(item)">
             <v-icon>
@@ -68,13 +68,11 @@
 
 <script>
 import ggl from 'graphql-tag'
-import getYears from '@/mixins/getYears'
-import { mapGetters } from 'vuex'
+import getDates from '@/mixins/getDates'
 export default {
-  mixins: [getYears],
+  mixins: [getDates],
   data() {
     return {
-      year: null,
       profit: [],
       total: 0,
       spent: [],
@@ -103,12 +101,16 @@ export default {
     }
   },
   computed: {
-    ...mapGetters({
-      months: 'dates/getMonths',
-      month: 'dates/getMonth',
-    }),
     yearsList() {
       return this.years.map((year) => ({ text: year.value, value: year }))
+    },
+    year: {
+      get() {
+        return this.$store.getters['dates/getYear']
+      },
+      set(value) {
+        this.$store.commit('dates/setYear', value)
+      },
     },
   },
   watch: {
@@ -121,31 +123,7 @@ export default {
     },
   },
   created() {
-    this.$apollo
-      .query({
-        query: ggl`
-          query {
-            profit: GetProfits {
-              id
-              name
-              value
-              type
-              date
-            }
-            spent: GetSpending {
-              id
-              name
-              value
-              type
-              date
-            }
-          }
-        `,
-      })
-      .then((response) => {
-        this.profit = response.data.profit
-        this.spent = response.data.spent
-      })
+    this.fetchData()
   },
   methods: {
     compareYear(value1, value2) {
@@ -183,7 +161,7 @@ export default {
         `,
           fetchPolicy: 'no-cache',
           variables: {
-            year: this.year?.value ?? null,
+            year: parseInt(this.year?.value, 10) ?? null,
             month: this.month ?? null,
           },
         })
