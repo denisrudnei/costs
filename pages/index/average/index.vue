@@ -39,7 +39,7 @@
 
 <script>
 import { parse } from 'date-fns'
-import ggl from 'graphql-tag'
+import summaryTotalByMonth from '@/graphql/query/summaryTotalByMonth'
 export default {
   components: {
     apexchart: () => import('vue-apexcharts'),
@@ -63,16 +63,7 @@ export default {
     fetchData() {
       this.$apollo
         .query({
-          query: ggl`
-            query {
-              SummaryTotalByMonth {
-                year
-                month
-                total
-                type
-              }
-            }
-          `,
+          query: summaryTotalByMonth,
           fetchPolicy: 'no-cache',
         })
         .then((response) => {

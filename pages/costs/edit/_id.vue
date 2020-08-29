@@ -7,7 +7,8 @@
 
 <script>
 import create from '@/components/cost/create'
-import ggl from 'graphql-tag'
+import getOneCost from '@/graphql/query/getOneCost'
+import editCost from '@/graphql/mutation/editCost'
 export default {
   components: {
     create,
@@ -21,16 +22,7 @@ export default {
     const { id } = this.$route.params
     this.$apollo
       .query({
-        query: ggl`
-          query GetOneCost($id: ID!) {
-            GetOneCost(id: $id) {
-              id
-              name
-              value
-              date
-              type
-            }
-          }`,
+        query: getOneCost,
         fetchPolicy: 'network-only',
         variables: {
           id,
@@ -49,17 +41,7 @@ export default {
       const { id } = this.$route.params
       this.$apollo
         .mutate({
-          mutation: ggl`
-            mutation EditCost($id: ID!, $cost: CostEditInput!) {
-              EditCost(id: $id, cost: $cost) {
-                name
-                id
-                value
-                date
-                type
-              }
-            }
-          `,
+          mutation: editCost,
           variables: {
             id,
             cost,

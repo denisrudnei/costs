@@ -1,5 +1,5 @@
-import ggl from 'graphql-tag'
 import { mapGetters } from 'vuex'
+import getUsedDates from '~/graphql/query/getUsedDates'
 
 export default {
   computed: mapGetters({
@@ -11,16 +11,7 @@ export default {
   created() {
     this.$apollo
       .query({
-        query: ggl`
-          query {
-            GetUsedDates {
-              years {
-                value
-                months
-              }
-            }
-          }
-        `,
+        query: getUsedDates,
         fetchPolicy: 'no-cache',
       })
       .then((response) => {

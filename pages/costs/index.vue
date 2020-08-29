@@ -28,7 +28,9 @@
 </template>
 
 <script>
-import ggl from 'graphql-tag'
+import costs from '@/graphql/query/costs'
+import refetch from '@/graphql/query/refetch'
+import removeCost from '@/graphql/mutation/removeCost'
 export default {
   data() {
     return {
@@ -38,16 +40,7 @@ export default {
   created() {
     this.$apollo
       .query({
-        query: ggl`
-          query {
-            Costs {
-              id
-              name
-              value
-              type
-              date
-            }
-          } `,
+        query: costs,
       })
       .then((response) => {
         this.costs = response.data.Costs
@@ -57,33 +50,14 @@ export default {
     remove(value) {
       this.$apollo
         .mutate({
-          mutation: ggl`
-          mutation RemoveCost($id: ID!) {
-            RemoveCost(id: $id)
-          }
-        `,
+          mutation: removeCost,
           variables: {
             id: value.id,
           },
           awaitRefetchQueries: true,
           refetchQueries: [
             {
-              query: ggl`
-                query {
-                  Costs {
-                    id
-                    value
-                  }
-                  GetProfits {
-                    id
-                    value
-                  }
-                  GetSpending {
-                    id
-                    value
-                  }
-                }
-              `,
+              query: refetch,
             },
           ],
         })

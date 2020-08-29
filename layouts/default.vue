@@ -38,8 +38,8 @@
 </template>
 
 <script>
-import ggl from 'graphql-tag'
 import { mapGetters } from 'vuex'
+import userSettings from '@/graphql/query/userSettings'
 export default {
   data() {
     return {
@@ -72,14 +72,7 @@ export default {
   created() {
     this.$apollo
       .query({
-        query: ggl`
-        query {
-          UserSettings {
-            locale
-            currency
-          }
-        }
-      `,
+        query: userSettings,
       })
       .then((response) => {
         const { currency, locale } = response.data.UserSettings

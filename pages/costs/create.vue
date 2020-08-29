@@ -3,9 +3,11 @@
 </template>
 
 <script>
-import ggl from 'graphql-tag'
-
 import create from '@/components/cost/create'
+import createNewCost from '@/graphql/mutation/createNewCost'
+import profits from '@/graphql/query/profits'
+import costs from '@/graphql/query/costs'
+import spending from '@/graphql/query/spending'
 export default {
   components: {
     create,
@@ -24,43 +26,20 @@ export default {
     save(cost) {
       this.$apollo
         .mutate({
-          mutation: ggl`
-          mutation CreateNewCost($cost: CostCreateInput!){
-            CreateNewCost(cost: $cost) {
-              id
-              name
-              value
-              type
-            }
-          }
-        `,
+          mutation: createNewCost,
           variables: {
             cost,
           },
           awaitRefetchQueries: true,
           refetchQueries: [
             {
-              query: ggl`
-              query {
-                Costs {
-                  id
-                  value
-                  type
-                }
-                GetProfits {
-                  id
-                  value
-                  type
-                  date
-                }
-                GetSpending {
-                  id
-                  value
-                  type
-                  date
-                }
-              }
-            `,
+              query: costs,
+            },
+            {
+              query: profits,
+            },
+            {
+              query: spending,
             },
           ],
         })

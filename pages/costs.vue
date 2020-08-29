@@ -12,7 +12,7 @@
 </template>
 
 <script>
-import ggl from 'graphql-tag'
+import costs from '@/graphql/query/costs'
 export default {
   data() {
     return {
@@ -22,15 +22,7 @@ export default {
   created() {
     this.$apollo
       .query({
-        query: ggl`
-          query {
-            Costs {
-              id
-              value
-              type
-              date
-            }
-          } `,
+        query: costs,
       })
       .then((response) => {
         this.costs = response.data.Costs

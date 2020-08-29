@@ -61,8 +61,8 @@
 </template>
 
 <script>
-import ggl from 'graphql-tag'
 import getDates from '@/mixins/getDates'
+import SummaryGroupedByDate from '@/graphql/query/summaryGroupedByDate'
 import { format } from 'date-fns'
 export default {
   components: {
@@ -121,19 +121,7 @@ export default {
     fetchData() {
       this.$apollo
         .query({
-          query: ggl`
-          query SummaryGroupedByDate ($year: Int, $month: Int) {
-            SummaryGroupedByDate (year: $year, month: $month) {
-              spending {
-                date
-                total
-              }
-              profits {
-                date
-                total
-              }
-            }
-          }`,
+          query: SummaryGroupedByDate,
           variables: {
             year: parseInt(this.year.value, 10),
             month: parseInt(this.month, 10),

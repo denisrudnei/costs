@@ -27,7 +27,8 @@
 </template>
 
 <script>
-import ggl from 'graphql-tag'
+import userSettings from '@/graphql/query/userSettings'
+import createUserSettings from '@/graphql/mutation/createUserSettings'
 import values from './settings-values.json'
 export default {
   data() {
@@ -53,14 +54,7 @@ export default {
   mounted() {
     this.$apollo
       .query({
-        query: ggl`
-          query {
-            UserSettings {
-              currency
-              locale
-            }
-          }
-        `,
+        query: userSettings,
       })
       .then((response) => {
         this.settings.locale = response.data.UserSettings.locale
@@ -71,26 +65,13 @@ export default {
     save() {
       this.$apollo
         .mutate({
-          mutation: ggl`
-          mutation CreateUserSettings($userSettings: UserSettingsInput!){
-            CreateUserSettings(userSettings: $userSettings) {
-              currency
-              locale
-            }
-          }
-        `,
+          mutation: createUserSettings,
           variables: {
             userSettings: this.settings,
           },
           refetchQueries: [
             {
-              query: ggl`
-                query {
-                  UserSettings {
-                    currency
-                    locale
-                  }
-                }`,
+              query: userSettings,
             },
           ],
           awaitRefetchQueries: true,

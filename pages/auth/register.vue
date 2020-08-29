@@ -23,7 +23,7 @@
 </template>
 
 <script>
-import ggl from 'graphql-tag'
+import register from '@/graphql/mutation/register'
 export default {
   auth: false,
   data() {
@@ -39,15 +39,7 @@ export default {
     register() {
       this.$apollo
         .mutate({
-          mutation: ggl`
-            mutation Register($email: String!, $name: String!, $password: String!) {
-              Register(email: $email, name: $name, password: $password) {
-                id
-                name
-                email
-              }
-            }
-          `,
+          mutation: register,
           variables: {
             email: this.user.email,
             name: this.user.name,

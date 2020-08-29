@@ -67,8 +67,10 @@
 </template>
 
 <script>
-import ggl from 'graphql-tag'
 import getDates from '@/mixins/getDates'
+import removeCost from '@/graphql/mutation/removeCost'
+import basicSummary from '@/graphql/query/basicSummary'
+import refetch from '@/graphql/query/refetch'
 export default {
   mixins: [getDates],
   data() {
@@ -132,37 +134,11 @@ export default {
     fetchData() {
       this.$apollo
         .query({
-          query: ggl`
-            query BasicSummary ($year: Int, $month: Int) {
-              BasicSummary(year: $year, month: $month) {
-                spending {
-                  sum
-                  values {
-                    id
-                    name
-                    value
-                    date
-                    type
-                  }
-                }
-                profits {
-                  sum
-                  values {
-                    id
-                    name
-                    value
-                    date
-                    type
-                  }
-                }
-                total
-              }
-            }
-        `,
+          query: basicSummary,
           fetchPolicy: 'no-cache',
           variables: {
-            year: parseInt(this.year?.value, 10) ?? null,
-            month: this.month ?? null,
+            year: this.year ? parseInt(this.year.value, 10) : null,
+            month: this.month ? this.month : null,
           },
         })
         .then((response) => {
@@ -182,38 +158,14 @@ export default {
       )
       this.$apollo
         .mutate({
-          mutation: ggl`
-          mutation RemoveCost($id: ID!) {
-            RemoveCost(id: $id)
-          }
-        `,
+          mutation: removeCost,
           variables: {
             id: value.id,
           },
           awaitRefetchQueries: true,
           refetchQueries: [
             {
-              query: ggl`
-                query {
-                  GetProfits {
-                    id
-                    value
-                    type
-                    date
-                  }
-                  GetSpending {
-                    id
-                    value
-                    type
-                    date
-                  }
-                  Costs {
-                    id
-                    value
-                    type
-                  }
-                }
-              `,
+              query: refetch,
             },
           ],
         })
