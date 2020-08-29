@@ -5,6 +5,7 @@ import SummaryService from '../services/SummaryService'
 import SummaryTotalByMonth from '../types/SummaryTotalByMonth'
 import SummaryGroupedByDate from '../types/SummaryGroupedByDate'
 import { BasicSummary } from '../types/BasicSummary'
+import SummaryDayByDay from '../types/SummaryTotalDayByDay'
 
 @Resolver()
 class SummaryResolver {
@@ -36,6 +37,17 @@ class SummaryResolver {
   SummaryTotalByMonth(@Ctx() { req }: ExpressContext) {
     const { id } = req.session!.authUser
     return SummaryService.summaryTotalByMonth(id)
+  }
+
+  @Query(() => [SummaryDayByDay])
+  @Authorized('user')
+  SummaryDayByDay(
+    @Ctx() { req }: ExpressContext,
+    @Arg('year', () => Int, { nullable: true }) year?: number,
+    @Arg('month', () => Int, { nullable: true }) month?: number
+  ) {
+    const { id } = req.session!.authUser
+    return SummaryService.summaryDayByDay(id, year, month)
   }
 }
 

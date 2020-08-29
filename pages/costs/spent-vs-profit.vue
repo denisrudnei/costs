@@ -33,6 +33,11 @@
           {{ item.date | date }}
         </template>
         <template v-slot:item.actions="{ item }">
+          <v-btn icon :to="`/costs/edit/${item.id}`">
+            <v-icon>
+              mdi-clipboard-edit
+            </v-icon>
+          </v-btn>
           <v-btn icon class="red--text" @click="remove(item)">
             <v-icon>
               mdi-delete
@@ -50,6 +55,11 @@
           {{ item.date | date }}
         </template>
         <template v-slot:item.actions="{ item }">
+          <v-btn icon :to="`/costs/edit/${item.id}`">
+            <v-icon>
+              mdi-clipboard-edit
+            </v-icon>
+          </v-btn>
           <v-btn icon class="red--text" @click="remove(item)">
             <v-icon>
               mdi-delete
@@ -98,6 +108,7 @@ export default {
         {
           value: 'actions',
           text: 'Actions',
+          sortable: false,
         },
       ],
     }

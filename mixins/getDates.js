@@ -8,6 +8,26 @@ export default {
     month: 'dates/getMonth',
     months: 'dates/getMonths',
   }),
+  watch: {
+    year(year) {
+      const { month } = this.$route.query
+      this.$router.push({
+        query: {
+          month,
+          year: year.value,
+        },
+      })
+    },
+    month(value) {
+      const { year } = this.$route.query
+      this.$router.push({
+        query: {
+          year,
+          month: value,
+        },
+      })
+    },
+  },
   created() {
     this.$apollo
       .query({
@@ -21,7 +41,10 @@ export default {
         this.$store.commit('dates/setYears', years)
         if (years.length > 0) this.$store.commit('dates/setYear', years[0])
         if (this.year && this.year.months.length > 0) {
-          this.$store.commit('dates/setMonths', this.year.months)
+          this.$store.commit(
+            'dates/setMonths',
+            this.year.months.sort((a, b) => (a > b ? 1 : -1))
+          )
           this.$store.commit('dates/setMonth', this.year.months[0])
         }
       })

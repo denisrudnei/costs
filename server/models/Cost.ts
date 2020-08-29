@@ -1,6 +1,8 @@
 import { Field, ID, ObjectType } from 'type-graphql'
 import {
   BaseEntity,
+  BeforeInsert,
+  BeforeUpdate,
   Column,
   Entity,
   ManyToOne,
@@ -40,6 +42,14 @@ class Cost extends BaseEntity {
   @Column({ type: 'enum', enum: CostType })
   @Field(() => CostType)
   public type: CostType = CostType.SPENT
+
+  @BeforeInsert()
+  @BeforeUpdate()
+  updateSignal() {
+    if (this.type === CostType.SPENT) {
+      this.value = -Math.abs(this.value)
+    }
+  }
 }
 
 export default Cost

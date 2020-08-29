@@ -51,6 +51,24 @@ export default {
         xaxis: {
           type: 'datetime',
         },
+        plotOptions: {
+          bar: {
+            colors: {
+              ranges: [
+                {
+                  from: 0,
+                  to: Infinity,
+                  color: '#008000',
+                },
+                {
+                  from: -Infinity,
+                  to: 0,
+                  color: '#ff0000',
+                },
+              ],
+            },
+          },
+        },
       },
       profitsSeries: [],
       spendingSeries: [],

@@ -1,11 +1,14 @@
+import { addDays, getDaysInMonth, getMonth, getYear, parse } from 'date-fns'
 import { getConnection } from 'typeorm'
-import { getMonth, getYear } from 'date-fns'
-import SummaryTotalByMonth from '../types/SummaryTotalByMonth'
-import Cost from '../models/Cost'
+
 import CostType from '../enums/CostType'
-import SummaryGroupedByDate from '../types/SummaryGroupedByDate'
+import Cost from '../models/Cost'
 import User from '../models/User'
-import { Spent, Profit, BasicSummary } from '../types/BasicSummary'
+import { BasicSummary, Profit, Spent } from '../types/BasicSummary'
+import SummaryGroupedByDate from '../types/SummaryGroupedByDate'
+import SummaryTotalByMonth from '../types/SummaryTotalByMonth'
+import SummaryDayByDay from '../types/SummaryTotalDayByDay'
+
 class SummaryService {
   public static async basicSummary(
     userId: User['id'],
@@ -61,7 +64,7 @@ class SummaryService {
         sum: sumProfits,
         values: profits,
       },
-      total: sumProfits - sumSpending,
+      total: Number(sumProfits) + Number(sumSpending),
     }
   }
 
@@ -118,6 +121,46 @@ class SummaryService {
       .addOrderBy('month')
       .getRawMany()
     return result
+  }
+
+  public static async summaryDayByDay(
+    userId: User['id'],
+    year?: number,
+    month?: number
+  ): Promise<SummaryDayByDay[]> {
+    if (!month) month = getMonth(new Date()) + 1
+    if (!year) year = getYear(new Date())
+
+    const base = parse(`${year}-${month}-01`, 'yyyy-MM-dd', new Date())
+
+    const lastDay = getDaysInMonth(
+      parse(`${year}-${month}`, 'yyyy-MM', new Date())
+    )
+
+    const connection = await getConnection()
+
+    const values: SummaryDayByDay[] = []
+
+    for (let day = 1; day <= lastDay; day += 1) {
+      const actualDay = addDays(base, day - 1)
+      const result = await connection
+        .createQueryBuilder()
+        .select('SUM(value) as total')
+        .from(Cost, 'cost')
+        .where('cost.user = :userId', { userId })
+        .andWhere('date BETWEEN :start and :end', {
+          start: base,
+          end: actualDay,
+        })
+        .getRawOne()
+
+      values.push({
+        total: result.total ? result.total : 0,
+        day: actualDay,
+      })
+    }
+
+    return values
   }
 }
 

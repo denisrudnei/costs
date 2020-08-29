@@ -1,7 +1,13 @@
 <template>
   <v-row>
-    <v-col>
-      <v-select v-model="selectedType" :items="types" filled></v-select>
+    <v-spacer />
+    <v-col cols="12" md="4">
+      <v-select
+        v-model="selectedType"
+        :items="types"
+        filled
+        label="Type"
+      ></v-select>
     </v-col>
     <v-col cols="12">
       <v-card class="white">
@@ -62,7 +68,8 @@
 
 <script>
 import getDates from '@/mixins/getDates'
-import SummaryGroupedByDate from '@/graphql/query/summaryGroupedByDate'
+import summaryGroupedByDate from '@/graphql/query/summaryGroupedByDate'
+import summaryDayByDay from '@/graphql/query/summaryDayByDay'
 import { format } from 'date-fns'
 export default {
   components: {
@@ -79,10 +86,28 @@ export default {
       options: {
         type: 'area',
         stroke: {
-          curve: 'stepline',
+          curve: 'straight',
         },
         xaxis: {
-          type: 'category',
+          type: 'datetime',
+        },
+        plotOptions: {
+          bar: {
+            colors: {
+              ranges: [
+                {
+                  from: 0,
+                  to: Infinity,
+                  color: '#008000',
+                },
+                {
+                  from: -Infinity,
+                  to: 0,
+                  color: '#ff0000',
+                },
+              ],
+            },
+          },
         },
         tooltip: {
           xaxis: {
@@ -93,6 +118,7 @@ export default {
       series: [],
       profits: [],
       spendigs: [],
+      dayByDaySeries: [],
     }
   },
   watch: {
@@ -110,18 +136,47 @@ export default {
   methods: {
     updateOptions() {
       Object.assign(this.mixedOptions, this.options)
-      this.mixedOptions.colors = ['green', 'red', 'white']
+      this.mixedOptions.colors = ['#008000', '#ff0000', '#0b0b6c']
 
       Object.assign(this.spendingOptions, this.options)
-      this.spendingOptions.colors = ['red']
+      this.spendingOptions.colors = ['#ff0000']
 
       Object.assign(this.profitsOptions, this.options)
-      this.profitsOptions.colors = ['green']
+      this.profitsOptions.colors = ['#008000']
+    },
+    summaryDayByDay() {
+      this.$apollo
+        .query({
+          query: summaryDayByDay,
+          variables: {
+            year: parseInt(this.year.value, 10),
+            month: parseInt(this.month, 10),
+          },
+        })
+        .then((response) => {
+          const { SummaryDayByDay } = response.data
+
+          const dayByDaySeries = {
+            name: 'Total in this day',
+            data: SummaryDayByDay.sort((a, b) => (a > b ? 1 : -1)).map(
+              (value) => ({
+                x: format(new Date(value.day), 'MM/dd/yyyy'),
+                y: value.total,
+              })
+            ),
+          }
+
+          this.series = this.series.filter((serie) => {
+            return serie.name !== dayByDaySeries.name
+          })
+
+          this.series.push(dayByDaySeries)
+        })
     },
     fetchData() {
       this.$apollo
         .query({
-          query: SummaryGroupedByDate,
+          query: summaryGroupedByDate,
           variables: {
             year: parseInt(this.year.value, 10),
             month: parseInt(this.month, 10),
@@ -160,6 +215,7 @@ export default {
           }
           this.series.push(spendingSeries)
           this.spendigs.push(spendingSeries)
+          this.summaryDayByDay()
         })
     },
   },

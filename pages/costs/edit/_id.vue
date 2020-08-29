@@ -48,7 +48,7 @@ export default {
           },
         })
         .then(() => {
-          this.$router.push('/costs')
+          this.$router.back()
         })
     },
   },
