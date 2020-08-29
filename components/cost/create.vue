@@ -78,7 +78,7 @@ export default {
     save() {
       this.$emit('input', {
         name: this.value.name,
-        value: parseInt(this.value.value),
+        value: parseFloat(this.value.value),
         type: this.value.type,
         date: this.date,
       })
