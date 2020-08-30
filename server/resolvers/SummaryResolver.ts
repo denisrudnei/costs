@@ -14,11 +14,13 @@ class SummaryResolver {
   BasicSummary(
     @Ctx() { req }: ExpressContext,
     @Arg('month', () => Int, { nullable: true }) month?: number,
-    @Arg('year', () => Int, { nullable: true }) year?: number
+    @Arg('year', () => Int, { nullable: true }) year?: number,
+    @Arg('useLastMonthBalance', () => Boolean, { nullable: true })
+    useLastMonthBalance?: boolean
   ) {
     const { id } = req.session!.authUser
 
-    return SummaryService.basicSummary(id, month, year)
+    return SummaryService.basicSummary(id, month, year, useLastMonthBalance)
   }
 
   @Query(() => SummaryGroupedByDate)

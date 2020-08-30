@@ -4,6 +4,7 @@ const query = ggl`
 query {
   Costs {
     id
+    name
     value
     type
     date

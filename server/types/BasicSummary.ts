@@ -32,4 +32,7 @@ export class BasicSummary {
 
   @Field()
   public total!: number
+
+  @Field({ nullable: true })
+  public lastMonthBalance?: Cost
 }

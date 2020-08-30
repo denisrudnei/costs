@@ -14,7 +14,7 @@ export default (context: Context) => {
   Vue.filter('dinero', (value: string | number) => {
     const { currency, locale } = context.store.state.settings
     return Dinero({
-      amount: parseInt(value.toString(), 10) * 100,
+      amount: parseFloat(value.toString()) * 100,
       currency: currency || 'USD',
     })
       .setLocale(locale || '')

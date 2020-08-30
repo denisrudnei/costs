@@ -1,4 +1,13 @@
-import { addDays, getDaysInMonth, getMonth, getYear, parse } from 'date-fns'
+import {
+  addDays,
+  format,
+  getDaysInMonth,
+  getMonth,
+  getYear,
+  isAfter,
+  parse,
+  subMonths,
+} from 'date-fns'
 import { getConnection } from 'typeorm'
 
 import CostType from '../enums/CostType'
@@ -13,10 +22,58 @@ class SummaryService {
   public static async basicSummary(
     userId: User['id'],
     month?: number,
-    year?: number
+    year?: number,
+    useLastMonthBalance?: boolean
   ): Promise<BasicSummary> {
     if (!month) month = getMonth(new Date()) + 1
     if (!year) year = getYear(new Date())
+
+    let total = 0.0
+    let lastMonthBalance: Cost | undefined
+
+    if (useLastMonthBalance) {
+      const { min } = await getConnection()
+        .createQueryBuilder()
+        .select('MIN(date) as min')
+        .from(Cost, 'cost')
+        .where('cost.user = :userId', { userId })
+        .getRawOne()
+
+      const lastMonth = subMonths(
+        parse(`${year}-${month}-01`, 'yyyy-MM-dd', new Date()),
+        1
+      )
+
+      const lastDay = getDaysInMonth(lastMonth)
+
+      const minMonth = getMonth(min) + 1
+      const minYear = getYear(min)
+      const minDate = parse(
+        `${minYear}-${minMonth}-01`,
+        'yyyy-MM-dd',
+        new Date()
+      )
+
+      const targetDate = parse(
+        `${getYear(lastMonth)}-${getMonth(lastMonth) + 1}-${lastDay}`,
+        'yyyy-MM-dd',
+        new Date()
+      )
+      const result = await this.basicSummary(
+        userId,
+        getMonth(lastMonth) + 1,
+        getYear(lastMonth),
+        isAfter(targetDate, minDate)
+      )
+
+      total += result.total
+      lastMonthBalance = new Cost({
+        name: `Balance in ${format(targetDate, 'MM/dd/yyyy')}`,
+        type: CostType.CONSOLIDATED,
+        value: result.total,
+        date: targetDate,
+      })
+    }
 
     const list = await getConnection()
       .createQueryBuilder()
@@ -55,6 +112,8 @@ class SummaryService {
     const sumSpending =
       sums.find((sum) => sum.type === CostType.SPENT)?.sum ?? 0
 
+    total += Number(sumProfits) + Number(sumSpending)
+
     return {
       spending: {
         sum: sumSpending,
@@ -64,7 +123,8 @@ class SummaryService {
         sum: sumProfits,
         values: profits,
       },
-      total: Number(sumProfits) + Number(sumSpending),
+      total,
+      lastMonthBalance,
     }
   }
 
