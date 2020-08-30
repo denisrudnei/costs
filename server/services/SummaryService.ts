@@ -134,15 +134,15 @@ class SummaryService {
     const base = parse(`${year}-${month}-01`, 'yyyy-MM-dd', new Date())
 
     const lastDay = getDaysInMonth(
-      parse(`${year}-${month}`, 'yyyy-MM', new Date())
+      parse(`${year}-${month}`, 'yyyy-MM', new Date()).getUTCDate()
     )
 
     const connection = await getConnection()
 
     const values: SummaryDayByDay[] = []
 
-    for (let day = 1; day <= lastDay; day += 1) {
-      const actualDay = addDays(base, day - 1)
+    for (let day = 0; day < lastDay; day += 1) {
+      const actualDay = addDays(base, day)
       const result = await connection
         .createQueryBuilder()
         .select('SUM(value) as total')
