@@ -29,7 +29,7 @@
             </v-card-title>
             <v-card-text>
               <v-date-picker
-                :value="getIsoDate(value.date)"
+                :value="getIsoDate(date)"
                 placeholder="Date"
                 filled
                 @change="setDate"
