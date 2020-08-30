@@ -4,6 +4,13 @@
       <v-row>
         <v-spacer />
         <v-col cols="12" md="2">
+          <v-checkbox
+            v-model="useLastMonthBalance"
+            label="Use last month balance"
+            @change="fetchData"
+          />
+        </v-col>
+        <v-col cols="12" md="2">
           <v-select
             v-model="year"
             placeholder="Year"
@@ -67,6 +74,14 @@
           </v-btn>
         </template>
       </v-data-table>
+      <v-card v-if="lastMonthBalance">
+        <v-card-title>
+          {{ lastMonthBalance.name }}
+        </v-card-title>
+        <v-card-text>
+          <h3>Value: {{ lastMonthBalance.value | dinero }}</h3>
+        </v-card-text>
+      </v-card>
     </v-col>
     <v-row>
       <v-col class="ma-1">
@@ -85,6 +100,8 @@ export default {
   mixins: [getDates],
   data() {
     return {
+      useLastMonthBalance: false,
+      lastMonthBalance: null,
       profit: [],
       total: 0,
       spent: [],
@@ -148,6 +165,7 @@ export default {
           query: basicSummary,
           fetchPolicy: 'no-cache',
           variables: {
+            useLastMonthBalance: this.useLastMonthBalance,
             year: this.year ? parseInt(this.year.value, 10) : null,
             month: this.month ? this.month : null,
           },
@@ -156,6 +174,7 @@ export default {
           this.profit = response.data.BasicSummary.profits.values
           this.spent = response.data.BasicSummary.spending.values
           this.total = response.data.BasicSummary.total
+          this.lastMonthBalance = response.data.BasicSummary.lastMonthBalance
         })
     },
     updateMonth(value) {

@@ -1,7 +1,7 @@
 import ggl from 'graphql-tag'
 const query = ggl`
-query BasicSummary ($year: Int, $month: Int) {
-  BasicSummary(year: $year, month: $month) {
+query BasicSummary ($useLastMonthBalance: Boolean, $year: Int, $month: Int) {
+  BasicSummary(useLastMonthBalance: $useLastMonthBalance, year: $year, month: $month) {
     spending {
       sum
       values {
@@ -21,6 +21,12 @@ query BasicSummary ($year: Int, $month: Int) {
         date
         type
       }
+    }
+    lastMonthBalance {
+      type
+      value
+      name
+      date
     }
     total
   }
