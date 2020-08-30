@@ -186,7 +186,8 @@ class SummaryService {
   public static async summaryDayByDay(
     userId: User['id'],
     year?: number,
-    month?: number
+    month?: number,
+    allDays: boolean = false
   ): Promise<SummaryDayByDay[]> {
     if (!month) month = getMonth(new Date()) + 1
     if (!year) year = getYear(new Date())
@@ -214,10 +215,18 @@ class SummaryService {
         })
         .getRawOne()
 
-      values.push({
+      const item = {
         total: result.total ? result.total : 0,
         day: actualDay,
-      })
+      }
+
+      if (allDays) {
+        values.push(item)
+      } else if (day === 0) {
+        values.push(item)
+      } else if (values[values.length - 1].total !== item.total) {
+        values.push(item)
+      }
     }
 
     return values

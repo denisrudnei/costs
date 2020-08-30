@@ -46,10 +46,11 @@ class SummaryResolver {
   SummaryDayByDay(
     @Ctx() { req }: ExpressContext,
     @Arg('year', () => Int, { nullable: true }) year?: number,
-    @Arg('month', () => Int, { nullable: true }) month?: number
+    @Arg('month', () => Int, { nullable: true }) month?: number,
+    @Arg('allDays', () => Boolean, { nullable: true }) allDays?: boolean
   ) {
     const { id } = req.session!.authUser
-    return SummaryService.summaryDayByDay(id, year, month)
+    return SummaryService.summaryDayByDay(id, year, month, allDays)
   }
 }
 
