@@ -74,6 +74,7 @@
           </v-btn>
         </template>
       </v-data-table>
+      <hr />
       <v-card v-if="lastMonthBalance">
         <v-card-title>
           {{ lastMonthBalance.name }}

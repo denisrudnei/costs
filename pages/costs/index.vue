@@ -1,6 +1,21 @@
 <template>
   <v-row>
-    <v-col v-for="cost in costs" :key="cost.id" md="4" cols="12">
+    <v-col cols="8">
+      <v-text-field
+        v-model="search"
+        label="Search"
+        filled
+        prepend-inner-icon="mdi-folder-search"
+        class="white--text"
+      />
+    </v-col>
+    <v-col cols="2">
+      <v-select v-model="order" label="Order by" :items="orderOptions" filled />
+    </v-col>
+    <v-col cols="2">
+      <v-checkbox v-model="asc" filled label="Asc" />
+    </v-col>
+    <v-col v-for="cost in costsFiltred" :key="cost.id" md="4" cols="12">
       <v-card>
         <v-card-title :class="type(cost)">
           {{ cost.name }}
@@ -34,8 +49,24 @@ import removeCost from '@/graphql/mutation/removeCost'
 export default {
   data() {
     return {
+      asc: true,
+      order: 'type',
+      orderOptions: ['type', 'name', 'value'],
+      search: '',
       costs: [],
     }
+  },
+  computed: {
+    costsFiltred() {
+      const sort = this.asc
+        ? (a, b) => (a[this.order] > b[this.order] ? 1 : -1)
+        : (a, b) => (a[this.order] > b[this.order] ? -1 : 1)
+      return this.costs
+        .filter((cost) => {
+          return cost.name.toLowerCase().includes(this.search.toLowerCase())
+        })
+        .sort(sort)
+    },
   },
   created() {
     this.$apollo
