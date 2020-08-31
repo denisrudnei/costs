@@ -39,8 +39,9 @@
 
 <script>
 import { mapGetters } from 'vuex'
-import userSettings from '@/graphql/query/userSettings'
+import login from '@/mixins/login'
 export default {
+  mixins: [login],
   data() {
     return {
       clipped: false,
@@ -70,15 +71,9 @@ export default {
     logged: 'auth/getLoggedIn',
   }),
   created() {
-    this.$apollo
-      .query({
-        query: userSettings,
-      })
-      .then((response) => {
-        const { currency, locale } = response.data.UserSettings
-        this.$store.commit('settings/setCurrency', currency)
-        this.$store.commit('settings/setLocale', locale)
-      })
+    if (this.logged) {
+      this.afterLogin()
+    }
   },
   methods: {
     logout() {

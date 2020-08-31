@@ -1,6 +1,6 @@
 <template>
   <v-row>
-    <v-col cols="8">
+    <v-col md="8" cols="12">
       <v-text-field
         v-model="search"
         label="Search"
@@ -9,10 +9,10 @@
         class="white--text"
       />
     </v-col>
-    <v-col cols="2">
+    <v-col md="2" cols="12">
       <v-select v-model="order" label="Order by" :items="orderOptions" filled />
     </v-col>
-    <v-col cols="2">
+    <v-col md="2" cols="12">
       <v-checkbox v-model="asc" filled label="Asc" />
     </v-col>
     <v-col v-for="cost in costsFiltred" :key="cost.id" md="4" cols="12">

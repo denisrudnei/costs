@@ -20,7 +20,9 @@
 </template>
 
 <script>
+import login from '@/mixins/login'
 export default {
+  mixins: [login],
   data() {
     return {
       user: {
@@ -39,6 +41,7 @@ export default {
           this.$toast.show('Logged', {
             duration: 1000,
           })
+          this.afterLogin()
         })
         .catch(() => {
           this.$toast.error('Login failed', {
