@@ -32,48 +32,74 @@
       </v-row>
     </v-col>
     <v-col sm="12" md="6">
-      <v-data-table :items="spent" :headers="headers">
-        <template v-slot:item.value="{ item }">
-          {{ item.value | dinero }}
-        </template>
-        <template v-slot:item.date="{ item }">
-          {{ item.date | date }}
-        </template>
-        <template v-slot:item.actions="{ item }">
-          <v-btn icon :to="`/costs/edit/${item.id}`">
-            <v-icon>
-              mdi-clipboard-edit
-            </v-icon>
-          </v-btn>
-          <v-btn icon class="red--text" @click="remove(item)">
-            <v-icon>
-              mdi-delete
-            </v-icon>
-          </v-btn>
-        </template>
-      </v-data-table>
+      <v-card>
+        <v-card-title>
+          <h2>Spending</h2>
+          <v-spacer />
+          <v-text-field v-model="spendingSearch" />
+        </v-card-title>
+        <v-card-text>
+          <v-data-table
+            :items="spent"
+            :headers="headers"
+            :search="spendingSearch"
+          >
+            <template v-slot:item.value="{ item }">
+              {{ item.value | dinero }}
+            </template>
+            <template v-slot:item.date="{ item }">
+              {{ item.date | date }}
+            </template>
+            <template v-slot:item.actions="{ item }">
+              <v-btn icon :to="`/costs/edit/${item.id}`">
+                <v-icon>
+                  mdi-clipboard-edit
+                </v-icon>
+              </v-btn>
+              <v-btn icon class="red--text" @click="remove(item)">
+                <v-icon>
+                  mdi-delete
+                </v-icon>
+              </v-btn>
+            </template>
+          </v-data-table>
+        </v-card-text>
+      </v-card>
     </v-col>
     <v-col cols="12" md="6">
-      <v-data-table :items="profit" :headers="headers">
-        <template v-slot:item.value="{ item }">
-          {{ item.value | dinero }}
-        </template>
-        <template v-slot:item.date="{ item }">
-          {{ item.date | date }}
-        </template>
-        <template v-slot:item.actions="{ item }">
-          <v-btn icon :to="`/costs/edit/${item.id}`">
-            <v-icon>
-              mdi-clipboard-edit
-            </v-icon>
-          </v-btn>
-          <v-btn icon class="red--text" @click="remove(item)">
-            <v-icon>
-              mdi-delete
-            </v-icon>
-          </v-btn>
-        </template>
-      </v-data-table>
+      <v-card>
+        <v-card-title>
+          <h2>Profits</h2>
+          <v-spacer />
+          <v-text-field v-model="profitsSearch" />
+        </v-card-title>
+        <v-card-text>
+          <v-data-table
+            :items="profit"
+            :headers="headers"
+            :search="profitsSearch"
+          >
+            <template v-slot:item.value="{ item }">
+              {{ item.value | dinero }}
+            </template>
+            <template v-slot:item.date="{ item }">
+              {{ item.date | date }}
+            </template>
+            <template v-slot:item.actions="{ item }">
+              <v-btn icon :to="`/costs/edit/${item.id}`">
+                <v-icon>
+                  mdi-clipboard-edit
+                </v-icon>
+              </v-btn>
+              <v-btn icon class="red--text" @click="remove(item)">
+                <v-icon>
+                  mdi-delete
+                </v-icon>
+              </v-btn>
+            </template>
+          </v-data-table>
+        </v-card-text>
+      </v-card>
       <hr />
       <v-card v-if="lastMonthBalance">
         <v-card-title>
@@ -106,6 +132,8 @@ export default {
       profit: [],
       total: 0,
       spent: [],
+      spendingSearch: '',
+      profitsSearch: '',
       headers: [
         {
           value: 'name',
@@ -118,10 +146,6 @@ export default {
         {
           value: 'value',
           text: 'Value',
-        },
-        {
-          value: 'type',
-          text: 'Type',
         },
         {
           value: 'actions',
