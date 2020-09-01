@@ -2,7 +2,11 @@
   <v-row>
     <v-col>
       <v-tabs>
-        <v-tab v-for="month in months" :key="month" @click="setMonth(month)">
+        <v-tab
+          v-for="month in months"
+          :key="month"
+          :to="`/charts/${year.value}/${month}`"
+        >
           {{ month | format }}
         </v-tab>
       </v-tabs>
@@ -24,19 +28,14 @@ export default {
   },
   computed: mapGetters({
     months: 'dates/getMonths',
+    year: 'dates/getYear',
   }),
-  methods: {
-    setMonth(month) {
-      const { year } = this.$route.params
-      this.$store.commit('dates/setYear', {
-        value: year,
-        months: this.months,
-      })
-      this.$store.commit('dates/setMonth', month)
-      this.$router.push({
-        path: `/charts/${year}/${month}`,
-      })
-    },
+  created() {
+    const { year } = this.$route.params
+    this.$store.commit('dates/setYear', {
+      value: year,
+      months: this.months,
+    })
   },
 }
 </script>

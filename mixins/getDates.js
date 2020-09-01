@@ -9,23 +9,16 @@ export default {
     months: 'dates/getMonths',
   }),
   watch: {
-    year(year) {
-      const { month } = this.$route.query
-      this.$router.push({
-        query: {
-          month,
-          year: year.value,
-        },
-      })
-    },
-    month(value) {
-      const { year } = this.$route.query
-      this.$router.push({
-        query: {
-          year,
-          month: value,
-        },
-      })
+    $route(value) {
+      const { year } = value.params
+      const { month } = value.params
+      if (month) this.$store.commit('dates/setMonth', parseInt(month, 10))
+      if (this.years.length > 0 && year) {
+        this.$store.commit(
+          'dates/setYear',
+          this.years.find((item) => item.value === parseInt(year, 10))
+        )
+      }
     },
   },
   created() {
