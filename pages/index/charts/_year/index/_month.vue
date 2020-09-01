@@ -33,7 +33,7 @@
         <v-col cols="12" md="4">
           <v-card class="white black--text">
             <v-card-title>
-              Spendings / Profits
+              Spending / Profits
             </v-card-title>
             <v-card-text>
               <client-only>
@@ -290,7 +290,7 @@ export default {
           this.series.push(profitsSeries)
           this.profits.push(profitsSeries)
           const spendingSeries = {
-            name: 'Spendings',
+            name: 'Spending',
             data: spending
               .sort((a, b) => {
                 return a.date > b.date ? 1 : -1
