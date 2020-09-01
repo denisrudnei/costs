@@ -1,6 +1,25 @@
 <template>
   <v-row>
     <v-spacer />
+    <v-col cols="12" md="2">
+      <v-checkbox
+        v-model="useLastMonthBalance"
+        label="Use last month balance"
+        @change="getSums"
+      />
+    </v-col>
+    <v-col cols="12" md="2">
+      <v-subheader>
+        Chart height
+      </v-subheader>
+      <v-slider
+        v-model.number="height"
+        min="150"
+        max="600"
+        step="1"
+        thumb-label
+      />
+    </v-col>
     <v-col cols="12" md="4">
       <v-select
         v-model="selectedType"
@@ -10,58 +29,80 @@
       ></v-select>
     </v-col>
     <v-col cols="12">
-      <v-card class="white">
-        <v-card-title>
-          Profts vs Spending
-        </v-card-title>
-        <v-card-text>
-          <client-only>
-            <apexchart
-              :type="selectedType"
-              :options="mixedOptions"
-              :series="series"
-              width="100%"
-              height="350px"
-            />
-          </client-only>
-        </v-card-text>
-      </v-card>
-    </v-col>
-    <v-col cols="12">
-      <v-card class="white">
-        <v-card-title>
-          Spending
-        </v-card-title>
-        <v-card-text>
-          <client-only>
-            <apexchart
-              :type="selectedType"
-              :options="spendingOptions"
-              :series="spendigs"
-              width="100%"
-              height="350px"
-            />
-          </client-only>
-        </v-card-text>
-      </v-card>
-    </v-col>
-    <v-col cols="12">
-      <v-card class="white">
-        <v-card-title>
-          Profits
-        </v-card-title>
-        <v-card-text>
-          <client-only>
-            <apexchart
-              :type="selectedType"
-              :options="profitsOptions"
-              :series="profits"
-              width="100%"
-              height="350px"
-            />
-          </client-only>
-        </v-card-text>
-      </v-card>
+      <v-row>
+        <v-col cols="12" md="4">
+          <v-card class="white black--text">
+            <v-card-title>
+              Spendings / Profits
+            </v-card-title>
+            <v-card-text>
+              <client-only>
+                <apexchart
+                  :type="pieOptions.type"
+                  :options="pieOptions"
+                  :series="pieSeries"
+                  width="100%"
+                  :height="height"
+                />
+              </client-only>
+            </v-card-text>
+          </v-card>
+        </v-col>
+        <v-col cols="12" md="8">
+          <v-card class="white">
+            <v-card-title>
+              Profts vs Spending
+            </v-card-title>
+            <v-card-text>
+              <client-only>
+                <apexchart
+                  :type="selectedType"
+                  :options="mixedOptions"
+                  :series="series"
+                  width="100%"
+                  :height="height"
+                />
+              </client-only>
+            </v-card-text>
+          </v-card>
+        </v-col>
+        <v-col cols="12">
+          <v-card class="white">
+            <v-card-title>
+              Spending
+            </v-card-title>
+            <v-card-text>
+              <client-only>
+                <apexchart
+                  :type="selectedType"
+                  :options="spendingOptions"
+                  :series="spendigs"
+                  width="100%"
+                  :height="height"
+                />
+              </client-only>
+            </v-card-text>
+          </v-card>
+        </v-col>
+        <v-col cols="12">
+          <v-card class="white">
+            <v-card-title>
+              Profits
+            </v-card-title>
+            <v-card-text>
+              <client-only>
+                <apexchart
+                  :type="selectedType"
+                  :options="profitsOptions"
+                  :series="profits"
+                  width="100%"
+                  :height="height"
+                />
+              </client-only>
+            </v-card-text>
+          </v-card>
+        </v-col>
+      </v-row>
     </v-col>
   </v-row>
 </template>
@@ -71,6 +112,7 @@ import getDates from '@/mixins/getDates'
 import summaryGroupedByDate from '@/graphql/query/summaryGroupedByDate'
 import summaryDayByDay from '@/graphql/query/summaryDayByDay'
 import { format } from 'date-fns'
+import basicSummary from '@/graphql/query/basicSummary'
 export default {
   components: {
     apexchart: () => import('vue-apexcharts'),
@@ -78,11 +120,18 @@ export default {
   mixins: [getDates],
   data() {
     return {
+      useLastMonthBalance: false,
       types: ['bar', 'line', 'area'],
       selectedType: 'area',
       mixedOptions: {},
+      height: 200,
       spendingOptions: {},
       profitsOptions: {},
+      pieOptions: {
+        type: 'pie',
+        colors: ['#ff0000', '#008000'],
+        labels: ['Spent', 'Profit'],
+      },
       options: {
         type: 'area',
         stroke: {
@@ -118,6 +167,7 @@ export default {
       series: [],
       profits: [],
       spendigs: [],
+      pieSeries: [],
       dayByDaySeries: [],
     }
   },
@@ -173,6 +223,43 @@ export default {
           this.series.push(dayByDaySeries)
         })
     },
+    getSums() {
+      this.$apollo
+        .query({
+          query: basicSummary,
+          fetchPolicy: 'no-cache',
+          variables: {
+            useLastMonthBalance: this.useLastMonthBalance,
+            year: this.year ? parseInt(this.year.value, 10) : null,
+            month: this.month ? this.month : null,
+          },
+        })
+        .then((response) => {
+          const lastMonthBalance = response.data.BasicSummary.lastMonthBalance
+
+          this.pieSeries = []
+          const sumProfits = response.data.BasicSummary.profits.sum
+          const absSumSpending = Math.abs(
+            response.data.BasicSummary.spending.sum
+          )
+          if (lastMonthBalance) {
+            const value = lastMonthBalance.value
+
+            if (value < 0) {
+              this.pieSeries.push(
+                Math.abs(absSumSpending) + Math.abs(lastMonthBalance.value)
+              )
+              this.pieSeries.push(sumProfits)
+            } else {
+              this.pieSeries.push(Math.abs(absSumSpending))
+              this.pieSeries.push(sumProfits + lastMonthBalance.value)
+            }
+          } else {
+            this.pieSeries.push(Math.abs(absSumSpending))
+            this.pieSeries.push(sumProfits)
+          }
+        })
+    },
     fetchData() {
       this.$apollo
         .query({
@@ -216,6 +303,7 @@ export default {
           this.series.push(spendingSeries)
           this.spendigs.push(spendingSeries)
           this.summaryDayByDay()
+          this.getSums()
         })
     },
   },
