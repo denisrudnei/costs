@@ -123,10 +123,25 @@ export default {
       useLastMonthBalance: false,
       types: ['bar', 'line', 'area'],
       selectedType: 'area',
-      mixedOptions: {},
+      mixedOptions: {
+        stroke: {
+          curve: 'straight',
+        },
+        colors: ['#008000', '#ff0000', '#0b0b6c'],
+      },
       height: 200,
-      spendingOptions: {},
-      profitsOptions: {},
+      spendingOptions: {
+        colors: ['#ff0000'],
+        stroke: {
+          curve: 'straight',
+        },
+      },
+      profitsOptions: {
+        colors: ['#008000'],
+        stroke: {
+          curve: 'straight',
+        },
+      },
       pieOptions: {
         type: 'pie',
         colors: ['#ff0000', '#008000'],
@@ -186,13 +201,10 @@ export default {
   methods: {
     updateOptions() {
       Object.assign(this.mixedOptions, this.options)
-      this.mixedOptions.colors = ['#008000', '#ff0000', '#0b0b6c']
 
       Object.assign(this.spendingOptions, this.options)
-      this.spendingOptions.colors = ['#ff0000']
 
       Object.assign(this.profitsOptions, this.options)
-      this.profitsOptions.colors = ['#008000']
     },
     summaryDayByDay() {
       this.$apollo
