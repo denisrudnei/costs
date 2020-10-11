@@ -33,14 +33,10 @@
             </template>
             <template v-slot:item.actions="{ item }">
               <v-btn icon :to="`/costs/edit/${item.id}`">
-                <v-icon>
-                  mdi-clipboard-edit
-                </v-icon>
+                <v-icon> mdi-clipboard-edit </v-icon>
               </v-btn>
               <v-btn icon class="red--text" @click="remove(item)">
-                <v-icon>
-                  mdi-delete
-                </v-icon>
+                <v-icon> mdi-delete </v-icon>
               </v-btn>
             </template>
           </v-data-table>
@@ -68,20 +64,16 @@
             </template>
             <template v-slot:item.actions="{ item }">
               <v-btn icon :to="`/costs/edit/${item.id}`">
-                <v-icon>
-                  mdi-clipboard-edit
-                </v-icon>
+                <v-icon> mdi-clipboard-edit </v-icon>
               </v-btn>
               <v-btn icon class="red--text" @click="remove(item)">
-                <v-icon>
-                  mdi-delete
-                </v-icon>
+                <v-icon> mdi-delete </v-icon>
               </v-btn>
             </template>
           </v-data-table>
         </v-card-text>
       </v-card>
-      <hr />
+      <hr>
       <v-card v-if="lastMonthBalance">
         <v-card-title>
           {{ lastMonthBalance.name }}
@@ -93,17 +85,20 @@
     </v-col>
     <v-row>
       <v-col class="ma-1">
-        <h2 :class="isNegative(total)">Total: {{ total | dinero }}</h2>
+        <h2 :class="isNegative(total)">
+          Total: {{ total | dinero }}
+        </h2>
       </v-col>
     </v-row>
   </v-row>
 </template>
 
 <script>
-import getDates from '@/mixins/getDates'
-import removeCost from '@/graphql/mutation/removeCost'
-import basicSummary from '@/graphql/query/basicSummary'
-import refetch from '@/graphql/query/refetch'
+import getDates from '@/mixins/getDates';
+import removeCost from '@/graphql/mutation/removeCost';
+import basicSummary from '@/graphql/query/basicSummary';
+import refetch from '@/graphql/query/refetch';
+
 export default {
   mixins: [getDates],
   data() {
@@ -134,28 +129,28 @@ export default {
           sortable: false,
         },
       ],
-    }
+    };
   },
   computed: {
     year: {
       get() {
-        return this.$store.getters['dates/getYear']
+        return this.$store.getters['dates/getYear'];
       },
       set(value) {
-        this.$store.commit('dates/setYear', value)
+        this.$store.commit('dates/setYear', value);
       },
     },
   },
   watch: {
     year() {
-      this.updateMonths()
+      this.updateMonths();
     },
     month() {
-      this.fetchData()
+      this.fetchData();
     },
   },
   created() {
-    this.fetchData()
+    this.fetchData();
   },
   methods: {
     fetchData() {
@@ -170,21 +165,19 @@ export default {
           },
         })
         .then((response) => {
-          this.profit = response.data.BasicSummary.profits.values
-          this.spent = response.data.BasicSummary.spending.values
-          this.total = response.data.BasicSummary.total
-          this.lastMonthBalance = response.data.BasicSummary.lastMonthBalance
-        })
+          this.profit = response.data.BasicSummary.profits.values;
+          this.spent = response.data.BasicSummary.spending.values;
+          this.total = response.data.BasicSummary.total;
+          this.lastMonthBalance = response.data.BasicSummary.lastMonthBalance;
+        });
     },
     updateMonth(value) {
-      this.$store.commit('dates/setMonth', value)
+      this.$store.commit('dates/setMonth', value);
     },
     remove(value) {
       this[value.type.toLowerCase()] = this[value.type.toLowerCase()].filter(
-        (item) => {
-          return item.id !== value.id
-        }
-      )
+        (item) => item.id !== value.id,
+      );
       this.$apollo
         .mutate({
           mutation: removeCost,
@@ -201,20 +194,18 @@ export default {
         .then(() => {
           this[value.type.toLowerCase()] = this[
             value.type.toLowerCase()
-          ].filter((item) => {
-            return item.id !== value.id
-          })
+          ].filter((item) => item.id !== value.id);
           this.$toast.show('Cost removed', {
             duration: 1000,
-          })
-          this.fetchData()
-        })
+          });
+          this.fetchData();
+        });
     },
     isNegative(amount) {
-      return amount < 0 ? 'red--text' : 'green--text'
+      return amount < 0 ? 'red--text' : 'green--text';
     },
   },
-}
+};
 </script>
 
 <style></style>

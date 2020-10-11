@@ -1,4 +1,4 @@
-import { Field, ID, ObjectType } from 'type-graphql'
+import { Field, ID, ObjectType } from 'type-graphql';
 import {
   BaseEntity,
   BeforeInsert,
@@ -7,17 +7,17 @@ import {
   Entity,
   ManyToOne,
   PrimaryGeneratedColumn,
-} from 'typeorm'
+} from 'typeorm';
 
-import CostType from '../enums/CostType'
-import User from './User'
+import CostType from '../enums/CostType';
+import { User } from './User';
 
 @ObjectType()
 @Entity()
-class Cost extends BaseEntity {
+export class Cost extends BaseEntity {
   constructor(cost?: Partial<Cost>) {
-    super()
-    Object.assign(this, cost)
+    super();
+    Object.assign(this, cost);
   }
 
   @PrimaryGeneratedColumn()
@@ -47,9 +47,7 @@ class Cost extends BaseEntity {
   @BeforeUpdate()
   updateSignal() {
     if (this.type === CostType.SPENT) {
-      this.value = -Math.abs(this.value)
+      this.value = -Math.abs(this.value);
     }
   }
 }
-
-export default Cost

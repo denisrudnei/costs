@@ -1,4 +1,5 @@
-import ggl from 'graphql-tag'
+import ggl from 'graphql-tag';
+
 const mutation = ggl`
 mutation CreateNewCost($cost: CostCreateInput!){
   CreateNewCost(cost: $cost) {
@@ -8,5 +9,5 @@ mutation CreateNewCost($cost: CostCreateInput!){
     type
   }
 }
-`
-export default mutation
+`;
+export default mutation;

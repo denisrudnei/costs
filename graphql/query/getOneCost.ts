@@ -1,4 +1,5 @@
-import ggl from 'graphql-tag'
+import ggl from 'graphql-tag';
+
 const query = ggl`
 query GetOneCost($id: ID!) {
   GetOneCost(id: $id) {
@@ -9,6 +10,6 @@ query GetOneCost($id: ID!) {
     type
   }
 }
-`
+`;
 
-export default query
+export default query;

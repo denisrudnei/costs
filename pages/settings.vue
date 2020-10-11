@@ -27,9 +27,10 @@
 </template>
 
 <script>
-import userSettings from '@/graphql/query/userSettings'
-import createUserSettings from '@/graphql/mutation/createUserSettings'
-import values from './settings-values.json'
+import userSettings from '@/graphql/query/userSettings';
+import createUserSettings from '@/graphql/mutation/createUserSettings';
+import values from './settings-values.json';
+
 export default {
   data() {
     return {
@@ -39,17 +40,17 @@ export default {
         locale: '',
         currency: '',
       },
-    }
+    };
   },
   created() {
-    this.currencies = values.currency
+    this.currencies = values.currency;
     this.locales = Object.entries(values.locale).map((locale) => {
-      const [value, text] = locale
+      const [value, text] = locale;
       return {
         text,
         value,
-      }
-    })
+      };
+    });
   },
   mounted() {
     this.$apollo
@@ -57,9 +58,9 @@ export default {
         query: userSettings,
       })
       .then((response) => {
-        this.settings.locale = response.data.UserSettings.locale
-        this.settings.currency = response.data.UserSettings.currency
-      })
+        this.settings.locale = response.data.UserSettings.locale;
+        this.settings.currency = response.data.UserSettings.currency;
+      });
   },
   methods: {
     save() {
@@ -77,16 +78,16 @@ export default {
           awaitRefetchQueries: true,
         })
         .then((response) => {
-          const { currency, locale } = response.data.CreateUserSettings
-          this.$store.commit('settings/setCurrency', currency)
-          this.$store.commit('settings/setLocale', locale)
+          const { currency, locale } = response.data.CreateUserSettings;
+          this.$store.commit('settings/setCurrency', currency);
+          this.$store.commit('settings/setLocale', locale);
           this.$toast.show('Settgings updated', {
             duration: 2500,
-          })
-        })
+          });
+        });
     },
   },
-}
+};
 </script>
 
 <style></style>

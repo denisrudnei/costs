@@ -1,4 +1,4 @@
-import ggl from 'graphql-tag'
+import ggl from 'graphql-tag';
 
 const query = ggl`
 query {
@@ -9,6 +9,6 @@ query {
     type
     date
   }
-}`
+}`;
 
-export default query
+export default query;

@@ -1,4 +1,4 @@
-import { registerEnumType } from 'type-graphql'
+import { registerEnumType } from 'type-graphql';
 
 enum CostType {
   PROFIT = 'PROFIT',
@@ -8,6 +8,6 @@ enum CostType {
 
 registerEnumType(CostType, {
   name: 'CostType',
-})
+});
 
-export default CostType
+export default CostType;

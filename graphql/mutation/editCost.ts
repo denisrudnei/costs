@@ -1,4 +1,5 @@
-import ggl from 'graphql-tag'
+import ggl from 'graphql-tag';
+
 const mutation = ggl`
 mutation EditCost($id: ID!, $cost: CostEditInput!) {
   EditCost(id: $id, cost: $cost) {
@@ -9,6 +10,6 @@ mutation EditCost($id: ID!, $cost: CostEditInput!) {
     type
   }
 }
-`
+`;
 
-export default mutation
+export default mutation;

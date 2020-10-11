@@ -9,9 +9,7 @@
       />
     </v-col>
     <v-col cols="12" md="2">
-      <v-subheader>
-        Chart height
-      </v-subheader>
+      <v-subheader> Chart height </v-subheader>
       <v-slider
         v-model.number="height"
         min="150"
@@ -21,20 +19,13 @@
       />
     </v-col>
     <v-col cols="12" md="4">
-      <v-select
-        v-model="selectedType"
-        :items="types"
-        filled
-        label="Type"
-      ></v-select>
+      <v-select v-model="selectedType" :items="types" filled label="Type" />
     </v-col>
     <v-col cols="12">
       <v-row>
         <v-col cols="12" md="4">
           <v-card class="white black--text">
-            <v-card-title>
-              Spending / Profits
-            </v-card-title>
+            <v-card-title> Spending / Profits </v-card-title>
             <v-card-text>
               <client-only>
                 <apexchart
@@ -50,9 +41,7 @@
         </v-col>
         <v-col cols="12" md="8">
           <v-card class="white">
-            <v-card-title>
-              Profts vs Spending
-            </v-card-title>
+            <v-card-title> Profts vs Spending </v-card-title>
             <v-card-text>
               <client-only>
                 <apexchart
@@ -68,9 +57,7 @@
         </v-col>
         <v-col cols="12">
           <v-card class="white">
-            <v-card-title>
-              Spending
-            </v-card-title>
+            <v-card-title> Spending </v-card-title>
             <v-card-text>
               <client-only>
                 <apexchart
@@ -86,9 +73,7 @@
         </v-col>
         <v-col cols="12">
           <v-card class="white">
-            <v-card-title>
-              Profits
-            </v-card-title>
+            <v-card-title> Profits </v-card-title>
             <v-card-text>
               <client-only>
                 <apexchart
@@ -108,11 +93,12 @@
 </template>
 
 <script>
-import getDates from '@/mixins/getDates'
-import summaryGroupedByDate from '@/graphql/query/summaryGroupedByDate'
-import summaryDayByDay from '@/graphql/query/summaryDayByDay'
-import { format } from 'date-fns'
-import basicSummary from '@/graphql/query/basicSummary'
+import getDates from '@/mixins/getDates';
+import summaryGroupedByDate from '@/graphql/query/summaryGroupedByDate';
+import summaryDayByDay from '@/graphql/query/summaryDayByDay';
+import { format } from 'date-fns';
+import basicSummary from '@/graphql/query/basicSummary';
+
 export default {
   components: {
     apexchart: () => import('vue-apexcharts'),
@@ -184,27 +170,27 @@ export default {
       spendigs: [],
       pieSeries: [],
       dayByDaySeries: [],
-    }
+    };
   },
   watch: {
     month() {
-      this.fetchData()
+      this.fetchData();
     },
     year() {
-      this.fetchData()
+      this.fetchData();
     },
   },
   created() {
-    this.updateOptions()
-    this.fetchData()
+    this.updateOptions();
+    this.fetchData();
   },
   methods: {
     updateOptions() {
-      Object.assign(this.mixedOptions, this.options)
+      Object.assign(this.mixedOptions, this.options);
 
-      Object.assign(this.spendingOptions, this.options)
+      Object.assign(this.spendingOptions, this.options);
 
-      Object.assign(this.profitsOptions, this.options)
+      Object.assign(this.profitsOptions, this.options);
     },
     summaryDayByDay() {
       this.$apollo
@@ -216,7 +202,7 @@ export default {
           },
         })
         .then((response) => {
-          const { SummaryDayByDay } = response.data
+          const { SummaryDayByDay } = response.data;
 
           const dayByDaySeries = {
             name: 'Total in this day',
@@ -224,16 +210,14 @@ export default {
               (value) => ({
                 x: format(new Date(value.day), 'MM/dd/yyyy'),
                 y: value.total,
-              })
+              }),
             ),
-          }
+          };
 
-          this.series = this.series.filter((serie) => {
-            return serie.name !== dayByDaySeries.name
-          })
+          this.series = this.series.filter((serie) => serie.name !== dayByDaySeries.name);
 
-          this.series.push(dayByDaySeries)
-        })
+          this.series.push(dayByDaySeries);
+        });
     },
     getSums() {
       this.$apollo
@@ -247,30 +231,30 @@ export default {
           },
         })
         .then((response) => {
-          const lastMonthBalance = response.data.BasicSummary.lastMonthBalance
+          const { lastMonthBalance } = response.data.BasicSummary;
 
-          this.pieSeries = []
-          const sumProfits = response.data.BasicSummary.profits.sum
+          this.pieSeries = [];
+          const sumProfits = response.data.BasicSummary.profits.sum;
           const absSumSpending = Math.abs(
-            response.data.BasicSummary.spending.sum
-          )
+            response.data.BasicSummary.spending.sum,
+          );
           if (lastMonthBalance) {
-            const value = lastMonthBalance.value
+            const { value } = lastMonthBalance;
 
             if (value < 0) {
               this.pieSeries.push(
-                Math.abs(absSumSpending) + Math.abs(lastMonthBalance.value)
-              )
-              this.pieSeries.push(sumProfits)
+                Math.abs(absSumSpending) + Math.abs(lastMonthBalance.value),
+              );
+              this.pieSeries.push(sumProfits);
             } else {
-              this.pieSeries.push(Math.abs(absSumSpending))
-              this.pieSeries.push(sumProfits + lastMonthBalance.value)
+              this.pieSeries.push(Math.abs(absSumSpending));
+              this.pieSeries.push(sumProfits + lastMonthBalance.value);
             }
           } else {
-            this.pieSeries.push(Math.abs(absSumSpending))
-            this.pieSeries.push(sumProfits)
+            this.pieSeries.push(Math.abs(absSumSpending));
+            this.pieSeries.push(sumProfits);
           }
-        })
+        });
     },
     fetchData() {
       this.$apollo
@@ -282,44 +266,40 @@ export default {
           },
         })
         .then((response) => {
-          const { profits, spending } = response.data.SummaryGroupedByDate
+          const { profits, spending } = response.data.SummaryGroupedByDate;
           const profitsSeries = {
             name: 'Profits',
             data: profits
-              .sort((a, b) => {
-                return a.date > b.date ? 1 : -1
-              })
+              .sort((a, b) => (a.date > b.date ? 1 : -1))
               .map((p) => ({
                 x: format(new Date(p.date), 'MM/dd/yyyy'),
                 y: p.total,
               })),
-          }
+          };
 
-          this.series = []
-          this.profits = []
-          this.spendigs = []
+          this.series = [];
+          this.profits = [];
+          this.spendigs = [];
 
-          this.series.push(profitsSeries)
-          this.profits.push(profitsSeries)
+          this.series.push(profitsSeries);
+          this.profits.push(profitsSeries);
           const spendingSeries = {
             name: 'Spending',
             data: spending
-              .sort((a, b) => {
-                return a.date > b.date ? 1 : -1
-              })
+              .sort((a, b) => (a.date > b.date ? 1 : -1))
               .map((s) => ({
                 x: format(new Date(s.date), 'MM/dd/yyyy'),
                 y: s.total,
               })),
-          }
-          this.series.push(spendingSeries)
-          this.spendigs.push(spendingSeries)
-          this.summaryDayByDay()
-          this.getSums()
-        })
+          };
+          this.series.push(spendingSeries);
+          this.spendigs.push(spendingSeries);
+          this.summaryDayByDay();
+          this.getSums();
+        });
     },
   },
-}
+};
 </script>
 <style scoped>
 * {

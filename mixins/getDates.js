@@ -1,5 +1,5 @@
-import { mapGetters } from 'vuex'
-import getUsedDates from '~/graphql/query/getUsedDates'
+import { mapGetters } from 'vuex';
+import getUsedDates from '~/graphql/query/getUsedDates';
 
 export default {
   computed: mapGetters({
@@ -10,14 +10,14 @@ export default {
   }),
   watch: {
     $route(value) {
-      const { year } = value.params
-      const { month } = value.params
-      if (month) this.$store.commit('dates/setMonth', parseInt(month, 10))
+      const { year } = value.params;
+      const { month } = value.params;
+      if (month) this.$store.commit('dates/setMonth', parseInt(month, 10));
       if (this.years.length > 0 && year) {
         this.$store.commit(
           'dates/setYear',
-          this.years.find((item) => item.value === parseInt(year, 10))
-        )
+          this.years.find((item) => item.value === parseInt(year, 10)),
+        );
       }
     },
   },
@@ -28,24 +28,22 @@ export default {
         fetchPolicy: 'no-cache',
       })
       .then((response) => {
-        const years = response.data.GetUsedDates.years.sort((a, b) =>
-          a > b ? 1 : -1
-        )
-        this.$store.commit('dates/setYears', years)
-        if (years.length > 0) this.$store.commit('dates/setYear', years[0])
+        const years = response.data.GetUsedDates.years.sort((a, b) => (a > b ? 1 : -1));
+        this.$store.commit('dates/setYears', years);
+        if (years.length > 0) this.$store.commit('dates/setYear', years[0]);
         if (this.year && this.year.months.length > 0) {
           this.$store.commit(
             'dates/setMonths',
-            this.year.months.sort((a, b) => (a > b ? 1 : -1))
-          )
-          this.$store.commit('dates/setMonth', this.year.months[0])
+            this.year.months.sort((a, b) => (a > b ? 1 : -1)),
+          );
+          this.$store.commit('dates/setMonth', this.year.months[0]);
         }
-      })
+      });
   },
   methods: {
     updateMonths() {
-      const months = this.year.months.sort((a, b) => (a > b ? 1 : -1))
-      this.$store.commit('dates/setMonths', months)
+      const months = this.year.months.sort((a, b) => (a > b ? 1 : -1));
+      this.$store.commit('dates/setMonths', months);
     },
   },
-}
+};

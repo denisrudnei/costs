@@ -1,20 +1,20 @@
-import { Field, ObjectType } from 'type-graphql'
+import { Field, ObjectType } from 'type-graphql';
 import {
   BaseEntity,
   Column,
   Entity,
   OneToOne,
   PrimaryGeneratedColumn,
-} from 'typeorm'
+} from 'typeorm';
 
-import User from './User'
+import { User } from './User';
 
 @ObjectType()
 @Entity()
-class UserSettings extends BaseEntity {
+export class UserSettings extends BaseEntity {
   constructor(userSettings?: Partial<UserSettings>) {
-    super()
-    Object.assign(this, userSettings)
+    super();
+    Object.assign(this, userSettings);
   }
 
   @PrimaryGeneratedColumn()
@@ -32,5 +32,3 @@ class UserSettings extends BaseEntity {
   @Field(() => User)
   public user!: User
 }
-
-export default UserSettings

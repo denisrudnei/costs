@@ -16,23 +16,37 @@
         Login
       </v-btn>
     </v-col>
+    <v-dialog :value="tryingLogin" width="55%" persistent>
+      <v-card>
+        <v-card-title>
+          Logging in
+        </v-card-title>
+        <v-card-text>
+          <v-progress-linear indeterminate />
+        </v-card-text>
+      </v-card>
+    </v-dialog>
   </v-row>
 </template>
 
 <script>
-import login from '@/mixins/login'
+import login from '@/mixins/login';
+
 export default {
   mixins: [login],
   data() {
     return {
+      tryingLogin: false,
       user: {
         email: '',
         password: '',
       },
-    }
+    };
   },
   methods: {
     login() {
+      this.tryingLogin = true;
+
       this.$auth
         .loginWith('local', {
           data: this.user,
@@ -40,17 +54,19 @@ export default {
         .then(() => {
           this.$toast.show('Logged', {
             duration: 1000,
-          })
-          this.afterLogin()
+          });
+          this.afterLogin();
         })
         .catch(() => {
           this.$toast.error('Login failed', {
             duration: 5000,
-          })
-        })
+          });
+        }).finally(() => {
+          this.tryingLogin = false;
+        });
     },
   },
-}
+};
 </script>
 
 <style></style>

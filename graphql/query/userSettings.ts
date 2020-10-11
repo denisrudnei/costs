@@ -1,4 +1,5 @@
-import ggl from 'graphql-tag'
+import ggl from 'graphql-tag';
+
 const query = ggl`
 query {
   UserSettings {
@@ -6,6 +7,6 @@ query {
     currency
   }
 }
-`
+`;
 
-export default query
+export default query;

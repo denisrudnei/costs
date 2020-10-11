@@ -6,9 +6,10 @@
 </template>
 
 <script>
-import create from '@/components/cost/create'
-import getOneCost from '@/graphql/query/getOneCost'
-import editCost from '@/graphql/mutation/editCost'
+import create from '@/components/cost/create';
+import getOneCost from '@/graphql/query/getOneCost';
+import editCost from '@/graphql/mutation/editCost';
+
 export default {
   components: {
     create,
@@ -16,10 +17,10 @@ export default {
   data() {
     return {
       cost: null,
-    }
+    };
   },
   mounted() {
-    const { id } = this.$route.params
+    const { id } = this.$route.params;
     this.$apollo
       .query({
         query: getOneCost,
@@ -29,16 +30,16 @@ export default {
         },
       })
       .then((response) => {
-        const date = new Date(response.data.GetOneCost.date)
+        const date = new Date(response.data.GetOneCost.date);
         this.cost = {
           ...response.data.GetOneCost,
           date,
-        }
-      })
+        };
+      });
   },
   methods: {
     update(cost) {
-      const { id } = this.$route.params
+      const { id } = this.$route.params;
       this.$apollo
         .mutate({
           mutation: editCost,
@@ -48,11 +49,11 @@ export default {
           },
         })
         .then(() => {
-          this.$router.back()
-        })
+          this.$router.back();
+        });
     },
   },
-}
+};
 </script>
 
 <style></style>

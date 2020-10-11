@@ -1,6 +1,7 @@
-import { ObjectType, Field } from 'type-graphql'
-import CostType from '../enums/CostType'
-import Cost from '~/models/Cost'
+import { ObjectType, Field } from 'type-graphql';
+import CostType from '../enums/CostType';
+import { Cost } from '~/models/Cost';
+import { CostListWithSum } from './CostListWithSum';
 
 type CostAsProfit = {
   type: CostType.PROFIT
@@ -12,15 +13,6 @@ type CostAsSpent = {
 
 export type Profit = CostAsProfit & Cost
 export type Spent = CostAsSpent & Cost
-
-@ObjectType()
-export class CostListWithSum<T> {
-  @Field(() => [Cost])
-  public values!: T[]
-
-  @Field()
-  public sum!: number
-}
 
 @ObjectType()
 export class BasicSummary {

@@ -3,34 +3,34 @@ export const state = () => ({
   years: [],
   month: 0,
   months: [],
-})
+});
 
 export const getters = {
   getYear(state) {
-    return state.year
+    return state.year;
   },
   getMonth(state) {
-    return state.month
+    return state.month;
   },
   getMonths(state) {
-    return state.months
+    return state.months;
   },
   getDates(state) {
-    return state.years
+    return state.years;
   },
-}
+};
 
 export const mutations = {
   setYear(state, year) {
-    state.year = year
+    state.year = year;
   },
   setMonth(state, month) {
-    state.month = month
+    state.month = month;
   },
   setMonths(state, months) {
-    state.months = months
+    state.months = months;
   },
   setYears(state, years) {
-    state.years = years
+    state.years = years;
   },
-}
+};

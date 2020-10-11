@@ -7,29 +7,29 @@ import {
   isAfter,
   parse,
   subMonths,
-} from 'date-fns'
-import { getConnection } from 'typeorm'
+} from 'date-fns';
+import { getConnection } from 'typeorm';
 
-import CostType from '../enums/CostType'
-import Cost from '../models/Cost'
-import User from '../models/User'
-import { BasicSummary, Profit, Spent } from '../types/BasicSummary'
-import SummaryGroupedByDate from '../types/SummaryGroupedByDate'
-import SummaryTotalByMonth from '../types/SummaryTotalByMonth'
-import SummaryDayByDay from '../types/SummaryTotalDayByDay'
+import CostType from '../enums/CostType';
+import { Cost } from '../models/Cost';
+import { User } from '../models/User';
+import { BasicSummary, Profit, Spent } from '../types/BasicSummary';
+import { SummaryGroupedByDate } from '../types/SummaryGroupedByDate';
+import { SummaryTotalByMonth } from '../types/SummaryTotalByMonth';
+import { SummaryDayByDay } from '../types/SummaryTotalDayByDay';
 
 class SummaryService {
   public static async basicSummary(
     userId: User['id'],
     month?: number,
     year?: number,
-    useLastMonthBalance?: boolean
+    useLastMonthBalance?: boolean,
   ): Promise<BasicSummary> {
-    if (!month) month = getMonth(new Date()) + 1
-    if (!year) year = getYear(new Date())
+    if (!month) month = getMonth(new Date()) + 1;
+    if (!year) year = getYear(new Date());
 
-    let total = 0.0
-    let lastMonthBalance: Cost | undefined
+    let total = 0.0;
+    let lastMonthBalance: Cost | undefined;
 
     if (useLastMonthBalance) {
       const { min } = await getConnection()
@@ -37,42 +37,42 @@ class SummaryService {
         .select('MIN(date) as min')
         .from(Cost, 'cost')
         .where('cost.user = :userId', { userId })
-        .getRawOne()
+        .getRawOne();
 
       const lastMonth = subMonths(
         parse(`${year}-${month}-01`, 'yyyy-MM-dd', new Date()),
-        1
-      )
+        1,
+      );
 
-      const lastDay = getDaysInMonth(lastMonth)
+      const lastDay = getDaysInMonth(lastMonth);
 
-      const minMonth = getMonth(min) + 1
-      const minYear = getYear(min)
+      const minMonth = getMonth(min) + 1;
+      const minYear = getYear(min);
       const minDate = parse(
         `${minYear}-${minMonth}-01`,
         'yyyy-MM-dd',
-        new Date()
-      )
+        new Date(),
+      );
 
       const targetDate = parse(
         `${getYear(lastMonth)}-${getMonth(lastMonth) + 1}-${lastDay}`,
         'yyyy-MM-dd',
-        new Date()
-      )
+        new Date(),
+      );
       const result = await this.basicSummary(
         userId,
         getMonth(lastMonth) + 1,
         getYear(lastMonth),
-        isAfter(targetDate, minDate)
-      )
+        isAfter(targetDate, minDate),
+      );
 
-      total += result.total
+      total += result.total;
       lastMonthBalance = new Cost({
         name: `Balance in ${format(targetDate, 'MM/dd/yyyy')}`,
         type: CostType.CONSOLIDATED,
         value: result.total,
         date: targetDate,
-      })
+      });
     }
 
     const list = await getConnection()
@@ -86,7 +86,7 @@ class SummaryService {
       .where('cost.user = :userId', { userId })
       .andWhere('EXTRACT(month from date) = :month', { month })
       .andWhere('EXTRACT(year from date) = :year', { year })
-      .getRawMany()
+      .getRawMany();
 
     const sums = await getConnection()
       .createQueryBuilder()
@@ -97,22 +97,16 @@ class SummaryService {
       .andWhere('EXTRACT(month from date) = :month', { month })
       .andWhere('EXTRACT(year from date) = :year', { year })
       .groupBy('type')
-      .getRawMany()
+      .getRawMany();
 
-    const profits = list.filter((cost) => {
-      return cost.type === CostType.PROFIT
-    }) as Profit[]
+    const profits = list.filter((cost) => cost.type === CostType.PROFIT) as Profit[];
 
-    const spending = list.filter((cost) => {
-      return cost.type === CostType.SPENT
-    }) as Spent[]
+    const spending = list.filter((cost) => cost.type === CostType.SPENT) as Spent[];
 
-    const sumProfits =
-      sums.find((sum) => sum.type === CostType.PROFIT)?.sum ?? 0
-    const sumSpending =
-      sums.find((sum) => sum.type === CostType.SPENT)?.sum ?? 0
+    const sumProfits = sums.find((sum) => sum.type === CostType.PROFIT)?.sum ?? 0;
+    const sumSpending = sums.find((sum) => sum.type === CostType.SPENT)?.sum ?? 0;
 
-    total += Number(sumProfits) + Number(sumSpending)
+    total += Number(sumProfits) + Number(sumSpending);
 
     return {
       spending: {
@@ -125,16 +119,16 @@ class SummaryService {
       },
       total,
       lastMonthBalance,
-    }
+    };
   }
 
   public static async summaryByDate(
     id: User['id'],
     month?: number,
-    year?: number
+    year?: number,
   ): Promise<SummaryGroupedByDate> {
-    if (!month) month = getMonth(new Date()) + 1
-    if (!year) year = getYear(new Date())
+    if (!month) month = getMonth(new Date()) + 1;
+    if (!year) year = getYear(new Date());
 
     const result = await getConnection()
       .createQueryBuilder()
@@ -147,24 +141,20 @@ class SummaryService {
       .andWhere('EXTRACT(month from date) = :month', { month })
       .groupBy('type')
       .addGroupBy('CAST(date as Date)')
-      .getRawMany()
+      .getRawMany();
 
-    const spending = result.filter((cost) => {
-      return cost.type === CostType.SPENT
-    })
+    const spending = result.filter((cost) => cost.type === CostType.SPENT);
 
-    const profits = result.filter((cost) => {
-      return cost.type === CostType.PROFIT
-    })
+    const profits = result.filter((cost) => cost.type === CostType.PROFIT);
 
     return {
       profits,
       spending,
-    }
+    };
   }
 
   public static async summaryTotalByMonth(
-    userId: User['id']
+    userId: User['id'],
   ): Promise<SummaryTotalByMonth[]> {
     const result = await getConnection()
       .createQueryBuilder()
@@ -179,31 +169,34 @@ class SummaryService {
       .addGroupBy('month')
       .addOrderBy('year')
       .addOrderBy('month')
-      .getRawMany()
-    return result
+      .getRawMany();
+    return result;
   }
 
   public static async summaryDayByDay(
     userId: User['id'],
     year?: number,
     month?: number,
-    allDays: boolean = false
+    allDays: boolean = false,
   ): Promise<SummaryDayByDay[]> {
-    if (!month) month = getMonth(new Date()) + 1
-    if (!year) year = getYear(new Date())
+    if (!month) month = getMonth(new Date()) + 1;
+    if (!year) year = getYear(new Date());
 
-    const base = parse(`${year}-${month}-01`, 'yyyy-MM-dd', new Date())
+    const base = parse(`${year}-${month}-01`, 'yyyy-MM-dd', new Date());
 
     const lastDay = getDaysInMonth(
-      parse(`${year}-${month}`, 'yyyy-MM', new Date()).getUTCDate()
-    )
+      parse(`${year}-${month}`, 'yyyy-MM', new Date()).getUTCDate(),
+    );
 
-    const connection = await getConnection()
+    const connection = await getConnection();
 
-    const values: SummaryDayByDay[] = []
+    const values: SummaryDayByDay[] = [];
+    const tempValues: SummaryDayByDay[] = [];
 
-    for (let day = 0; day < lastDay; day += 1) {
-      const actualDay = addDays(base, day)
+    const days = Array.from({ length: lastDay }, (_, index) => index);
+
+    const fns = days.map(async (day) => {
+      const actualDay = addDays(base, day);
       const result = await connection
         .createQueryBuilder()
         .select('SUM(value) as total')
@@ -213,24 +206,32 @@ class SummaryService {
           start: base,
           end: actualDay,
         })
-        .getRawOne()
+        .getRawOne();
 
       const item = {
         total: result.total ? result.total : 0,
         day: actualDay,
-      }
+      };
+      tempValues.push(item);
+    });
 
+    await Promise.all(fns);
+
+    const sorted = tempValues.sort((item1, item2) => (isAfter(item1.day, item2.day) ? 1 : -1));
+
+    sorted.forEach((item) => {
+      const itemDay = parseInt(format(item.day, 'dd'), 10) - 1;
       if (allDays) {
-        values.push(item)
-      } else if (day === 0) {
-        values.push(item)
+        values.push(item);
+      } else if (itemDay === 0) {
+        values.push(item);
       } else if (values[values.length - 1].total !== item.total) {
-        values.push(item)
+        values.push(item);
       }
-    }
+    });
 
-    return values
+    return values;
   }
 }
 
-export default SummaryService
+export default SummaryService;

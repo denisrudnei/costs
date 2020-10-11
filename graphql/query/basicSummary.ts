@@ -1,4 +1,5 @@
-import ggl from 'graphql-tag'
+import ggl from 'graphql-tag';
+
 const query = ggl`
 query BasicSummary ($useLastMonthBalance: Boolean, $year: Int, $month: Int) {
   BasicSummary(useLastMonthBalance: $useLastMonthBalance, year: $year, month: $month) {
@@ -31,6 +32,6 @@ query BasicSummary ($useLastMonthBalance: Boolean, $year: Int, $month: Int) {
     total
   }
 }
-`
+`;
 
-export default query
+export default query;

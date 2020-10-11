@@ -1,4 +1,5 @@
-import ggl from 'graphql-tag'
+import ggl from 'graphql-tag';
+
 const mutation = ggl`
 mutation Register($email: String!, $name: String!, $password: String!) {
   Register(email: $email, name: $name, password: $password) {
@@ -7,6 +8,6 @@ mutation Register($email: String!, $name: String!, $password: String!) {
     email
   }
 }
-`
+`;
 
-export default mutation
+export default mutation;

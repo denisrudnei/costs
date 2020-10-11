@@ -23,7 +23,8 @@
 </template>
 
 <script>
-import register from '@/graphql/mutation/register'
+import register from '@/graphql/mutation/register';
+
 export default {
   auth: false,
   data() {
@@ -33,7 +34,7 @@ export default {
         name: '',
         password: '',
       },
-    }
+    };
   },
   methods: {
     register() {
@@ -49,17 +50,17 @@ export default {
         .then(() => {
           this.$toast.show('User created', {
             duration: 1500,
-          })
-          this.$router.push('/auth/login')
+          });
+          this.$router.push('/auth/login');
         })
         .catch(() => {
           this.$toast.error('Error', {
             duration: 5000,
-          })
-        })
+          });
+        });
     },
   },
-}
+};
 </script>
 
 <style></style>

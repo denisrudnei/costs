@@ -1,4 +1,5 @@
-import ggl from 'graphql-tag'
+import ggl from 'graphql-tag';
+
 const query = ggl`
 query SummaryDayByDay($month: Int, $year: Int) {
   SummaryDayByDay(month: $month, year: $year) {
@@ -6,6 +7,6 @@ query SummaryDayByDay($month: Int, $year: Int) {
     total
   }
 }
-`
+`;
 
-export default query
+export default query;

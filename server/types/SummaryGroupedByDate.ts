@@ -1,21 +1,11 @@
-import { Field, Float, ObjectType } from 'type-graphql'
+import { Field, ObjectType } from 'type-graphql';
+import { TotalValueSingleDay } from './TotalValueSingleDay';
 
 @ObjectType()
-class SummaryGroupedByDate {
+export class SummaryGroupedByDate {
   @Field(() => [TotalValueSingleDay])
   public profits!: TotalValueSingleDay[]
 
   @Field(() => [TotalValueSingleDay])
   public spending!: TotalValueSingleDay[]
 }
-
-@ObjectType()
-class TotalValueSingleDay {
-  @Field(() => Float)
-  public total!: number
-
-  @Field(() => Date)
-  date!: Date
-}
-
-export default SummaryGroupedByDate

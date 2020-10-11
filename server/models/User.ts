@@ -1,5 +1,5 @@
-import bcrypt from 'bcryptjs'
-import { Field, ID, ObjectType } from 'type-graphql'
+import bcrypt from 'bcryptjs';
+import { Field, ID, ObjectType } from 'type-graphql';
 import {
   BaseEntity,
   BeforeInsert,
@@ -11,14 +11,14 @@ import {
   OneToOne,
   PrimaryGeneratedColumn,
   AfterLoad,
-} from 'typeorm'
+} from 'typeorm';
 
-import Cost from './Cost'
-import UserSettings from './UserSettings'
+import { Cost } from './Cost';
+import { UserSettings } from './UserSettings';
 
 @Entity()
 @ObjectType()
-class User extends BaseEntity {
+export class User extends BaseEntity {
   @PrimaryGeneratedColumn()
   @Field(() => ID)
   public id!: number
@@ -48,18 +48,16 @@ class User extends BaseEntity {
 
   @AfterLoad()
   checkPasswordChanged() {
-    this.tempPassword = this.password
+    this.tempPassword = this.password;
   }
 
   @BeforeInsert()
   @BeforeUpdate()
   hashPassword() {
     if (this.password && this.password !== this.tempPassword) {
-      const salt = bcrypt.genSaltSync(12)
-      this.password = bcrypt.hashSync(this.password, salt)
+      const salt = bcrypt.genSaltSync(12);
+      this.password = bcrypt.hashSync(this.password, salt);
     }
-    this.tempPassword = ''
+    this.tempPassword = '';
   }
 }
-
-export default User

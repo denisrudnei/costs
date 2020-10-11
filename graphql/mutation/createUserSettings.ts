@@ -1,4 +1,5 @@
-import ggl from 'graphql-tag'
+import ggl from 'graphql-tag';
+
 const mutation = ggl`
 mutation CreateUserSettings($userSettings: UserSettingsInput!){
   CreateUserSettings(userSettings: $userSettings) {
@@ -6,5 +7,5 @@ mutation CreateUserSettings($userSettings: UserSettingsInput!){
     locale
   }
 }
-`
-export default mutation
+`;
+export default mutation;

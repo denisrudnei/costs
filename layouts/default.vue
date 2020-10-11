@@ -38,8 +38,9 @@
 </template>
 
 <script>
-import { mapGetters } from 'vuex'
-import login from '@/mixins/login'
+import { mapGetters } from 'vuex';
+import login from '@/mixins/login';
+
 export default {
   mixins: [login],
   data() {
@@ -65,20 +66,20 @@ export default {
         },
       ],
       miniVariant: false,
-    }
+    };
   },
   computed: mapGetters({
     logged: 'auth/getLoggedIn',
   }),
   created() {
     if (this.logged) {
-      this.afterLogin()
+      this.afterLogin();
     }
   },
   methods: {
     logout() {
-      this.$auth.logout()
+      this.$auth.logout();
     },
   },
-}
+};
 </script>

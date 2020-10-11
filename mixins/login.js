@@ -1,4 +1,5 @@
-import userSettings from '@/graphql/query/userSettings'
+import userSettings from '@/graphql/query/userSettings';
+
 export default {
   methods: {
     afterLogin() {
@@ -7,10 +8,10 @@ export default {
           query: userSettings,
         })
         .then((response) => {
-          const { currency, locale } = response.data.UserSettings
-          this.$store.commit('settings/setCurrency', currency)
-          this.$store.commit('settings/setLocale', locale)
-        })
+          const { currency, locale } = response.data.UserSettings;
+          this.$store.commit('settings/setCurrency', currency);
+          this.$store.commit('settings/setLocale', locale);
+        });
     },
   },
-}
+};

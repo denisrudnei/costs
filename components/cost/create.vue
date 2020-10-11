@@ -23,9 +23,7 @@
         <v-col md="4" cols="12">
           <v-card>
             <v-card-title>
-              <h3>
-                Date:
-              </h3>
+              <h3>Date:</h3>
             </v-card-title>
             <v-card-text>
               <v-date-picker
@@ -40,13 +38,16 @@
       </v-row>
     </v-col>
     <v-col>
-      <v-btn @click="save"> Save </v-btn>
+      <v-btn @click="save">
+        Save
+      </v-btn>
     </v-col>
   </v-row>
 </template>
 
 <script>
-import { format, parse } from 'date-fns'
+import { format, parse } from 'date-fns';
+
 export default {
   props: {
     value: {
@@ -63,17 +64,17 @@ export default {
     return {
       types: ['PROFIT', 'SPENT'],
       date: new Date(),
-    }
+    };
   },
   created() {
-    this.setDate(this.getIsoDate(this.value.date))
+    this.setDate(this.getIsoDate(this.value.date));
   },
   methods: {
     getIsoDate(value) {
-      return format(value, 'yyyy-MM-dd')
+      return format(value, 'yyyy-MM-dd');
     },
     setDate(value) {
-      this.date = parse(value, 'yyyy-MM-dd', new Date())
+      this.date = parse(value, 'yyyy-MM-dd', new Date());
     },
     save() {
       this.$emit('input', {
@@ -81,10 +82,10 @@ export default {
         value: parseFloat(this.value.value),
         type: this.value.type,
         date: this.date,
-      })
+      });
     },
   },
-}
+};
 </script>
 
 <style></style>

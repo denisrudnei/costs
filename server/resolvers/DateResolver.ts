@@ -1,17 +1,19 @@
-import { ExpressContext } from 'apollo-server-express/dist/ApolloServer'
-import { Ctx, Query, Resolver, Authorized } from 'type-graphql'
+import { ExpressContext } from 'apollo-server-express/dist/ApolloServer';
+import {
+  Ctx, Query, Resolver, Authorized,
+} from 'type-graphql';
 
-import DateService from '../services/DateService'
-import UsedDates from '../types/UsedDates'
+import DateService from '../services/DateService';
+import { UsedDates } from '../types/UsedDates';
 
 @Resolver()
 class DateResolver {
   @Query(() => UsedDates)
   @Authorized('user')
   GetUsedDates(@Ctx() { req }: ExpressContext) {
-    const { id } = req.session!.authUser
-    return DateService.getUsedDates(id)
+    const { id } = req.session!.authUser;
+    return DateService.getUsedDates(id);
   }
 }
 
-export default DateResolver
+export default DateResolver;

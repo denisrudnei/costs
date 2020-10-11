@@ -1,9 +1,9 @@
-import { Field, InputType } from 'type-graphql'
+import { Field, InputType } from 'type-graphql';
 
-import CostType from '../enums/CostType'
+import CostType from '../enums/CostType';
 
 @InputType()
-class CostEditInput {
+export class CostEditInput {
   @Field(() => CostType, { nullable: true })
   public type!: CostType
 
@@ -16,5 +16,3 @@ class CostEditInput {
   @Field(() => Number, { nullable: true })
   public value!: number
 }
-
-export default CostEditInput

@@ -1,12 +1,10 @@
-import { InputType, Field } from 'type-graphql'
+import { InputType, Field } from 'type-graphql';
 
 @InputType()
-class UserSettingsInput {
+export class UserSettingsInput {
   @Field()
   public currency!: string
 
   @Field()
   public locale!: string
 }
-
-export default UserSettingsInput

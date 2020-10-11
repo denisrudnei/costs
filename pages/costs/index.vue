@@ -21,20 +21,18 @@
           {{ cost.name }}
         </v-card-title>
         <v-card-text>
-          <h2 :class="type(cost)">Type: {{ cost.type }}</h2>
+          <h2 :class="type(cost)">
+            Type: {{ cost.type }}
+          </h2>
           <h3>Value: {{ cost.value | dinero }}</h3>
           <p>Date {{ cost.date | date }}</p>
         </v-card-text>
         <v-card-actions>
           <v-btn icon :to="`/costs/edit/${cost.id}`">
-            <v-icon>
-              mdi-clipboard-edit
-            </v-icon>
+            <v-icon> mdi-clipboard-edit </v-icon>
           </v-btn>
           <v-btn icon class="red--text" @click="remove(cost)">
-            <v-icon>
-              mdi-delete
-            </v-icon>
+            <v-icon> mdi-delete </v-icon>
           </v-btn>
         </v-card-actions>
       </v-card>
@@ -43,9 +41,10 @@
 </template>
 
 <script>
-import costs from '@/graphql/query/costs'
-import refetch from '@/graphql/query/refetch'
-import removeCost from '@/graphql/mutation/removeCost'
+import costs from '@/graphql/query/costs';
+import refetch from '@/graphql/query/refetch';
+import removeCost from '@/graphql/mutation/removeCost';
+
 export default {
   data() {
     return {
@@ -54,18 +53,16 @@ export default {
       orderOptions: ['type', 'name', 'value'],
       search: '',
       costs: [],
-    }
+    };
   },
   computed: {
     costsFiltred() {
       const sort = this.asc
         ? (a, b) => (a[this.order] > b[this.order] ? 1 : -1)
-        : (a, b) => (a[this.order] > b[this.order] ? -1 : 1)
+        : (a, b) => (a[this.order] > b[this.order] ? -1 : 1);
       return this.costs
-        .filter((cost) => {
-          return cost.name.toLowerCase().includes(this.search.toLowerCase())
-        })
-        .sort(sort)
+        .filter((cost) => cost.name.toLowerCase().includes(this.search.toLowerCase()))
+        .sort(sort);
     },
   },
   created() {
@@ -74,8 +71,8 @@ export default {
         query: costs,
       })
       .then((response) => {
-        this.costs = response.data.Costs
-      })
+        this.costs = response.data.Costs;
+      });
   },
   methods: {
     remove(value) {
@@ -93,16 +90,14 @@ export default {
           ],
         })
         .then(() => {
-          this.costs = this.costs.filter((item) => {
-            return item.id !== value.id
-          })
-        })
+          this.costs = this.costs.filter((item) => item.id !== value.id);
+        });
     },
     type(value) {
-      return value.type === 'SPENT' ? 'red--text' : 'white--text'
+      return value.type === 'SPENT' ? 'red--text' : 'white--text';
     },
   },
-}
+};
 </script>
 
 <style></style>

@@ -1,4 +1,5 @@
-import ggl from 'graphql-tag'
+import ggl from 'graphql-tag';
+
 const query = ggl`
 query {
   GetUsedDates {
@@ -8,6 +9,6 @@ query {
     }
   }
 }
-`
+`;
 
-export default query
+export default query;

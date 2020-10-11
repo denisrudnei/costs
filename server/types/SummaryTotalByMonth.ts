@@ -1,8 +1,10 @@
-import { ObjectType, Field, Float, Int } from 'type-graphql'
-import CostType from '../enums/CostType'
+import {
+  ObjectType, Field, Float, Int,
+} from 'type-graphql';
+import CostType from '../enums/CostType';
 
 @ObjectType()
-class SummaryTotalByMonth {
+export class SummaryTotalByMonth {
   @Field(() => Int)
   public month!: number
 
@@ -15,5 +17,3 @@ class SummaryTotalByMonth {
   @Field(() => Float)
   public total!: number
 }
-
-export default SummaryTotalByMonth

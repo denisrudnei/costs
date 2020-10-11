@@ -1,4 +1,5 @@
-import ggl from 'graphql-tag'
+import ggl from 'graphql-tag';
+
 const query = ggl`
 query {
   GetSpending {
@@ -8,6 +9,6 @@ query {
     date
   }
 }
-`
+`;
 
-export default query
+export default query;

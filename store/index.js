@@ -1,1 +1,2 @@
-export const strict = false
+// eslint-disable-next-line import/prefer-default-export
+export const strict = false;

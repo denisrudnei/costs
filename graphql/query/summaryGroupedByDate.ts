@@ -1,4 +1,5 @@
-import ggl from 'graphql-tag'
+import ggl from 'graphql-tag';
+
 const query = ggl`
 query SummaryGroupedByDate ($year: Int, $month: Int) {
   SummaryGroupedByDate (year: $year, month: $month) {
@@ -12,6 +13,6 @@ query SummaryGroupedByDate ($year: Int, $month: Int) {
     }
   }
 }
-`
+`;
 
-export default query
+export default query;

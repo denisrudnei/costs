@@ -1,4 +1,5 @@
-import ggl from 'graphql-tag'
+import ggl from 'graphql-tag';
+
 const query = ggl`
 query {
   Costs {
@@ -14,6 +15,6 @@ query {
     value
   }
 }
-`
+`;
 
-export default query
+export default query;

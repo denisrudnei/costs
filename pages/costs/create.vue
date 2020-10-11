@@ -3,11 +3,12 @@
 </template>
 
 <script>
-import create from '@/components/cost/create'
-import createNewCost from '@/graphql/mutation/createNewCost'
-import profits from '@/graphql/query/profits'
-import costs from '@/graphql/query/costs'
-import spending from '@/graphql/query/spending'
+import create from '@/components/cost/create';
+import createNewCost from '@/graphql/mutation/createNewCost';
+import profits from '@/graphql/query/profits';
+import costs from '@/graphql/query/costs';
+import spending from '@/graphql/query/spending';
+
 export default {
   components: {
     create,
@@ -20,7 +21,7 @@ export default {
         date: new Date(),
         value: 0,
       },
-    }
+    };
   },
   methods: {
     save(cost) {
@@ -46,17 +47,17 @@ export default {
         .then(() => {
           this.$toast.show('New cost created', {
             duration: 2500,
-          })
+          });
           this.cost = {
             name: '',
             type: 'PROFIT',
             date: new Date(),
             value: 0,
-          }
-        })
+          };
+        });
     },
   },
-}
+};
 </script>
 
 <style></style>

@@ -16,14 +16,15 @@
 </template>
 
 <script>
-import { setMonth, format } from 'date-fns'
-import getDates from '@/mixins/getDates'
-import { mapGetters } from 'vuex'
+import { setMonth, format } from 'date-fns';
+import getDates from '@/mixins/getDates';
+import { mapGetters } from 'vuex';
+
 export default {
   mixin: [getDates],
   filters: {
     format(value) {
-      return format(setMonth(new Date(), value - 1), 'MMM')
+      return format(setMonth(new Date(), value - 1), 'MMM');
     },
   },
   computed: mapGetters({
@@ -31,13 +32,13 @@ export default {
     year: 'dates/getYear',
   }),
   created() {
-    const { year } = this.$route.params
+    const { year } = this.$route.params;
     this.$store.commit('dates/setYear', {
       value: year,
       months: this.months,
-    })
+    });
   },
-}
+};
 </script>
 
 <style></style>

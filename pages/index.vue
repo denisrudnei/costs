@@ -2,8 +2,12 @@
   <v-row>
     <v-col>
       <v-tabs>
-        <v-tab to="/charts">Charts</v-tab>
-        <v-tab to="/average">Average</v-tab>
+        <v-tab to="/charts">
+          Charts
+        </v-tab>
+        <v-tab to="/average">
+          Average
+        </v-tab>
       </v-tabs>
       <nuxt-child />
     </v-col>
@@ -11,7 +15,7 @@
 </template>
 
 <script>
-export default {}
+export default {};
 </script>
 
 <style></style>

@@ -25,16 +25,15 @@ export default {
     return {
       pageNotFound: '404 Not Found',
       otherError: 'An error occurred',
-    }
+    };
   },
   head() {
-    const title =
-      this.error.statusCode === 404 ? this.pageNotFound : this.otherError
+    const title = this.error.statusCode === 404 ? this.pageNotFound : this.otherError;
     return {
       title,
-    }
+    };
   },
-}
+};
 </script>
 
 <style scoped>
