@@ -29,8 +29,8 @@ class AuthResolver {
   }
 
   @Mutation(() => String)
-  SendResetEmail(@Arg('email') email: string, @Ctx() { req }: ExpressContext) {
-    return AuthService.sendResetEmail(email, req);
+  SendResetEmail(@Arg('email') email: string, @Arg('url') url: string) {
+    return AuthService.sendResetEmail(email, url);
   }
 
   @Mutation(() => String)

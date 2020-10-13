@@ -1,7 +1,6 @@
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 
-import express from 'express';
 import { ILike } from '../db/FindOperator';
 import { User } from '../models/User';
 import { EmailService } from './EmailService';
@@ -38,7 +37,7 @@ class AuthService {
     }).save();
   }
 
-  public static async sendResetEmail(email: string, req: express.Request) {
+  public static async sendResetEmail(email: string, url: string) {
     const user = await User.findOne({
       where: {
         email,
@@ -50,7 +49,7 @@ class AuthService {
       name: user.name,
       email: user.email,
     }, process.env.JWT_KEY!);
-    await EmailService.SendResetEmail(email, token, req);
+    await EmailService.SendResetEmail(email, token, url);
     return token;
   }
 

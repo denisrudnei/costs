@@ -33,7 +33,12 @@ export default {
     return {
       sending: false,
       email: '',
+      url: '',
     };
+  },
+  mounted() {
+    const { protocol, host } = window.location;
+    this.url = `${protocol}//${host}`;
   },
   methods: {
     send() {
@@ -42,6 +47,7 @@ export default {
         mutation: sendResetMail,
         variables: {
           email: this.email,
+          url: this.url,
         },
       }).then(() => {
         this.sending = false;

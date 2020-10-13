@@ -1,6 +1,5 @@
 import nodemailer from 'nodemailer';
 import SMTPTransport from 'nodemailer/lib/smtp-transport';
-import express from 'express';
 
 const transport = nodemailer.createTransport(new SMTPTransport({
   host: process.env.MAIL_HOST!,
@@ -12,12 +11,12 @@ const transport = nodemailer.createTransport(new SMTPTransport({
 }));
 
 export class EmailService {
-  public static async SendResetEmail(email: string, token: string, req: express.Request) {
+  public static async SendResetEmail(email: string, token: string, url: string) {
     await transport.sendMail({
       to: email,
       from: process.env.MAIL_USER!,
       subject: 'Password reset',
-      html: `<p>Click <a href="${req.protocol}://${req.hostname}/auth/token/${token}">here</a> to reset you password</p>`,
+      html: `<p>Click <a href="${url}/auth/token/${token}">here</a> to reset you password</p>`,
     });
   }
 }
