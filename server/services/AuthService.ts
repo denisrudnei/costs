@@ -1,7 +1,16 @@
 import bcrypt from 'bcryptjs';
+import jwt from 'jsonwebtoken';
 
+import express from 'express';
 import { ILike } from '../db/FindOperator';
 import { User } from '../models/User';
+import { EmailService } from './EmailService';
+
+type ResetJWT = {
+  date: Date
+  name: string
+  email: string
+}
 
 class AuthService {
   public static async login(email: string, password: string) {
@@ -27,6 +36,36 @@ class AuthService {
       name,
       password,
     }).save();
+  }
+
+  public static async sendResetEmail(email: string, req: express.Request) {
+    const user = await User.findOne({
+      where: {
+        email,
+      },
+    });
+    if (!user) throw new Error('User not found');
+    const token = jwt.sign({
+      date: new Date(),
+      name: user.name,
+      email: user.email,
+    }, process.env.JWT_KEY!);
+    await EmailService.SendResetEmail(email, token, req);
+    return token;
+  }
+
+  public static async resetFromReceivedEmail(token: string, newPassword: string) {
+    const info = jwt.decode(token) as ResetJWT;
+    const { email } = info;
+    const user = await User.findOne({
+      where: {
+        email,
+      },
+    });
+    if (!user) throw new Error('User not found');
+    user.password = newPassword;
+    await user.save();
+    return token;
   }
 
   private static verifyPassword(password: string, hash: string) {

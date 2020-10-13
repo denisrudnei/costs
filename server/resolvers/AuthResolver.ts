@@ -28,6 +28,16 @@ class AuthResolver {
     return user;
   }
 
+  @Mutation(() => String)
+  SendResetEmail(@Arg('email') email: string, @Ctx() { req }: ExpressContext) {
+    return AuthService.sendResetEmail(email, req);
+  }
+
+  @Mutation(() => String)
+  ResetFromReceivedEmail(@Arg('token') token: string, @Arg('newPassword') newPassword: string) {
+    return AuthService.resetFromReceivedEmail(token, newPassword);
+  }
+
   @Mutation(() => User)
   public Register(
     @Arg('email') email: string,

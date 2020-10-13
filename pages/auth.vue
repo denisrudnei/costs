@@ -22,6 +22,16 @@
             Register
           </v-list-item-content>
         </v-list-item>
+        <v-list-item to="/auth/reset">
+          <v-list-item-icon>
+            <v-icon>
+              mdi-lock-open
+            </v-icon>
+          </v-list-item-icon>
+          <v-list-item-content>
+            Reset password
+          </v-list-item-content>
+        </v-list-item>
       </v-list>
     </v-navigation-drawer>
     <v-col>
