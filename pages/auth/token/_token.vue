@@ -34,7 +34,7 @@ export default {
   },
   methods: {
     reset() {
-      const token = this.$route.params.route;
+      const { token } = this.$route.params;
       this.$apollo.mutate({
         mutation: resetFromReceiveEmail,
         variables: {
