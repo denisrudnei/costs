@@ -1,7 +1,7 @@
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 
-import { ILike } from '../db/FindOperator';
+import { Raw } from 'typeorm';
 import { User } from '../models/User';
 import { EmailService } from './EmailService';
 
@@ -15,7 +15,8 @@ class AuthService {
   public static async login(email: string, password: string) {
     const user = await User.findOne({
       where: {
-        email: ILike(email),
+        // FIXME
+        email: Raw((alias) => `${alias} ILIKE '%${email}%'`),
       },
     });
     if (!user) throw new Error('User not found');
@@ -26,7 +27,8 @@ class AuthService {
   public static async register(email: string, name: string, password: string) {
     const user = await User.findOne({
       where: {
-        email: ILike(email),
+        // FIXME
+        email: Raw((alias) => `${alias} ILIKE '%${email}%`),
       },
     });
     if (user) throw new Error('User registered');
