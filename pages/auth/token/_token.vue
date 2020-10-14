@@ -39,7 +39,7 @@ export default {
         mutation: resetFromReceiveEmail,
         variables: {
           token,
-          newPassword: this.newPassword,
+          newPassword: this.password,
         },
       }).then(() => {
         this.$toast.show('Updated', {
