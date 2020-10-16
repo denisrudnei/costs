@@ -21,10 +21,10 @@
     <v-col cols="12">
       <v-file-input v-model="file" filled label="Import file" accept="text/*" @change="makeTable" />
       <v-row v-if="imported.length !== 0">
-        <v-col cols="6">
+        <v-col cols="5">
           <v-select v-model="format" :items="formats" label="Format" filled @change="makeTable" />
         </v-col>
-        <v-col cols="6">
+        <v-col cols="5">
           <v-select
             v-model="separator"
             :items="separators"
@@ -32,6 +32,9 @@
             filled
             @change="makeTable"
           />
+        </v-col>
+        <v-col cols="2">
+          <v-checkbox v-model="merge" label="Merge with existing?" />
         </v-col>
         <v-col cols="12">
           <v-data-table :items="imported" :headers="headers" />
@@ -70,6 +73,7 @@ export default {
         text: item,
         value: item,
       })),
+      merge: false,
       imported: [],
       locales: [],
       headers: [
@@ -170,6 +174,7 @@ export default {
         form.append('file', this.file);
         form.append('separator', this.separator);
         form.append('format', this.format);
+        form.append('merge', this.merge);
 
         this.$axios.post('/api/import', form)
           .then(() => {

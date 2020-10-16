@@ -1,6 +1,7 @@
 import { Formats } from '@/enums/ImportFile/Formats';
 import { parse } from 'date-fns';
 import { UploadedFile } from 'express-fileupload';
+import { In } from 'typeorm';
 import { Cost } from '~/models/Cost';
 
 import CostType from '../enums/CostType';
@@ -19,6 +20,7 @@ export class ImportService {
     user: User,
     format = Formats.DAY_MONTH_YEAR,
     separator = Separators.SEMICOLON,
+    merge = false,
   ) {
     const data = this.convertToTable(file, separator);
     const costs = data.map((item) => {
@@ -35,7 +37,26 @@ export class ImportService {
       return cost;
     });
 
-    const saveAll = costs.map((cost) => Cost.save(cost));
+    let saveAll;
+
+    if (merge) {
+      const names = costs.map((cost) => cost.name);
+      const dates = costs.map((cost) => cost.date);
+      const values = costs.map((cost) => cost.value);
+      const costsInDb = await Cost.find({
+        where: {
+          name: In(names),
+          date: In(dates),
+          value: In(values),
+        },
+      });
+      saveAll = costs
+        .filter((cost) => !costsInDb.map((inDb) => inDb.name).includes(cost.name))
+        .map((cost) => Cost.save(cost));
+    } else {
+      saveAll = costs.map((cost) => Cost.save(cost));
+    }
+
     await Promise.all(saveAll);
     return costs;
   }

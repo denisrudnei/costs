@@ -17,7 +17,7 @@ router.use('/import', async (req, res) => {
 
   const { email } = (jwt.decode(jwtString) as info);
 
-  const { separator, format } = req.body;
+  const { separator, format, merge } = req.body;
 
   const user = await User.findOne({
     where: {
@@ -31,7 +31,7 @@ router.use('/import', async (req, res) => {
     });
   }
 
-  return ImportService.save(req.files!.file, user, format, separator)
+  return ImportService.save(req.files!.file, user, format, separator, merge)
     .then(() => res.status(200).json({
       message: 'Success',
     }))
