@@ -1,15 +1,15 @@
 import 'reflect-metadata';
 
-import http from 'http';
-import path from 'path';
 import { ApolloServer } from 'apollo-server-express';
 import consola from 'consola';
 import express from 'express';
+import http from 'http';
+import path from 'path';
 import { buildSchema } from 'type-graphql';
 
+import customAuthChecker from './customAuthChecker';
 import Connection from './db/Connection';
 import routes from './routes';
-import customAuthChecker from './customAuthChecker';
 
 async function main() {
   await Connection;
@@ -20,6 +20,10 @@ async function main() {
       resolvers: [path.resolve(__dirname, 'resolvers/**/*')],
       authChecker: customAuthChecker,
     }),
+    uploads: {
+      maxFileSize: 10_000_000,
+      maxFiles: 5,
+    },
     context: (context) => ({
       req: context.req,
       res: context.res,

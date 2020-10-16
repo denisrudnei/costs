@@ -19,6 +19,27 @@
       />
     </v-col>
     <v-col cols="12">
+      <v-file-input v-model="file" filled label="Import file" accept="text/*" @change="makeTable" />
+      <v-row v-if="imported.length !== 0">
+        <v-col cols="6">
+          <v-select v-model="format" :items="formats" label="Format" filled @change="makeTable" />
+        </v-col>
+        <v-col cols="6">
+          <v-select
+            v-model="separator"
+            :items="separators"
+            label="Separators"
+            filled
+            @change="makeTable"
+          />
+        </v-col>
+        <v-col cols="12">
+          <v-data-table :items="imported" :headers="headers" />
+        </v-col>
+      </v-row>
+    </v-col>
+
+    <v-col cols="12">
       <v-btn @click="save">
         Save
       </v-btn>
@@ -29,13 +50,42 @@
 <script>
 import userSettings from '@/graphql/query/userSettings';
 import createUserSettings from '@/graphql/mutation/createUserSettings';
+import { format, parse } from 'date-fns';
 import values from './settings-values.json';
+import { Separators } from '~/server/enums/ImportFile/Separators';
+import { Formats } from '~/server/enums/ImportFile/Formats';
 
 export default {
   data() {
     return {
+      file: null,
       currencies: [],
+      separator: Separators.COMMA,
+      formats: Object.values(Formats).map((item) => ({
+        text: item,
+        value: item,
+      })),
+      format: Formats.DAY_MONTH_YEAR,
+      separators: Object.values(Separators).map((item) => ({
+        text: item,
+        value: item,
+      })),
+      imported: [],
       locales: [],
+      headers: [
+        {
+          text: 'Date',
+          value: 'date',
+        },
+        {
+          text: 'Name',
+          value: 'name',
+        },
+        {
+          text: 'Value',
+          value: 'value',
+        },
+      ],
       settings: {
         locale: '',
         currency: '',
@@ -63,6 +113,34 @@ export default {
       });
   },
   methods: {
+    toDate(text) {
+      const dateFormat = this.format.toLowerCase();
+      try {
+        const date = parse(text, dateFormat, new Date());
+        return format(date, dateFormat);
+      } catch (e) {
+        return text;
+      }
+    },
+    makeTable() {
+      if (!this.file) {
+        this.imported = [];
+        return;
+      }
+      const fileReader = new FileReader();
+      fileReader.readAsText(this.file);
+      fileReader.addEventListener('loadend', () => {
+        const fullLines = fileReader.result.toString().split('\n');
+        const linesWithColumns = fullLines.map(
+          (line) => line.split(this.separator),
+        ).filter((line) => line[0].length > 0);
+        this.imported = linesWithColumns.map((line) => ({
+          date: this.toDate(line[0]),
+          name: line[1],
+          value: line[2],
+        }));
+      });
+    },
     save() {
       this.$apollo
         .mutate({
@@ -85,6 +163,26 @@ export default {
             duration: 2500,
           });
         });
+
+      if (this.file !== null) {
+        this.$toast.show('Uploading file...', { duration: 1000 });
+        const form = new FormData();
+        form.append('file', this.file);
+        form.append('separator', this.separator);
+        form.append('format', this.format);
+
+        this.$axios.post('/api/import', form)
+          .then(() => {
+            this.$toast.show('File uploaded', {
+              duration: 5000,
+            });
+          })
+          .catch(() => {
+            this.$toast.error('Failed to upload file', {
+              duration: 5000,
+            });
+          });
+      }
     },
   },
 };
