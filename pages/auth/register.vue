@@ -1,17 +1,20 @@
 <template>
   <v-row>
     <v-col cols="12">
-      <v-text-field v-model="user.email" filled placeholder="Email" />
+      <v-text-field v-model="user.email" filled placeholder="Email" @keypress.enter="register" />
     </v-col>
     <v-col cols="12">
-      <v-text-field v-model="user.name" filled placeholder="Name" />
+      <v-text-field v-model="user.name" filled placeholder="Name" @keypress.enter="register" />
     </v-col>
     <v-col cols="12">
       <v-text-field
         v-model="user.password"
         filled
         placeholder="Password"
-        type="password"
+        :type="show ? 'text': 'password'"
+        :append-icon="show ? 'mdi-eye-off' : 'mdi-eye'"
+        @click:append="show = !show"
+        @keypress.enter="register"
       />
     </v-col>
     <v-col>
@@ -29,6 +32,7 @@ export default {
   auth: false,
   data() {
     return {
+      show: false,
       user: {
         email: '',
         name: '',

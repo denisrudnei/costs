@@ -1,14 +1,17 @@
 <template>
   <v-row>
     <v-col cols="12">
-      <v-text-field v-model="user.email" filled placeholder="Email" />
+      <v-text-field v-model="user.email" filled placeholder="Email" @keypress.enter="login" />
     </v-col>
     <v-col cols="12">
       <v-text-field
         v-model="user.password"
         filled
         placeholder="Password"
-        type="password"
+        :type="showPassword ? 'text': 'password'"
+        :append-icon="showPassword ? 'mdi-eye-off' : 'mdi-eye'"
+        @click:append="showPassword = !showPassword"
+        @keypress.enter="login"
       />
     </v-col>
     <v-col>
@@ -36,6 +39,7 @@ export default {
   mixins: [login],
   data() {
     return {
+      showPassword: false,
       tryingLogin: false,
       user: {
         email: '',
