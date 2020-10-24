@@ -68,13 +68,11 @@ export default {
       const sort = this.asc
         ? (a, b) => (a[this.order] > b[this.order] ? 1 : -1)
         : (a, b) => (a[this.order] > b[this.order] ? -1 : 1);
-
       const costs = this.costs
         .flatMap((item) => item.costs)
         .filter((cost) => cost.name.toLowerCase().includes(this.search.toLowerCase()))
         .sort(sort);
-      this.groupCosts(costs);
-      return this.costs;
+      return this.groupCosts(costs);
     },
   },
   created() {
@@ -83,33 +81,34 @@ export default {
         query: costs,
       })
       .then((response) => {
-        const costs = response.data.Costs;
-        this.groupCosts(costs);
+        const { Costs } = response.data;
+        this.costs = this.groupCosts(Costs);
       });
   },
   methods: {
     groupCosts(costs) {
-      this.costs = [];
+      const result = [];
 
       costs.forEach((cost) => {
         const date = new Date(cost.date);
 
         const dateToGroup = format(date, 'MM/yyyy');
 
-        if (!this.costs.map((item) => item.date).includes(dateToGroup)) {
-          this.costs.push({
+        if (!result.map((item) => item.date).includes(dateToGroup)) {
+          result.push({
             date: dateToGroup,
             costs: [],
           });
         }
-        this.costs.find((item) => item.date === dateToGroup).costs.push(cost);
-        this.costs.sort((a, b) => {
+        result.find((item) => item.date === dateToGroup).costs.push(cost);
+        result.sort((a, b) => {
           const dateA = parse(a.date, 'MM/yyyy', new Date());
           const dateB = parse(b.date, 'MM/yyyy', new Date());
 
           return isAfter(dateA, dateB) ? -1 : 1;
         });
       });
+      return result;
     },
     remove(value) {
       this.$apollo
