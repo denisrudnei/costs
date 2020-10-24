@@ -1,5 +1,6 @@
 import { isSameDay } from 'date-fns';
 
+import { In } from 'typeorm';
 import CostType from '../enums/CostType';
 import { CostEditInput } from '../inputs/CostEditInput';
 import { User } from '../models/User';
@@ -102,6 +103,20 @@ class CostService {
     if (!cost) throw new Error('Cost not found');
     await Cost.remove(cost);
     return true;
+  }
+
+  public static async getNotDuplicates(costs: Cost[]) {
+    const names = costs.map((cost) => cost.name);
+    const dates = costs.map((cost) => cost.date);
+    const values = costs.map((cost) => cost.value);
+    const costsInDb = await Cost.find({
+      where: {
+        name: In(names),
+        date: In(dates),
+        value: In(values),
+      },
+    });
+    return costs.filter((cost) => !costsInDb.map((inDb) => inDb.name).includes(cost.name));
   }
 }
 
