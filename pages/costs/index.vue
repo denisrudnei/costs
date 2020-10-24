@@ -15,32 +15,40 @@
     <v-col md="2" cols="12">
       <v-checkbox v-model="asc" filled label="Asc" />
     </v-col>
-    <v-col v-for="cost in costsFiltred" :key="cost.id" md="4" cols="12">
-      <v-card>
-        <v-card-title :class="type(cost)">
-          {{ cost.name }}
-        </v-card-title>
-        <v-card-text>
-          <h2 :class="type(cost)">
-            Type: {{ cost.type }}
-          </h2>
-          <h3>Value: {{ cost.value | dinero }}</h3>
-          <p>Date {{ cost.date | date }}</p>
-        </v-card-text>
-        <v-card-actions>
-          <v-btn icon :to="`/costs/edit/${cost.id}`">
-            <v-icon> mdi-clipboard-edit </v-icon>
-          </v-btn>
-          <v-btn icon class="red--text" @click="remove(cost)">
-            <v-icon> mdi-delete </v-icon>
-          </v-btn>
-        </v-card-actions>
-      </v-card>
+    <v-col v-for="item in costsFiltred" :key="item.date" cols="12">
+      <v-row>
+        <v-col cols="12">
+          <h3>Month - Year: {{ item.date }}</h3>
+        </v-col>
+        <v-col v-for="cost in item.costs" :key="cost.id" md="4" cols="12">
+          <v-card>
+            <v-card-title :class="type(cost)">
+              {{ cost.name }}
+            </v-card-title>
+            <v-card-text>
+              <h2 :class="type(cost)">
+                Type: {{ cost.type }}
+              </h2>
+              <h3>Value: {{ cost.value | dinero }}</h3>
+              <p>Date {{ cost.date | date }}</p>
+            </v-card-text>
+            <v-card-actions>
+              <v-btn icon :to="`/costs/edit/${cost.id}`">
+                <v-icon> mdi-clipboard-edit </v-icon>
+              </v-btn>
+              <v-btn icon class="red--text" @click="remove(cost)">
+                <v-icon> mdi-delete </v-icon>
+              </v-btn>
+            </v-card-actions>
+          </v-card>
+        </v-col>
+      </v-row>
     </v-col>
   </v-row>
 </template>
 
 <script>
+import { format, isAfter, parse } from 'date-fns';
 import costs from '@/graphql/query/costs';
 import refetch from '@/graphql/query/refetch';
 import removeCost from '@/graphql/mutation/removeCost';
@@ -60,9 +68,13 @@ export default {
       const sort = this.asc
         ? (a, b) => (a[this.order] > b[this.order] ? 1 : -1)
         : (a, b) => (a[this.order] > b[this.order] ? -1 : 1);
-      return this.costs
+
+      const costs = this.costs
+        .flatMap((item) => item.costs)
         .filter((cost) => cost.name.toLowerCase().includes(this.search.toLowerCase()))
         .sort(sort);
+      this.groupCosts(costs);
+      return this.costs;
     },
   },
   created() {
@@ -71,10 +83,34 @@ export default {
         query: costs,
       })
       .then((response) => {
-        this.costs = response.data.Costs;
+        const costs = response.data.Costs;
+        this.groupCosts(costs);
       });
   },
   methods: {
+    groupCosts(costs) {
+      this.costs = [];
+
+      costs.forEach((cost) => {
+        const date = new Date(cost.date);
+
+        const dateToGroup = format(date, 'MM/yyyy');
+
+        if (!this.costs.map((item) => item.date).includes(dateToGroup)) {
+          this.costs.push({
+            date: dateToGroup,
+            costs: [],
+          });
+        }
+        this.costs.find((item) => item.date === dateToGroup).costs.push(cost);
+        this.costs.sort((a, b) => {
+          const dateA = parse(a.date, 'MM/yyyy', new Date());
+          const dateB = parse(b.date, 'MM/yyyy', new Date());
+
+          return isAfter(dateA, dateB) ? -1 : 1;
+        });
+      });
+    },
     remove(value) {
       this.$apollo
         .mutate({
