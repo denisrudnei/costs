@@ -1,6 +1,17 @@
 <template>
   <v-app dark>
-    <v-navigation-drawer v-if="logged" clipped fixed app>
+    <v-app-bar v-if="logged && onMobile" app clipped-left fixed>
+      <v-btn icon @click="drawer = !drawer">
+        <v-icon>mdi-menu</v-icon>
+      </v-btn>
+    </v-app-bar>
+    <v-navigation-drawer
+      v-if="logged"
+      v-model="drawer"
+      app
+      clipped
+      fixed
+    >
       <v-list>
         <v-list-item
           v-for="(item, i) in items"
@@ -46,8 +57,8 @@ export default {
   data() {
     return {
       clipped: false,
-      drawer: true,
       fixed: false,
+      drawer: true,
       items: [
         {
           icon: 'mdi-home',
@@ -68,10 +79,19 @@ export default {
       miniVariant: false,
     };
   },
-  computed: mapGetters({
-    logged: 'auth/getLoggedIn',
-  }),
+  computed: {
+    onMobile() {
+      return ['sm', 'xs'].includes(this.breakpoint);
+    },
+    breakpoint() {
+      return this.$vuetify.breakpoint.name;
+    },
+    ...mapGetters({
+      logged: 'auth/getLoggedIn',
+    }),
+  },
   created() {
+    if (this.onMobile) this.drawer = false;
     if (this.logged) {
       this.afterLogin();
     }
