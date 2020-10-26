@@ -2,34 +2,14 @@
   <v-row>
     <v-navigation-drawer app>
       <v-list>
-        <v-list-item to="/auth/login">
+        <v-list-item v-for="link in pages" :key="link.link" :to="link.link">
           <v-list-item-icon>
             <v-icon>
-              mdi-account-box
+              {{ link.icon }}
             </v-icon>
           </v-list-item-icon>
           <v-list-item-content>
-            Login
-          </v-list-item-content>
-        </v-list-item>
-        <v-list-item to="/auth/register">
-          <v-list-item-icon>
-            <v-icon>
-              mdi-book-information-variant
-            </v-icon>
-          </v-list-item-icon>
-          <v-list-item-content>
-            Register
-          </v-list-item-content>
-        </v-list-item>
-        <v-list-item to="/auth/reset">
-          <v-list-item-icon>
-            <v-icon>
-              mdi-lock-open
-            </v-icon>
-          </v-list-item-icon>
-          <v-list-item-content>
-            Reset password
+            {{ link.text }}
           </v-list-item-content>
         </v-list-item>
       </v-list>
@@ -46,7 +26,27 @@
 
 <script>
 export default {
-
+  data() {
+    return {
+      pages: [
+        {
+          link: '/auth/login',
+          text: 'Login',
+          icon: 'mdi-account-box',
+        },
+        {
+          link: '/auth/register',
+          text: 'Register',
+          icon: 'mdi-book-information-variant',
+        },
+        {
+          link: '/auth/reset',
+          text: 'Reset password',
+          icon: 'mdi-lock-open',
+        },
+      ],
+    };
+  },
 };
 </script>
 
