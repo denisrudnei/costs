@@ -1,6 +1,6 @@
 <template>
   <v-row>
-    <v-navigation-drawer app>
+    <v-navigation-drawer v-model="drawer" app clipped>
       <v-list>
         <v-list-item v-for="link in pages" :key="link.link" :to="link.link">
           <v-list-item-icon>
@@ -25,6 +25,7 @@
 </template>
 
 <script>
+
 export default {
   data() {
     return {
@@ -46,6 +47,16 @@ export default {
         },
       ],
     };
+  },
+  computed: {
+    drawer: {
+      get() {
+        return this.$store.getters['screen/getDrawer'];
+      },
+      set(value) {
+        this.$store.commit('screen/setDrawer', value);
+      },
+    },
   },
 };
 </script>

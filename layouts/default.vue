@@ -1,13 +1,13 @@
 <template>
   <v-app dark>
-    <v-app-bar v-if="logged && onMobile" app clipped-left fixed>
-      <v-btn icon @click="drawer = !drawer">
+    <v-app-bar app clipped-left fixed>
+      <v-btn icon @click="toggleDrawer">
         <v-icon>mdi-menu</v-icon>
       </v-btn>
     </v-app-bar>
     <v-navigation-drawer
       v-if="logged"
-      v-model="drawer"
+      :value="drawer"
       app
       clipped
       fixed
@@ -58,7 +58,6 @@ export default {
     return {
       clipped: false,
       fixed: false,
-      drawer: true,
       items: [
         {
           icon: 'mdi-home',
@@ -80,23 +79,31 @@ export default {
     };
   },
   computed: {
-    onMobile() {
-      return ['sm', 'xs'].includes(this.breakpoint);
-    },
-    breakpoint() {
-      return this.$vuetify.breakpoint.name;
-    },
     ...mapGetters({
       logged: 'auth/getLoggedIn',
+
     }),
+    drawer: {
+      get() {
+        return this.$store.getters['screen/getDrawer'];
+      },
+      set(value) {
+        this.$store.commit('screen/setDrawer', value);
+      },
+    },
+  },
+  mounted() {
+    if (this.onMobile) this.drawer = false;
   },
   created() {
-    if (this.onMobile) this.drawer = false;
     if (this.logged) {
       this.afterLogin();
     }
   },
   methods: {
+    toggleDrawer() {
+      this.$store.commit('screen/setDrawer', !this.drawer);
+    },
     logout() {
       this.$auth.logout();
     },
