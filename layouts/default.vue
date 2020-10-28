@@ -51,9 +51,13 @@
 <script>
 import { mapGetters } from 'vuex';
 import login from '@/mixins/login';
+import drawer from '@/mixins/drawer';
 
 export default {
-  mixins: [login],
+  mixins: [
+    login,
+    drawer,
+  ],
   data() {
     return {
       clipped: false,
@@ -78,20 +82,9 @@ export default {
       miniVariant: false,
     };
   },
-  computed: {
-    ...mapGetters({
-      logged: 'auth/getLoggedIn',
-
-    }),
-    drawer: {
-      get() {
-        return this.$store.getters['screen/getDrawer'];
-      },
-      set(value) {
-        this.$store.commit('screen/setDrawer', value);
-      },
-    },
-  },
+  computed: mapGetters({
+    logged: 'auth/getLoggedIn',
+  }),
   mounted() {
     if (this.onMobile) this.drawer = false;
   },
