@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "private": true,
   "scripts": {
-    "dev:client": "nuxt-ts",
+    "dev:client": "nuxt-ts --port 4000",
     "dev:server": "ts-node-dev --transpile-only --respawn -r tsconfig-paths/register server/index.ts",
     "build": "nuxt-ts build",
     "start": "nuxt-ts start",

@@ -40,7 +40,8 @@ export class ImportService {
     let saveAll;
 
     if (merge) {
-      saveAll = await CostService.getNotDuplicates(costs);
+      const items = await CostService.getNotDuplicates(costs);
+      saveAll = items.map((item) => item.save());
     } else {
       saveAll = costs.map((cost) => Cost.save(cost));
     }
