@@ -9,7 +9,7 @@ export default {
     months: 'dates/getMonths',
   }),
   watch: {
-    $route(value, _) {
+    $route(value) {
       const { year, month } = value.params;
       if (month) this.$store.commit('dates/setMonth', parseInt(month, 10));
       if (this.years.length > 0 && year) {
