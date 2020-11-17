@@ -23,6 +23,15 @@ export default {
     year: 'dates/getYear',
     months: 'dates/getMonths',
   }),
+  mounted() {
+    const { month } = this.$route.params;
+    if (!month && this.months.length !== 0) {
+      const { path } = this.$route;
+      this.$router.push({
+        path: `${path}/${this.months[0]}`,
+      });
+    }
+  },
 };
 </script>
 
