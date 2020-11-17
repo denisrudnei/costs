@@ -7,7 +7,7 @@
           :key="month"
           :to="`/charts/${year.value}/${month}`"
         >
-          {{ month | format }}
+          {{ month | monthName }}
         </v-tab>
       </v-tabs>
       <nuxt-child />
@@ -16,17 +16,11 @@
 </template>
 
 <script>
-import { setMonth, format } from 'date-fns';
 import getDates from '@/mixins/getDates';
 import { mapGetters } from 'vuex';
 
 export default {
-  mixin: [getDates],
-  filters: {
-    format(value) {
-      return format(setMonth(new Date(), value - 1), 'MMM');
-    },
-  },
+  mixins: [getDates],
   computed: mapGetters({
     months: 'dates/getMonths',
     year: 'dates/getYear',

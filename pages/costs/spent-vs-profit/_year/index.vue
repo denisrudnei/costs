@@ -7,7 +7,7 @@
           :key="month"
           :to="`/costs/spent-vs-profit/${year.value}/${month}`"
         >
-          {{ month }}
+          {{ month | monthName }}
         </v-tab>
       </v-tabs>
       <nuxt-child />
