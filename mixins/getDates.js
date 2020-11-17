@@ -9,7 +9,7 @@ export default {
     months: 'dates/getMonths',
   }),
   watch: {
-    $route(value) {
+    $route(value, _) {
       const { year, month } = value.params;
       if (month) this.$store.commit('dates/setMonth', parseInt(month, 10));
       if (this.years.length > 0 && year) {
@@ -35,7 +35,10 @@ export default {
             'dates/setMonths',
             this.year.months.sort((a, b) => (a > b ? 1 : -1)),
           );
-          this.$store.commit('dates/setMonth', this.year.months[0]);
+          const month = this.year.months.find(
+            (month) => month === this.month,
+          ) || this.year.months[0];
+          this.$store.commit('dates/setMonth', month);
         }
       });
   },

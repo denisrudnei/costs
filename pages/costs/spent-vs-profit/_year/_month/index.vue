@@ -131,16 +131,6 @@ export default {
       ],
     };
   },
-  computed: {
-    year: {
-      get() {
-        return this.$store.getters['dates/getYear'];
-      },
-      set(value) {
-        this.$store.commit('dates/setYear', value);
-      },
-    },
-  },
   watch: {
     year() {
       this.updateMonths();
