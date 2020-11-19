@@ -14,6 +14,7 @@ router.post('/auth/login', (req, res) => {
           id: logged.id,
           email: logged.email,
           name: logged.name,
+          role: logged.role,
         },
         process.env.JWT_KEY!,
       );

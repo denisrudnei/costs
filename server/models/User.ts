@@ -27,6 +27,9 @@ export class User extends BaseEntity {
   @Field()
   public name!: string
 
+  @Column({ default: 'USER' })
+  public role: 'ADMIN' | 'USER' = 'USER'
+
   @Column({ unique: true })
   @Field()
   public email!: string

@@ -27,6 +27,14 @@
             <v-list-item-title v-text="item.title" />
           </v-list-item-content>
         </v-list-item>
+        <v-list-item v-if="isAdmin" to="/admin">
+          <v-list-item-action>
+            <v-icon>mdi-database-settings</v-icon>
+          </v-list-item-action>
+          <v-list-item-content>
+            Admin
+          </v-list-item-content>
+        </v-list-item>
         <v-list-item @click="logout">
           <v-list-item-action>
             <v-icon>mdi-exit-to-app</v-icon>
@@ -82,9 +90,15 @@ export default {
       miniVariant: false,
     };
   },
-  computed: mapGetters({
-    logged: 'auth/getLoggedIn',
-  }),
+  computed: {
+    isAdmin() {
+      return this.logged && this.user.role === 'ADMIN';
+    },
+    ...mapGetters({
+      logged: 'auth/getLoggedIn',
+      user: 'auth/getUser',
+    }),
+  },
   mounted() {
     if (this.onMobile) this.drawer = false;
   },
