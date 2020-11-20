@@ -7,6 +7,7 @@
         filled
         prepend-inner-icon="mdi-folder-search"
         class="white--text"
+        @keyup="updateQuery"
       />
     </v-col>
     <v-col md="2" cols="12">
@@ -84,6 +85,8 @@ export default {
         const { Costs } = response.data;
         this.costs = this.groupCosts(Costs);
       });
+    const { search } = this.$route.query;
+    if (search) this.search = search;
   },
   methods: {
     groupCosts(costs) {
@@ -127,6 +130,13 @@ export default {
         .then(() => {
           this.costs = this.costs.filter((item) => item.id !== value.id);
         });
+    },
+    updateQuery() {
+      this.$router.push({
+        query: {
+          search: this.search,
+        },
+      });
     },
     type(value) {
       return value.type === 'SPENT' ? 'red--text' : 'white--text';
