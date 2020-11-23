@@ -128,7 +128,13 @@ export default {
           ],
         })
         .then(() => {
-          this.costs = this.costs.filter((item) => item.id !== value.id);
+          const costs = this.costs
+            .flatMap((item) => item.costs)
+            .filter((item) => item.id !== value.id);
+          this.costs = this.groupCosts(costs);
+          this.$toast.show('Cost removed', {
+            duration: 1000,
+          });
         });
     },
     updateQuery() {
