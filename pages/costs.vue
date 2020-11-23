@@ -1,17 +1,17 @@
 <template>
   <v-row>
-    <v-tabs>
-      <v-tab to="/costs" exact>
-        List
-      </v-tab>
-      <v-tab to="/costs/create">
-        Create
-      </v-tab>
-      <v-tab to="/costs/spent-vs-profit">
-        Spends vs Profits
-      </v-tab>
-    </v-tabs>
     <v-col>
+      <v-tabs>
+        <v-tab to="/costs" exact>
+          List
+        </v-tab>
+        <v-tab to="/costs/create">
+          Create
+        </v-tab>
+        <v-tab to="/costs/spent-vs-profit">
+          Spends vs Profits
+        </v-tab>
+      </v-tabs>
       <nuxt-child />
     </v-col>
   </v-row>
