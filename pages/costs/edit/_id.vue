@@ -1,7 +1,26 @@
 <template>
   <div>
     <create v-if="cost" v-model="cost" @input="update" />
-    <span v-else>Loading</span>
+    <v-row>
+      <v-col>
+        <v-alert
+          icon="mdi-alert-circle"
+          type="info"
+          :value="status === 'loading'"
+          dismissible
+        >
+          Loading cost...
+        </v-alert>
+        <v-alert
+          icon="mdi-alert-circle"
+          type="error"
+          :value="status === 'error'"
+          dismissible
+        >
+          Error loading cost
+        </v-alert>
+      </v-col>
+    </v-row>
   </div>
 </template>
 
@@ -17,9 +36,11 @@ export default {
   data() {
     return {
       cost: null,
+      status: 'loading',
     };
   },
   mounted() {
+    this.status = 'loading';
     const { id } = this.$route.params;
     this.$apollo
       .query({
@@ -35,6 +56,9 @@ export default {
           ...response.data.GetOneCost,
           date,
         };
+        this.status = 'loaded';
+      }).catch(() => {
+        this.status = 'error';
       });
   },
   methods: {
