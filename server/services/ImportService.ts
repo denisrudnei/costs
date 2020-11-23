@@ -25,7 +25,7 @@ export class ImportService {
     const data = this.convertToTable(file, separator);
     const costs = data.map((item) => {
       const [date, name, value] = item;
-      const newValue = parseInt(value, 10);
+      const newValue = parseFloat(value.replace(',', '.'));
       const cost = new Cost({
         name,
         value: newValue,
