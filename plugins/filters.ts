@@ -3,10 +3,18 @@ import { format, parse, setMonth } from 'date-fns';
 import Dinero from 'dinero.js';
 import { Context } from '@nuxt/types';
 
-Vue.filter('date', (value: string) => format(
-  parse(value.split('T')[0], 'yyyy-MM-dd', new Date()),
-  'dd/MM/yyyy',
-));
+Vue.filter('date', (value: string | Date) => {
+  if (typeof value === 'string') {
+    return format(
+      parse(value.split('T')[0], 'yyyy-MM-dd', new Date()),
+      'dd/MM/yyyy',
+    );
+  }
+  return format(
+    parse(value.toISOString().split('T')[0], 'yyyy-MM-dd', new Date()),
+    'dd/MM/yyyy',
+  );
+});
 
 Vue.filter('monthName', (value: number) => format(setMonth(new Date(), value - 1), 'MMM'));
 

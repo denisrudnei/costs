@@ -82,6 +82,11 @@ export default {
           to: '/costs',
         },
         {
+          icon: 'mdi-axis-arrow',
+          title: 'Forecasts',
+          to: '/forecasts',
+        },
+        {
           icon: 'mdi-cog',
           title: 'Settings',
           to: '/settings',
