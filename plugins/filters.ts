@@ -8,7 +8,7 @@ export const dineroFormatter = (value: string | number, currency: Currency = 'US
   currency,
 })
   .setLocale(locale || '')
-  .toFormat('$0.0,00');
+  .toFormat('$0,0.00');
 
 Vue.filter('date', (value: string | Date) => {
   if (typeof value === 'string') {
