@@ -26,6 +26,8 @@ Vue.filter('date', (value: string | Date) => {
 Vue.filter('monthName', (value: number) => format(setMonth(new Date(), value - 1), 'MMM'));
 
 export default (context: Context) => {
-  const { currency, locale } = context.store.state.settings;
-  Vue.filter('dinero', (value: string | number) => dineroFormatter(value, currency !== '' ? currency : 'USD', locale));
+  Vue.filter('dinero', (value: string | number) => {
+    const { currency, locale } = context.store.state.settings;
+    return dineroFormatter(value, currency !== '' ? currency : 'USD', locale);
+  });
 };
