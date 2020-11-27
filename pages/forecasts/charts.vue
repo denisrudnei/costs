@@ -148,7 +148,7 @@ export default {
           name: 'Difference',
           data: items.map((item) => ({
             x: format(parse(item.date.substr(0, 10), 'yyyy-MM-dd', new Date()), 'MM/dd/yyyy'),
-            y: item.total,
+            y: item.total.toFixed(2),
           })),
         });
       });
