@@ -72,7 +72,10 @@ export default {
       selected: [],
       items: [],
       chartOptions: {
-        type: 'area',
+        type: 'line',
+        stroke: {
+          curve: 'stepline',
+        },
         xaxis: {
           type: 'datetime',
         },
