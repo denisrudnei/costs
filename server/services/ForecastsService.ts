@@ -80,7 +80,7 @@ export class ForecastService {
         date: actualDate,
         total: toSum
           .map((f) => f.value)
-          .reduce((acc, value) => parseFloat(acc.toString()) + parseFloat(value.toString(0)), 0),
+          .reduce((acc, value) => Number(acc) + Number(value), 0),
       };
       if (result.length === 0) { result.push(value); }
       if (result[result.length - 1].total !== value.total) result.push(value);

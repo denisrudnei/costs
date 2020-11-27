@@ -55,9 +55,11 @@
 <script>
 import forecasts from '@/mixins/forecasts';
 import { format, parse } from 'date-fns';
+import { mapGetters } from 'vuex';
 import { GetForecast } from '../../graphql/query/getForecast';
 import { ForecastsInMonths } from '../../graphql/query/forecastsInMonths';
 import { TotalForecastInMonths } from '../../graphql/query/totalForecastInMonths';
+import { dineroFormatter } from '~/plugins/filters';
 
 export default {
   components: {
@@ -85,12 +87,22 @@ export default {
     };
   },
   computed: {
+    ...mapGetters({
+      currency: 'settings/getCurrency',
+      locale: 'settings/getLocale',
+    }),
     searchResult() {
       return this.items
         .filter((item) => item.text.toLowerCase().includes(this.search.toLowerCase()));
     },
   },
   created() {
+    const fmt = (value) => dineroFormatter(value, this.currency, this.locale);
+    this.chartOptions.yaxis = {
+      labels: {
+        formatter: fmt,
+      },
+    };
     this.$apollo.query({
       query: GetForecast,
     }).then((response) => {
@@ -119,7 +131,7 @@ export default {
             name: item.name,
             data: item.values.map((value) => ({
               x: parse(value.date.substr(0, 10), 'yyyy-MM-dd', new Date()).getTime(),
-              y: value.value,
+              y: value.value.toFixed(2),
             })),
           });
         });
