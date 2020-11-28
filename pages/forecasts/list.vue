@@ -110,6 +110,12 @@ export default {
         variables: {
           id,
         },
+        awaitRefetchQueries: true,
+        refetchQueries: [
+          {
+            query: GetForecast,
+          },
+        ],
       }).then(() => {
         this.items = this.items.filter((forecast) => forecast.id !== id);
         this.$toast.show('Forecast removed', {
