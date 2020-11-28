@@ -46,6 +46,9 @@
             filled
             @change="updateChart"
           />
+          <v-btn block @click="selectAll">
+            Select all
+          </v-btn>
         </v-card-text>
       </v-card>
     </v-col>
@@ -120,6 +123,10 @@ export default {
       const months = this.getMonths(item.start.substr(0, 10), item.end.substr(0, 10));
       const total = item.value * months;
       return `${item.name} | Months: ${months} | Total: ${total}`;
+    },
+    selectAll() {
+      this.selected = this.items.map((item) => item.value);
+      this.updateChart();
     },
     updateChart() {
       this.$apollo.query({
