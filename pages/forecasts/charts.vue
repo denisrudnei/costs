@@ -69,24 +69,23 @@
       </v-card>
       <v-row>
         <v-col cols="12">
-          <v-btn block @click="add('start')">
-            Add 1 year to start date
+          <v-btn block @click="remove('start')">
+            Starts one year earlier
           </v-btn>
         </v-col>
-
         <v-col cols="12">
-          <v-btn block @click="remove('start')">
-            Remove 1 year to start date
+          <v-btn block @click="add('start')">
+            Starts 1 year later
           </v-btn>
         </v-col>
         <v-col cols="12">
           <v-btn block @click="add('end')">
-            Add 1 year to end date
+            Ends one year later
           </v-btn>
         </v-col>
         <v-col cols="12">
           <v-btn block @click="remove('end')">
-            Remove 1 year to end date
+            Ends one year earlier
           </v-btn>
         </v-col>
       </v-row>

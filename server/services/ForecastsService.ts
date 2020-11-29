@@ -1,9 +1,9 @@
 /* eslint-disable no-loop-func */
 import {
-  addMonths, differenceInMonths, isAfter, isBefore, isWithinInterval,
+  addMonths, differenceInMonths, isBefore, isWithinInterval,
 } from 'date-fns';
+import { In, Raw } from 'typeorm';
 
-import { In } from 'typeorm';
 import CostType from '../enums/CostType';
 import { Forecast } from '../models/Forecast';
 import { User } from '../models/User';
@@ -31,10 +31,11 @@ export class ForecastService {
   public static async forecastInMonths(ids: Forecast['id'][], userId: User['id'], numberOfMonths: number = 12) {
     const forecasts = await Forecast.find({
       where: {
-        id: In(ids),
+        id: ids.length > 0 ? In(ids) : Raw(() => 'FALSE'),
         user: userId,
       },
     });
+
     const result = forecasts.map((forecast) => {
       const end = forecast.indeterminate ? addMonths(forecast.start, numberOfMonths) : forecast.end;
       const months = Math.abs(differenceInMonths(forecast.start, end));
@@ -68,7 +69,7 @@ export class ForecastService {
 
     const forecasts = await Forecast.find({
       where: {
-        id: In(ids),
+        id: ids.length > 0 ? In(ids) : Raw(() => 'FALSE'),
         user: userId,
       },
     });
