@@ -14,6 +14,12 @@
               <p>Months: {{ forecast.values.length }}</p>
               <p>Total value: {{ forecast.total | dinero }}</p>
             </v-col>
+            <v-col v-if="forecast.indeterminate" cols="12">
+              <v-text-field v-model="months" label="Number of months" type="number" filled />
+              <v-btn @click="getInfo">
+                Update
+              </v-btn>
+            </v-col>
             <v-col cols="12">
               <v-data-table :items="items" :headers="headers">
                 <template v-slot:item.date="{ item }">
@@ -38,6 +44,8 @@ export default {
   data() {
     return {
       items: [],
+      id: undefined,
+      months: undefined,
       forecast: undefined,
       headers: [
         {
@@ -53,16 +61,23 @@ export default {
   },
   created() {
     const { id } = this.$route.params;
-    this.$apollo.query({
-      query: ForecastsInMonths,
-      variables: {
-        ids: [id],
-      },
-    }).then((response) => {
-      const [forecast] = response.data.ForecastsInMonths;
-      this.forecast = forecast;
-      this.items = forecast.values;
-    });
+    this.id = id;
+    this.getInfo();
+  },
+  methods: {
+    getInfo() {
+      this.$apollo.query({
+        query: ForecastsInMonths,
+        variables: {
+          ids: [this.id],
+          months: parseInt(this.months || 12, 10),
+        },
+      }).then((response) => {
+        const [forecast] = response.data.ForecastsInMonths;
+        this.forecast = forecast;
+        this.items = forecast.values;
+      });
+    },
   },
 };
 </script>

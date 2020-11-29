@@ -16,5 +16,8 @@ export class ForecastInput {
   public end!: Date
 
   @Field()
+  public indeterminate!: boolean
+
+  @Field()
   public value!: number
 }

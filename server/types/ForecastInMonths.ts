@@ -13,6 +13,9 @@ export class ForecastInMonths {
   @Field()
   public end!: Date
 
+  @Field()
+  public indeterminate!: boolean
+
   @Field(() => Float)
   public value!: number
 

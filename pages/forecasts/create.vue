@@ -1,16 +1,16 @@
 <template>
   <v-row>
-    <v-col cols="8">
+    <v-col md="8" cols="12">
       <v-row>
         <v-col cols="12" md="12">
           <v-text-field v-model="forecast.name" placeholder="Name" filled />
         </v-col>
-        <v-col cols="12" md="6">
+        <v-col cols="12" md="5">
           <v-menu v-model="menuStart" max-width="290px" :close-on-content-click="false">
             <v-date-picker :value="start" @input="updateStart" />
             <template #activator="{on}">
               <v-text-field
-                placeholder="Start date"
+                label="Start date"
                 filled
                 :value="startFormatted"
                 readonly
@@ -19,12 +19,12 @@
             </template>
           </v-menu>
         </v-col>
-        <v-col cols="12" md="6">
+        <v-col cols="12" md="5">
           <v-menu v-model="menuEnd" max-width="290px" :close-on-content-click="false">
             <v-date-picker :value="end" :allowed-dates="allowedEnd" @input="updateEnd" />
             <template #activator="{ on }">
               <v-text-field
-                placeholder="End date"
+                label="End date"
                 filled
                 :value="endFormatted"
                 readonly
@@ -32,6 +32,13 @@
               />
             </template>
           </v-menu>
+        </v-col>
+        <v-col cols="2">
+          <v-checkbox
+            v-model="forecast.indeterminate"
+            label="No deadline"
+            @change="setIndeterminate"
+          />
         </v-col>
         <v-col cols="12" md="6">
           <v-select v-model="forecast.type" filled :items="types" />
@@ -41,7 +48,7 @@
         </v-col>
       </v-row>
     </v-col>
-    <v-col cols="4">
+    <v-col md="4" cols="12">
       <v-row>
         <v-col cols="12">
           <v-card>
@@ -72,7 +79,7 @@
         Save
       </v-btn>
     </v-col>
-    <v-dialog v-model="importModal" width="75%" scrollable>
+    <v-dialog v-model="importModal" width="95%" scrollable>
       <v-card>
         <v-card-title>
           <v-text-field v-model="search" filled label="Search" />
@@ -81,7 +88,7 @@
           <v-row>
             <v-col>
               <v-row>
-                <v-col v-for="cost in costs" :key="cost.id" cols="3">
+                <v-col v-for="cost in costs" :key="cost.id" md="3" cols="12">
                   <v-card>
                     <v-card-title>
                       <span>
@@ -103,7 +110,7 @@
                 </v-col>
               </v-row>
             </v-col>
-            <v-col v-if="selectedToImport && getSelected(selectedToImport)" cols="4">
+            <v-col v-if="selectedToImport && getSelected(selectedToImport)" md="4" cols="12">
               <v-card>
                 <v-card-title>
                   {{ getSelected(selectedToImport).name }}
@@ -151,6 +158,7 @@ export default {
       types: ['PROFIT', 'SPENT'],
       forecast: {
         name: '',
+        indeterminate: false,
         start: new Date(),
         end: new Date(),
         value: 0,
@@ -202,12 +210,18 @@ export default {
         this.costsData = response.data.Costs;
       });
     },
+    setIndeterminate(value) {
+      if (value) {
+        this.forecast.end = addMonths(this.forecast.start, 12);
+      }
+    },
     importSelected() {
       const value = this.getSelected(this.selectedToImport);
       const date = parse(value.date.substr(0, 10), 'yyyy-MM-dd', new Date());
       this.forecast = {
         name: value.name,
         value: value.value,
+        indeterminate: value.indeterminate,
         start: date,
         type: value.type,
         end: addMonths(date, 12),
@@ -234,6 +248,7 @@ export default {
           name: '',
           start: new Date(),
           end: new Date(),
+          indeterminate: false,
           value: 0,
           type: 'PROFIT',
         };

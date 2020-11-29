@@ -2,6 +2,22 @@
   <v-row>
     <v-col cols="8">
       <v-row>
+        <v-col cols="12" md="6">
+          <v-menu v-model="startMenu" :close-on-content-click="false" max-width="290px">
+            <template v-slot:activator="{ on }">
+              <v-text-field filled label="Start" :value="getStart" v-on="on" />
+            </template>
+            <v-date-picker @change="updateDate($event, 'start')" />
+          </v-menu>
+        </v-col>
+        <v-col cols="12" md="6">
+          <v-menu v-model="endMenu" :close-on-content-click="false" max-width="290px">
+            <template v-slot:activator="{ on }">
+              <v-text-field filled label="End" :value="getEnd" v-on="on" />
+            </template>
+            <v-date-picker @change="updateDate($event, 'end')" />
+          </v-menu>
+        </v-col>
         <v-col cols="12">
           <v-card class="white black--text">
             <v-card-title>
@@ -51,13 +67,38 @@
           </v-btn>
         </v-card-text>
       </v-card>
+      <v-row>
+        <v-col cols="12">
+          <v-btn block @click="add('start')">
+            Add 1 year to start date
+          </v-btn>
+        </v-col>
+
+        <v-col cols="12">
+          <v-btn block @click="remove('start')">
+            Remove 1 year to start date
+          </v-btn>
+        </v-col>
+        <v-col cols="12">
+          <v-btn block @click="add('end')">
+            Add 1 year to end date
+          </v-btn>
+        </v-col>
+        <v-col cols="12">
+          <v-btn block @click="remove('end')">
+            Remove 1 year to end date
+          </v-btn>
+        </v-col>
+      </v-row>
     </v-col>
   </v-row>
 </template>
 
 <script>
 import forecasts from '@/mixins/forecasts';
-import { format, parse } from 'date-fns';
+import {
+  addMonths, addYears, format, parse, subYears,
+} from 'date-fns';
 import { mapGetters } from 'vuex';
 import { GetForecast } from '../../graphql/query/getForecast';
 import { ForecastsInMonths } from '../../graphql/query/forecastsInMonths';
@@ -71,6 +112,10 @@ export default {
   mixins: [forecasts],
   data() {
     return {
+      start: new Date(),
+      end: new Date(),
+      startMenu: false,
+      endMenu: false,
       search: '',
       selected: [],
       items: [],
@@ -101,6 +146,12 @@ export default {
       return this.items
         .filter((item) => item.text.toLowerCase().includes(this.search.toLowerCase()));
     },
+    getStart() {
+      return format(this.start, 'dd/MM/yyyy');
+    },
+    getEnd() {
+      return format(this.end, 'dd/MM/yyyy');
+    },
   },
   created() {
     const fmt = (value) => dineroFormatter(value, this.currency, this.locale);
@@ -109,6 +160,7 @@ export default {
         formatter: fmt,
       },
     };
+    this.end = addMonths(this.start, 12);
     this.$apollo.query({
       query: GetForecast,
     }).then((response) => {
@@ -119,6 +171,14 @@ export default {
     });
   },
   methods: {
+    add(type) {
+      this[type] = addYears(this[type], 1);
+      this.updateChart();
+    },
+    remove(type) {
+      this[type] = subYears(this[type], 1);
+      this.updateChart();
+    },
     getName(item) {
       const months = this.getMonths(item.start.substr(0, 10), item.end.substr(0, 10));
       const total = item.value * months;
@@ -126,6 +186,11 @@ export default {
     },
     selectAll() {
       this.selected = this.items.map((item) => item.value);
+      this.updateChart();
+    },
+    updateDate(value, type) {
+      this[type] = parse(value, 'yyyy-MM-dd', new Date());
+      this[`${type}Menu`] = false;
       this.updateChart();
     },
     updateChart() {
@@ -150,6 +215,8 @@ export default {
         query: TotalForecastInMonths,
         variables: {
           ids: this.selected,
+          start: this.start,
+          end: this.end,
         },
       }).then((response) => {
         this.seriesTotal = [];

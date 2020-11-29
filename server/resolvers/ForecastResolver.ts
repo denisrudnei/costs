@@ -1,6 +1,7 @@
 import {
-  Authorized, Query, Resolver, Mutation, Arg, Ctx, ID,
+  Authorized, Query, Resolver, Mutation, Arg, Ctx, ID, Int,
 } from 'type-graphql';
+
 import { ExpressContext } from 'apollo-server-express/dist/ApolloServer';
 import { Forecast } from '../models/Forecast';
 import { ForecastService } from '../services/ForecastsService';
@@ -26,16 +27,21 @@ export class ForecastResolver {
 
   @Query(() => [ForecastInMonths])
   @Authorized('user')
-  public ForecastsInMonths(@Arg('ids', () => [ID]) ids: Forecast['id'][], @Ctx() { req }: ExpressContext) {
+  public ForecastsInMonths(@Arg('ids', () => [ID]) ids: Forecast['id'][], @Arg('months', () => Int, { nullable: true }) months: number, @Ctx() { req }: ExpressContext) {
     const { id } = req.session!.authUser!;
-    return ForecastService.forecastInMonths(ids, id);
+    return ForecastService.forecastInMonths(ids, id, months);
   }
 
   @Query(() => [TotalForecastInMonths])
   @Authorized('user')
-  public TotalForecastInMonths(@Arg('ids', () => [ID]) ids: Forecast['id'][], @Ctx() { req }: ExpressContext) {
+  public TotalForecastInMonths(
+    @Arg('ids', () => [ID]) ids: Forecast['id'][],
+    @Arg('start', () => Date) start: Date,
+    @Arg('end', () => Date) end: Date,
+    @Ctx() { req }: ExpressContext,
+  ) {
     const { id } = req.session!.authUser!;
-    return ForecastService.totalForecastInMonths(ids, id);
+    return ForecastService.totalForecastInMonths(ids, id, start, end);
   }
 
   @Mutation(() => Boolean)

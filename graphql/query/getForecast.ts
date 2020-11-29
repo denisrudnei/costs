@@ -5,6 +5,7 @@ export const GetForecast = ggl`
     GetForecast {
       id
       name
+      indeterminate
       start
       end
       value

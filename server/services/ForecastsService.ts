@@ -1,6 +1,6 @@
 /* eslint-disable no-loop-func */
 import {
-  addMonths, differenceInMonths, isBefore, isWithinInterval, max, min,
+  addMonths, differenceInMonths, isAfter, isBefore, isWithinInterval,
 } from 'date-fns';
 
 import { In } from 'typeorm';
@@ -28,7 +28,7 @@ export class ForecastService {
     return Forecast.save(forecast);
   }
 
-  public static async forecastInMonths(ids: Forecast['id'][], userId: User['id']) {
+  public static async forecastInMonths(ids: Forecast['id'][], userId: User['id'], numberOfMonths: number = 12) {
     const forecasts = await Forecast.find({
       where: {
         id: In(ids),
@@ -36,14 +36,15 @@ export class ForecastService {
       },
     });
     const result = forecasts.map((forecast) => {
-      const months = Math.abs(differenceInMonths(forecast.start, forecast.end));
+      const end = forecast.indeterminate ? addMonths(forecast.start, numberOfMonths) : forecast.end;
+      const months = Math.abs(differenceInMonths(forecast.start, end));
       const total = months * forecast.value;
       let actualDate = forecast.start;
       const values: ForecastValue[] = [];
-      while (isBefore(actualDate, forecast.end)) {
+      while (isBefore(actualDate, end)) {
         const value = values.length >= 1
-          ? parseFloat(values[values.length - 1].value.toString())
-          + parseFloat(forecast.value.toString())
+          ? Number(values[values.length - 1].value)
+          + Number(forecast.value)
           : forecast.value;
         values.push({
           name: forecast.name,
@@ -62,39 +63,46 @@ export class ForecastService {
     return result;
   }
 
-  public static async totalForecastInMonths(ids: Forecast['id'][], userId: User['id']) {
+  public static async totalForecastInMonths(ids: Forecast['id'][], userId: User['id'], startDate: Date, endDate: Date) {
     const result: TotalForecastInMonths[] = [];
+
     const forecasts = await Forecast.find({
       where: {
         id: In(ids),
         user: userId,
       },
     });
-    const startDate = min(forecasts.map((forecast) => forecast.start));
-    const endDate = max(forecasts.map((forecast) => forecast.end));
-    let actualDate = startDate;
 
-    function addToResult(toSum: Forecast[], actualDate: Date) {
-      const value = {
-        names: toSum.map((item) => item.name),
-        date: actualDate,
-        total: toSum
-          .map((f) => f.value)
-          .reduce((acc, value) => Number(acc) + Number(value), 0),
-      };
-      if (result.length === 0) { result.push(value); }
-      if (result[result.length - 1].total !== value.total) result.push(value);
-    }
+    let actualDate = startDate;
 
     while (isBefore(actualDate, endDate)) {
       const toSum = forecasts
-        .filter(
-          (forecast) => isWithinInterval(actualDate, { start: forecast.start, end: forecast.end }),
-        );
-      addToResult(toSum, actualDate);
+        .filter((forecast) => {
+          if (!forecast.indeterminate) {
+            return isWithinInterval(actualDate, { start: forecast.start, end: forecast.end });
+          }
+          return isBefore(forecast.start, actualDate);
+        });
+      this.addToResult(result, toSum, actualDate);
       actualDate = addMonths(actualDate, 1);
     }
     return result;
+  }
+
+  private static async addToResult(
+    result: TotalForecastInMonths[],
+    toSum: Forecast[],
+    actualDate: Date,
+  ) {
+    const value = {
+      names: toSum.map((item) => item.name),
+      date: actualDate,
+      total: toSum
+        .map((f) => f.value)
+        .reduce((acc, value) => Number(acc) + Number(value), 0),
+    };
+    if (result.length === 0) { result.push(value); }
+    if (result[result.length - 1].total !== value.total) result.push(value);
   }
 
   public static async remove(id: Forecast['id'], userId: User['id']) {

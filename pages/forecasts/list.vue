@@ -28,6 +28,9 @@
         <template v-slot:item.total="{ item }">
           {{ (months(item.start, item.end) * item.value) | dinero }}
         </template>
+        <template v-slot:item.indeterminate="{ item }">
+          <v-checkbox readonly :input-value="item.indeterminate" />
+        </template>
         <template v-slot:item.actions="{ item }">
           <v-btn :to="`/forecasts/details/${item.id}`" icon>
             <v-icon>
@@ -80,6 +83,10 @@ export default {
         {
           value: 'months',
           text: 'Months',
+        },
+        {
+          value: 'indeterminate',
+          text: 'Indeterminate',
         },
         {
           value: 'total',

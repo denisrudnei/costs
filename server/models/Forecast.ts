@@ -31,6 +31,10 @@ export class Forecast extends BaseEntity {
   @Field(() => Date)
   public end!: Date
 
+  @Column({ default: false })
+  @Field(() => Boolean)
+  public indeterminate!: boolean
+
   @Column({ type: 'decimal', default: 0 })
   @Field(() => Float)
   public value: number = 0
