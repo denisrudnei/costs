@@ -200,7 +200,7 @@ export default {
       return this.forecast.value * this.months;
     },
     forecast() {
-      return Object.assign(this.forecastData, this.value);
+      return Object.assign(this.value, this.forecastData);
     },
   },
   methods: {
@@ -231,10 +231,10 @@ export default {
     importSelected() {
       const value = this.getSelected(this.selectedToImport);
       const date = parse(value.date.substr(0, 10), 'yyyy-MM-dd', new Date());
-      this.forecast = {
+      this.forecastData = {
         name: value.name,
         value: value.value,
-        indeterminate: value.indeterminate,
+        indeterminate: false,
         start: date,
         type: value.type,
         end: addMonths(date, 12),
