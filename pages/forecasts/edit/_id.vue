@@ -46,7 +46,7 @@ export default {
             name,
             start,
             end,
-            value,
+            value: parseFloat(value.toString()),
             type,
             indeterminate,
           },
