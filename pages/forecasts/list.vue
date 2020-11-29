@@ -25,6 +25,9 @@
         <template v-slot:item.months="{ item }">
           {{ months(item.start, item.end) }}
         </template>
+        <template v-slot:item.value="{ item }">
+          {{ item.value | dinero }}
+        </template>
         <template v-slot:item.total="{ item }">
           {{ (months(item.start, item.end) * item.value) | dinero }}
         </template>
