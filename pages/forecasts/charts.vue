@@ -181,7 +181,7 @@ export default {
     getName(item) {
       const months = this.getMonths(item.start.substr(0, 10), item.end.substr(0, 10));
       const total = item.value * months;
-      return `${item.name} | Months: ${months} | Total: ${total}`;
+      return `${item.name} | Months: ${months} | Total: ${dineroFormatter(total, this.currency, this.locale)}`;
     },
     selectAll() {
       this.selected = this.items.map((item) => item.value);
