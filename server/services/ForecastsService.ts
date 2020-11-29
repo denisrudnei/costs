@@ -19,6 +19,15 @@ export class ForecastService {
     });
   }
 
+  public static async getOne(id: Forecast['id'], userId: User['id']) {
+    return Forecast.findOne({
+      where: {
+        id,
+        user: userId,
+      },
+    });
+  }
+
   public static async create(forecast: Forecast, userId: User['id']) {
     const user = await User.findOne(userId);
     if (!user) throw new Error('User not found');
@@ -26,6 +35,19 @@ export class ForecastService {
     if (forecast.value < 0) forecast.type = CostType.SPENT;
     if (forecast.type === CostType.SPENT) forecast.value = -Math.abs(forecast.value);
     return Forecast.save(forecast);
+  }
+
+  public static async edit(id: Forecast['id'], forecastToEdit: Partial<Forecast>, userId: User['id']) {
+    const forecast = await Forecast.findOne({
+      where: {
+        id,
+        user: userId,
+      },
+    });
+    if (!forecast) throw new Error('Forecast not found');
+    Object.assign(forecast, forecastToEdit);
+    await forecast.save();
+    return forecast;
   }
 
   public static async forecastInMonths(ids: Forecast['id'][], userId: User['id'], numberOfMonths: number = 12) {

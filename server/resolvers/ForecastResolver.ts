@@ -1,11 +1,12 @@
+import { ExpressContext } from 'apollo-server-express/dist/ApolloServer';
 import {
-  Authorized, Query, Resolver, Mutation, Arg, Ctx, ID, Int,
+  Arg, Authorized, Ctx, ID, Int, Mutation, Query, Resolver,
 } from 'type-graphql';
 
-import { ExpressContext } from 'apollo-server-express/dist/ApolloServer';
+import { ForecastEditInput } from '../inputs/ForecastEditInput';
+import { ForecastInput } from '../inputs/ForecastInput';
 import { Forecast } from '../models/Forecast';
 import { ForecastService } from '../services/ForecastsService';
-import { ForecastInput } from '../inputs/ForecastInput';
 import { ForecastInMonths } from '../types/ForecastInMonths';
 import { TotalForecastInMonths } from '../types/TotalForecastInMonths';
 
@@ -18,11 +19,25 @@ export class ForecastResolver {
     return ForecastService.getAll(id);
   }
 
+  @Query(() => Forecast)
+  @Authorized('user')
+  public GetOneForecast(@Arg('id', () => ID) forecastId: Forecast['id'], @Ctx() { req }: ExpressContext) {
+    const { id } = req.session!.authUser;
+    return ForecastService.getOne(forecastId, id);
+  }
+
   @Mutation(() => Forecast)
   @Authorized('user')
   public CreateForecast(@Arg('forecast', () => ForecastInput) forecast: Forecast, @Ctx() { req }: ExpressContext) {
     const { id } = req.session!.authUser;
     return ForecastService.create(forecast, id);
+  }
+
+  @Mutation(() => Forecast)
+  @Authorized('user')
+  public EditForecast(@Arg('id', () => ID) forecastId: Forecast['id'], @Arg('forecast', () => ForecastEditInput) forecast: Forecast, @Ctx() { req }: ExpressContext) {
+    const { id } = req.session!.authUser;
+    return ForecastService.edit(forecastId, forecast, id);
   }
 
   @Query(() => [ForecastInMonths])
