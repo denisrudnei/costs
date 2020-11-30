@@ -1,6 +1,16 @@
 <template>
   <v-row>
-    <v-col>
+    <v-col cols="12" md="8">
+      <v-data-table :items="items" :headers="headers">
+        <template v-slot:item.date="{ item }">
+          {{ item.date.substr(0, 10) | date }}
+        </template>
+        <template v-slot:item.value="{ item }">
+          {{ item.value | dinero }}
+        </template>
+      </v-data-table>
+    </v-col>
+    <v-col cols="12" md="4">
       <v-card v-if="forecast">
         <v-card-title>
           {{ forecast.name }}
@@ -19,16 +29,6 @@
               <v-btn @click="getInfo">
                 Update
               </v-btn>
-            </v-col>
-            <v-col cols="12">
-              <v-data-table :items="items" :headers="headers">
-                <template v-slot:item.date="{ item }">
-                  {{ item.date.substr(0, 10) | date }}
-                </template>
-                <template v-slot:item.value="{ item }">
-                  {{ item.value | dinero }}
-                </template>
-              </v-data-table>
             </v-col>
           </v-row>
         </v-card-text>
