@@ -24,8 +24,10 @@
     <v-col cols="12">
       <v-row>
         <v-col cols="12" md="4">
-          <v-card class="white black--text">
-            <v-card-title> Spending / Profits </v-card-title>
+          <v-card>
+            <v-card-title class="white--text">
+              Spending / Profits
+            </v-card-title>
             <v-card-text>
               <client-only>
                 <apexchart
@@ -40,8 +42,10 @@
           </v-card>
         </v-col>
         <v-col cols="12" md="8">
-          <v-card class="white">
-            <v-card-title> Profts vs Spending </v-card-title>
+          <v-card>
+            <v-card-title class="white--text">
+              Profts vs Spending
+            </v-card-title>
             <v-card-text>
               <client-only>
                 <apexchart
@@ -56,8 +60,10 @@
           </v-card>
         </v-col>
         <v-col cols="12">
-          <v-card class="white">
-            <v-card-title> Spending </v-card-title>
+          <v-card>
+            <v-card-title class="white--text">
+              Spending
+            </v-card-title>
             <v-card-text>
               <client-only>
                 <apexchart
@@ -72,8 +78,10 @@
           </v-card>
         </v-col>
         <v-col cols="12">
-          <v-card class="white">
-            <v-card-title> Profits </v-card-title>
+          <v-card>
+            <v-card-title class="white--text">
+              Profits
+            </v-card-title>
             <v-card-text>
               <client-only>
                 <apexchart
@@ -93,11 +101,13 @@
 </template>
 
 <script>
+import { mapGetters } from 'vuex';
 import getDates from '@/mixins/getDates';
 import summaryGroupedByDate from '@/graphql/query/summaryGroupedByDate';
 import summaryDayByDay from '@/graphql/query/summaryDayByDay';
 import { format } from 'date-fns';
 import basicSummary from '@/graphql/query/basicSummary';
+import { dineroFormatter } from '~/plugins/filters';
 
 export default {
   components: {
@@ -112,6 +122,7 @@ export default {
       mixedOptions: {
         stroke: {
           curve: 'straight',
+          width: 3,
         },
         colors: ['#008000', '#ff0000', '#0b0b6c'],
       },
@@ -121,11 +132,17 @@ export default {
         stroke: {
           curve: 'straight',
         },
+        tooltip: {
+          theme: 'dark',
+        },
       },
       profitsOptions: {
         colors: ['#008000'],
         stroke: {
           curve: 'straight',
+        },
+        tooltip: {
+          theme: 'dark',
         },
       },
       pieOptions: {
@@ -140,6 +157,18 @@ export default {
         },
         xaxis: {
           type: 'datetime',
+          axisTicks: {
+            color: '#333',
+          },
+          axisBorder: {
+            color: '#333',
+          },
+        },
+        chart: {
+          foreColor: '#fff',
+        },
+        grid: {
+          borderColor: '#40475D',
         },
         plotOptions: {
           bar: {
@@ -160,6 +189,7 @@ export default {
           },
         },
         tooltip: {
+          theme: 'dark',
           xaxis: {
             format: 'dd MM yyyy',
           },
@@ -172,6 +202,10 @@ export default {
       dayByDaySeries: [],
     };
   },
+  computed: mapGetters({
+    currency: 'settings/getCurrency',
+    locale: 'settings/getLocale',
+  }),
   watch: {
     month() {
       this.fetchData();
@@ -186,6 +220,12 @@ export default {
   },
   methods: {
     updateOptions() {
+      const fmt = (value) => dineroFormatter(value, this.currency, this.locale);
+
+      this.options.yaxis = {
+        labels: { formatter: fmt },
+      };
+
       Object.assign(this.mixedOptions, this.options);
 
       Object.assign(this.spendingOptions, this.options);
@@ -301,8 +341,5 @@ export default {
   },
 };
 </script>
-<style scoped>
-* {
-  color: black;
-}
+<style>
 </style>

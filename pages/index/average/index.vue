@@ -1,9 +1,11 @@
 <template>
   <v-row>
     <v-col cols="12">
-      <v-card class="white">
+      <v-card>
         <client-only>
-          <v-card-title> Spending </v-card-title>
+          <v-card-title class="white--text">
+            Spending
+          </v-card-title>
           <v-card-text>
             <apexchart
               :options="options"
@@ -16,8 +18,10 @@
       </v-card>
     </v-col>
     <v-col cols="12">
-      <v-card class="white">
-        <v-card-title> Profits </v-card-title>
+      <v-card>
+        <v-card-title class="white--text">
+          Profits
+        </v-card-title>
         <client-only>
           <v-card-text>
             <apexchart
@@ -36,6 +40,8 @@
 <script>
 import { parse } from 'date-fns';
 import summaryTotalByMonth from '@/graphql/query/summaryTotalByMonth';
+import { mapGetters } from 'vuex';
+import { dineroFormatter } from '~/plugins/filters';
 
 export default {
   components: {
@@ -45,8 +51,29 @@ export default {
     return {
       options: {
         type: 'bar',
+        chart: {
+          foreColor: '#fff',
+          toolbar: {
+            show: true,
+          },
+        },
         xaxis: {
           type: 'datetime',
+          axisTicks: {
+            color: '#333',
+          },
+          axisBorder: {
+            color: '#333',
+          },
+        },
+        grid: {
+          borderColor: '#40475D',
+        },
+        tooltip: {
+          theme: 'dark',
+          xaxis: {
+            format: 'dd MM yyyy',
+          },
         },
         plotOptions: {
           bar: {
@@ -71,7 +98,17 @@ export default {
       spendingSeries: [],
     };
   },
+  computed: mapGetters({
+    currency: 'settings/getCurrency',
+    locale: 'settings/getLocale',
+  }),
   mounted() {
+    const fmt = (value) => dineroFormatter(value, this.currency, this.locale);
+    this.options.yaxis = {
+      labels: {
+        formatter: fmt,
+      },
+    };
     this.fetchData();
   },
   methods: {
@@ -112,8 +149,5 @@ export default {
 };
 </script>
 
-<style scoped>
-* {
-  color: black;
-}
+<style>
 </style>

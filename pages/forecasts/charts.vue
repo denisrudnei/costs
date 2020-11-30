@@ -1,6 +1,6 @@
 <template>
   <v-row>
-    <v-col cols="8">
+    <v-col md="8" cols="12">
       <v-row>
         <v-col cols="12" md="6">
           <v-menu v-model="startMenu" :close-on-content-click="false" max-width="290px">
@@ -19,26 +19,31 @@
           </v-menu>
         </v-col>
         <v-col cols="12">
-          <v-card class="white black--text">
-            <v-card-title>
+          <v-card>
+            <v-card-title class="white--text">
               Forecasts
             </v-card-title>
             <v-card-text>
               <client-only>
-                <apexchart type="area" :series="series" :options="chartOptions" height="200" />
+                <apexchart
+                  :type="chartOptions.type"
+                  :series="series"
+                  :options="chartOptions"
+                  height="200"
+                />
               </client-only>
             </v-card-text>
           </v-card>
         </v-col>
         <v-col cols="12">
-          <v-card class="white black--text">
-            <v-card-title>
+          <v-card>
+            <v-card-title class="white--text">
               Total
             </v-card-title>
             <v-card-text>
               <client-only>
                 <apexchart
-                  type="area"
+                  type="bar"
                   :series="seriesTotal"
                   :options="chartOptions"
                   height="200"
@@ -49,7 +54,7 @@
         </v-col>
       </v-row>
     </v-col>
-    <v-col cols="4">
+    <v-col md="4" cols="12">
       <v-card>
         <v-card-title>
           <v-text-field v-model="search" filled placeholder="Seach" />
@@ -75,7 +80,7 @@
         </v-col>
         <v-col cols="12">
           <v-btn block @click="add('start')">
-            Starts 1 year later
+            Starts one year later
           </v-btn>
         </v-col>
         <v-col cols="12">
@@ -120,13 +125,31 @@ export default {
       items: [],
       chartOptions: {
         type: 'line',
+        palette: 'palette3',
+        chart: {
+          foreColor: '#fff',
+          toolbar: {
+            show: true,
+          },
+        },
         stroke: {
-          curve: 'stepline',
+          width: 3,
+          curve: 'smooth',
         },
         xaxis: {
           type: 'datetime',
+          axisTicks: {
+            color: '#333',
+          },
+          axisBorder: {
+            color: '#333',
+          },
+        },
+        grid: {
+          borderColor: '#40475D',
         },
         tooltip: {
+          theme: 'dark',
           xaxis: {
             format: 'dd MM yyyy',
           },
@@ -233,8 +256,5 @@ export default {
 };
 </script>
 
-<style scoped>
-* {
-  color: black;
-}
+<style>
 </style>
