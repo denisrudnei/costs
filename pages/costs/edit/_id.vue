@@ -25,7 +25,7 @@
 </template>
 
 <script>
-import create from '@/components/cost/create';
+import create from '@/components/cost/costCreate';
 import getOneCost from '@/graphql/query/getOneCost';
 import editCost from '@/graphql/mutation/editCost';
 

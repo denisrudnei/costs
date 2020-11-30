@@ -3,7 +3,7 @@
 </template>
 
 <script>
-import create from '@/components/forecast/create';
+import create from '@/components/forecast/forecastCreate';
 import { parse } from 'date-fns';
 import { GetOneForecast } from '../../../graphql/query/getOneForecast';
 import { EditForecast } from '../../../graphql/mutation/editForecast';

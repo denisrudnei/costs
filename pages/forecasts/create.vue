@@ -3,7 +3,7 @@
 </template>
 
 <script>
-import create from '@/components/forecast/create';
+import create from '@/components/forecast/forecastCreate';
 import { createForecast } from '../../graphql/mutation/createForecast';
 import { GetForecast } from '../../graphql/query/getForecast';
 

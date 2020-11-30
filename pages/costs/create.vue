@@ -3,7 +3,7 @@
 </template>
 
 <script>
-import create from '@/components/cost/create';
+import create from '@/components/cost/costCreate';
 import createNewCost from '@/graphql/mutation/createNewCost';
 import profits from '@/graphql/query/profits';
 import costs from '@/graphql/query/costs';
