@@ -28,7 +28,7 @@ class AuthService {
     const user = await User.findOne({
       where: {
         // FIXME
-        email: Raw((alias) => `${alias} ILIKE '%${email}%`),
+        email: Raw((alias) => `${alias} ILIKE '%${email}%'`),
       },
     });
     if (user) throw new Error('User registered');
