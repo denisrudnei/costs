@@ -1,7 +1,6 @@
 import { Loan } from '../models/Loan';
 import { User } from '../models/User';
 import { Portion } from '../types/Portion';
-import { LoanEditInput } from '../inputs/LoanEditInput';
 
 export class LoanService {
   public static async getLoans(id: User['id']) {
@@ -83,7 +82,7 @@ export class LoanService {
     portions.forEach((portion) => {
       const restValue = loan.total - (amortization * (portion - 1));
       const actualPortion = amortization + ((restValue * loan.interest) / 100);
-      const interest = (restValue * loan.interest) / 100;
+      const interest = (restValue / 100) * loan.interest;
 
       const value = {
         number: portion,
