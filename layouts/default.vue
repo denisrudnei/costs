@@ -87,6 +87,11 @@ export default {
           to: '/forecasts',
         },
         {
+          icon: 'mdi-currency-usd',
+          title: 'Loans',
+          to: '/loans',
+        },
+        {
           icon: 'mdi-cog',
           title: 'Settings',
           to: '/settings',
