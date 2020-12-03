@@ -8,6 +8,12 @@
         <v-tab to="/admin/users">
           Users
         </v-tab>
+        <v-tab to="/admin/systeminfo">
+          System info
+          <v-icon right>
+            mdi-thermometer-lines
+          </v-icon>
+        </v-tab>
       </v-tabs>
       <nuxt-child />
     </v-col>

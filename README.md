@@ -4,6 +4,7 @@
   
   - GRAPHQL
   - API
+  - SUBSCRIPTIONS
 
 ### Env vars - Server
 

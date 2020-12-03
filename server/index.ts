@@ -1,6 +1,6 @@
 import 'reflect-metadata';
 
-import { ApolloServer } from 'apollo-server-express';
+import { ApolloServer, PubSub } from 'apollo-server-express';
 import consola from 'consola';
 import express from 'express';
 import http from 'http';
@@ -15,11 +15,16 @@ async function main() {
   await Connection;
   const app = express();
 
+  const pubSub = new PubSub();
+
   const server = new ApolloServer({
     schema: await buildSchema({
       resolvers: [path.resolve(__dirname, 'resolvers/**/*')],
       authChecker: customAuthChecker,
     }),
+    subscriptions: {
+      path: '/subscriptions',
+    },
     uploads: {
       maxFileSize: 10_000_000,
       maxFiles: 5,
@@ -27,6 +32,7 @@ async function main() {
     context: (context) => ({
       req: context.req,
       res: context.res,
+      pubSub,
     }),
   });
 
