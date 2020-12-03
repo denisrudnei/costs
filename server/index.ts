@@ -22,6 +22,7 @@ async function main() {
       resolvers: [path.resolve(__dirname, 'resolvers/**/*')],
       authChecker: customAuthChecker,
     }),
+    introspection: true,
     subscriptions: {
       path: '/subscriptions',
     },
