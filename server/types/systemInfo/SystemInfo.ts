@@ -1,8 +1,6 @@
-/* eslint-disable max-classes-per-file */
 import { CpuInfo } from 'os';
-import {
-  Field, ObjectType, Int, Float,
-} from 'type-graphql';
+import { Field, Float, ObjectType } from 'type-graphql';
+
 import { CpuInfoType } from './CpuInfoType';
 
 @ObjectType()
