@@ -140,7 +140,7 @@ export default {
         result({ data }) {
           const value = data.GetEverySecond;
 
-          this.memorySeries = [(value.freeMemory / value.totalMemory) * 100];
+          this.memorySeries = [parseInt((value.freeMemory / value.totalMemory) * 100, 10)];
 
           const { model } = value.cpus[0];
           const speed = value.cpus
