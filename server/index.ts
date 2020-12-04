@@ -22,6 +22,9 @@ async function main() {
       resolvers: [path.resolve(__dirname, 'resolvers/**/*')],
       authChecker: customAuthChecker,
     }),
+    playground: {
+      endpoint: '/graphql',
+    },
     introspection: true,
     subscriptions: {
       path: '/subscriptions',
