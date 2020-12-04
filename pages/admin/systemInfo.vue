@@ -1,7 +1,7 @@
 <template>
   <v-row>
     <v-col cols="12" md="8">
-      <v-card>
+      <v-card height="300">
         <v-card-title>
           Average CPU
         </v-card-title>
@@ -19,7 +19,7 @@
       </v-card>
     </v-col>
     <v-col cols="12" md="4">
-      <v-card>
+      <v-card height="300">
         <v-card-title>
           Used memory
         </v-card-title>
