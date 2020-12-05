@@ -4,6 +4,10 @@
       <v-card height="300">
         <v-card-title>
           Average CPU
+          <v-spacer />
+          <template v-if="info.cpus">
+            {{ average }} Mhz
+          </template>
         </v-card-title>
         <v-card-text>
           <no-ssr>
@@ -49,6 +53,7 @@ export default {
   data() {
     return {
       info: {},
+      average: 0,
       chartOptions: {
         type: 'line',
         palette: 'palette3',
@@ -68,6 +73,9 @@ export default {
         stroke: {
           width: 3,
           curve: 'smooth',
+        },
+        yaxis: {
+          min: 0,
         },
         xaxis: {
           type: 'datetime',
@@ -148,6 +156,7 @@ export default {
             .reduce((acc, value) => acc + value, 0);
 
           const average = parseInt(speed / value.cpus.length, 10);
+          this.average = average;
 
           const item = this.series.find((item) => item.name === model);
           const serieData = {

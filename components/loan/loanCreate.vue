@@ -36,7 +36,7 @@
         </v-card-title>
         <v-card-text>
           <p>Total: {{ Number(loan.total )| dinero }}</p>
-          <p>Interest: {{ loan.interest }} %</p>
+          <p>Interest: {{ loan.interest }}%</p>
           <p>Portions: {{ loan.portions }}</p>
           <p>Advance Interest: {{ loan.advanceInterest }}%</p>
         </v-card-text>
