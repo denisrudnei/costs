@@ -1,4 +1,3 @@
-import { ExpressContext } from 'apollo-server-express/dist/ApolloServer';
 import {
   Arg,
   Authorized,
@@ -8,6 +7,7 @@ import {
   Query,
   Resolver,
 } from 'type-graphql';
+import { CustomExpressContext } from '../types/CustomSession';
 import { CostCreateInput } from '../inputs/CostCreateInput';
 import { CostEditInput } from '../inputs/CostEditInput';
 import { Cost } from '~/models/Cost';
@@ -17,8 +17,8 @@ import CostService from '~/services/CostService';
 class CostResolver {
   @Query(() => [Cost])
   @Authorized('user')
-  Costs(@Ctx() { req }: ExpressContext) {
-    const { id } = req.session!.authUser;
+  Costs(@Ctx() { req }: CustomExpressContext) {
+    const { id } = req.session!.authUser!;
     return CostService.getAllCosts(id);
   }
 
@@ -26,9 +26,9 @@ class CostResolver {
   @Authorized('user')
   GetOneCost(
     @Arg('id', () => ID) id: Cost['id'],
-    @Ctx() { req }: ExpressContext,
+    @Ctx() { req }: CustomExpressContext,
   ) {
-    const userId = req.session!.authUser.id;
+    const userId = req.session!.authUser!.id;
     return CostService.getOne(id, userId);
   }
 
@@ -37,31 +37,31 @@ class CostResolver {
   EditCost(
     @Arg('id', () => ID) id: Cost['id'],
     @Arg('cost') cost: CostEditInput,
-    @Ctx() { req }: ExpressContext,
+    @Ctx() { req }: CustomExpressContext,
   ) {
-    const userId = req.session!.authUser.id;
+    const userId = req.session!.authUser!.id;
     return CostService.edit(id, userId, cost);
   }
 
   @Query(() => [Cost])
   @Authorized('user')
-  GetProfits(@Ctx() { req }: ExpressContext) {
-    const { id } = req.session!.authUser;
+  GetProfits(@Ctx() { req }: CustomExpressContext) {
+    const { id } = req.session!.authUser!;
 
     return CostService.getProfits(id);
   }
 
   @Query(() => [Cost])
   @Authorized('user')
-  GetSpending(@Ctx() { req }: ExpressContext) {
-    const { id } = req.session!.authUser;
+  GetSpending(@Ctx() { req }: CustomExpressContext) {
+    const { id } = req.session!.authUser!;
     return CostService.getSpending(id);
   }
 
   @Query(() => [Cost])
   @Authorized('user')
-  CostsByDate(@Arg('date') date: Date, @Ctx() { req }: ExpressContext) {
-    const { id } = req.session!.authUser;
+  CostsByDate(@Arg('date') date: Date, @Ctx() { req }: CustomExpressContext) {
+    const { id } = req.session!.authUser!;
     return CostService.getCostsByDate(date, id);
   }
 
@@ -69,9 +69,9 @@ class CostResolver {
   @Authorized('user')
   RemoveCost(
     @Arg('id', () => ID) id: Cost['id'],
-    @Ctx() { req }: ExpressContext,
+    @Ctx() { req }: CustomExpressContext,
   ) {
-    const user = req.session!.authUser;
+    const user = req.session!.authUser!;
     return CostService.remove(id, user.id);
   }
 
@@ -79,9 +79,9 @@ class CostResolver {
   @Authorized('user')
   CreateNewCost(
     @Arg('cost', () => CostCreateInput) cost: CostCreateInput,
-    @Ctx() { req }: ExpressContext,
+    @Ctx() { req }: CustomExpressContext,
   ) {
-    const { id } = req.session!.authUser;
+    const { id } = req.session!.authUser!;
     return CostService.createCost(new Cost(cost), id);
   }
 }

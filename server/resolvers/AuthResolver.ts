@@ -1,8 +1,8 @@
-import { ExpressContext } from 'apollo-server-express/dist/ApolloServer';
 import jwt from 'jsonwebtoken';
 import {
   Arg, Ctx, Mutation, Resolver,
 } from 'type-graphql';
+import { CustomExpressContext } from '../types/CustomSession';
 
 import { User } from '../models/User';
 import AuthService from '../services/AuthService';
@@ -13,7 +13,7 @@ class AuthResolver {
   public async Login(
     @Arg('email') email: string,
     @Arg('password') password: string,
-    @Ctx() context: ExpressContext,
+    @Ctx() context: CustomExpressContext,
   ): Promise<User> {
     const user = await AuthService.login(email, password);
     const token = jwt.sign(

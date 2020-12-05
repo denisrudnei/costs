@@ -1,10 +1,10 @@
-import { Router } from 'express';
+import express, { Router } from 'express';
 import jwt from 'jsonwebtoken';
 import AuthService from '../services/AuthService';
 
 const router = Router();
 
-router.post('/auth/login', (req, res) => {
+router.post('/auth/login', (req: express.Request, res: express.Response) => {
   const { email, password } = req.body;
 
   AuthService.login(email, password)
@@ -31,7 +31,7 @@ router.post('/auth/login', (req, res) => {
     });
 });
 
-router.post('/auth/logout', (req, res) => {
+router.post('/auth/logout', (req: express.Request, res: express.Response) => {
   delete req.session!.authUser;
   res.set('authorization', undefined);
   res.sendStatus(200);
