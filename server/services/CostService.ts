@@ -116,7 +116,13 @@ class CostService {
         value: In(values),
       },
     });
-    return costs.filter((cost) => !costsInDb.map((inDb) => inDb.name).includes(cost.name));
+
+    return costs.filter((cost) => {
+      const inDb = costsInDb.find((toFind) => cost.name === toFind.name
+      && Number(cost.value) === Number(toFind.value)
+      && isSameDay(cost.date, toFind.date));
+      return !inDb;
+    });
   }
 }
 
