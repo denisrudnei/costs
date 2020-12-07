@@ -9,13 +9,17 @@
       />
     </v-col>
     <v-col cols="12" md="2">
-      <v-subheader> Chart height </v-subheader>
+      <v-subheader>Chart height: {{ height }}</v-subheader>
       <v-slider
         v-model.number="height"
-        min="150"
+        min="200"
         max="600"
-        step="1"
-        thumb-label
+        step="50"
+        append-icon="mdi-plus-box"
+        prepend-icon="mdi-minus-box"
+        readonly
+        @click:prepend="height -= 50"
+        @click:append="height += 50"
       />
     </v-col>
     <v-col cols="12" md="4">
@@ -24,7 +28,7 @@
     <v-col cols="12">
       <v-row>
         <v-col cols="12" md="4">
-          <v-card>
+          <v-card :height="height + 75">
             <v-card-title class="white--text">
               Spending / Profits
             </v-card-title>
@@ -42,7 +46,7 @@
           </v-card>
         </v-col>
         <v-col cols="12" md="8">
-          <v-card>
+          <v-card :height="height + 75">
             <v-card-title class="white--text">
               Profts vs Spending
             </v-card-title>
@@ -60,7 +64,25 @@
           </v-card>
         </v-col>
         <v-col cols="12">
-          <v-card>
+          <v-card :height="height + 75">
+            <v-card-title class="white--text">
+              Total in this day
+            </v-card-title>
+            <v-card-text>
+              <client-only>
+                <apexchart
+                  :type="selectedType"
+                  :options="mixedOptions"
+                  :series="dayByDaySeries"
+                  width="100%"
+                  :height="height"
+                />
+              </client-only>
+            </v-card-text>
+          </v-card>
+        </v-col>
+        <v-col cols="12">
+          <v-card :height="height + 75">
             <v-card-title class="white--text">
               Spending
             </v-card-title>
@@ -243,6 +265,7 @@ export default {
         })
         .then((response) => {
           const { SummaryDayByDay } = response.data;
+          this.dayByDaySeries = [];
 
           const dayByDaySeries = {
             name: 'Total in this day',
@@ -257,6 +280,7 @@ export default {
           this.series = this.series.filter((serie) => serie.name !== dayByDaySeries.name);
 
           this.series.push(dayByDaySeries);
+          this.dayByDaySeries.push(dayByDaySeries);
         });
     },
     getSums() {
