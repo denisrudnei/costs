@@ -19,7 +19,14 @@
       />
     </v-col>
     <v-col cols="12">
-      <v-file-input v-model="file" filled label="Import file" accept="text/*" @change="makeTable" />
+      <v-file-input
+        v-model="file"
+        filled
+        label="Import file"
+        accept="text/*"
+        multiple
+        @change="makeTable"
+      />
       <v-row v-if="imported.length !== 0">
         <v-col cols="5">
           <v-select v-model="format" :items="formats" label="Format" filled @change="makeTable" />
@@ -131,18 +138,33 @@ export default {
         this.imported = [];
         return;
       }
-      const fileReader = new FileReader();
-      fileReader.readAsText(this.file);
-      fileReader.addEventListener('loadend', () => {
-        const fullLines = fileReader.result.toString().split('\n');
-        const linesWithColumns = fullLines.map(
-          (line) => line.split(this.separator),
-        ).filter((line) => line[0].length > 0);
-        this.imported = linesWithColumns.map((line) => ({
-          date: this.toDate(line[0]),
-          name: line[1],
-          value: line[2],
-        }));
+      this.imported = [];
+      this.file.forEach((file) => {
+        const fileReader = new FileReader();
+        fileReader.readAsText(file);
+        fileReader.addEventListener('loadend', () => {
+          const fullLines = fileReader.result.toString().split('\n');
+          const linesWithColumns = fullLines.map(
+            (line) => line.split(this.separator),
+          ).filter((line) => line[0].length > 0);
+          const items = linesWithColumns.map((line) => ({
+            date: this.toDate(line[0]),
+            name: line[1],
+            value: line[2],
+          }));
+          const newItems = items.filter((item) => {
+            const found = this.imported.find(
+              (imported) => imported.name === item.name
+              && imported.date === item.date
+              && imported.value === item.value,
+            );
+            return !found;
+          });
+          this.imported = [
+            ...this.imported,
+            ...newItems,
+          ];
+        });
       });
     },
     save() {
@@ -171,7 +193,10 @@ export default {
       if (this.file !== null) {
         this.$toast.show('Uploading file...', { duration: 1000 });
         const form = new FormData();
-        form.append('file', this.file);
+        this.file.forEach((file) => {
+          form.append('file', file);
+        });
+
         form.append('separator', this.separator);
         form.append('format', this.format);
         form.append('merge', this.merge);

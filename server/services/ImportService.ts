@@ -16,13 +16,19 @@ export class ImportService {
   }
 
   public static async save(
-    file: UploadedFile,
+    files: UploadedFile | UploadedFile[],
     user: User,
     format = Formats.DAY_MONTH_YEAR,
     separator = Separators.SEMICOLON,
     merge = false,
   ) {
-    const data = this.convertToTable(file, separator);
+    let data;
+    if ('length' in files) {
+      data = files.flatMap((file) => this.convertToTable(file, separator));
+    } else {
+      data = this.convertToTable(files, separator);
+    }
+
     const costs = data.map((item) => {
       const [date, name, value] = item;
       const newValue = parseFloat(value.replace(',', '.'));

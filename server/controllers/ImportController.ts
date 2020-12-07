@@ -1,6 +1,7 @@
 import { Router } from 'express';
 import jwt from 'jsonwebtoken';
 
+import { UploadedFile } from 'express-fileupload';
 import { User } from '../models/User';
 import { ImportService } from '../services/ImportService';
 
