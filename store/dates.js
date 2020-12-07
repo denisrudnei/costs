@@ -3,6 +3,7 @@ export const state = () => ({
   years: [],
   month: 0,
   months: [],
+  useLastMonthBalance: false,
 });
 
 export const getters = {
@@ -18,6 +19,9 @@ export const getters = {
   getDates(state) {
     return state.years;
   },
+  getUseLastMonthBalance(state) {
+    return state.useLastMonthBalance;
+  },
 };
 
 export const mutations = {
@@ -32,5 +36,8 @@ export const mutations = {
   },
   setYears(state, years) {
     state.years = years;
+  },
+  setUseLastMonthBalance(state, useLastMonthBalance) {
+    state.useLastMonthBalance = useLastMonthBalance;
   },
 };

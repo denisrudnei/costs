@@ -103,7 +103,6 @@ export default {
   mixins: [getDates],
   data() {
     return {
-      useLastMonthBalance: false,
       lastMonthBalance: null,
       profit: [],
       total: 0,
@@ -131,12 +130,27 @@ export default {
       ],
     };
   },
+  computed: {
+    useLastMonthBalance: {
+      get() {
+        return this.$store.getters['dates/getUseLastMonthBalance'];
+      },
+      set(value) {
+        this.$store.commit('dates/setUseLastMonthBalance', value);
+      },
+    },
+  },
   watch: {
     year() {
       this.updateMonths();
     },
     month() {
       this.fetchData();
+      this.$router.push({
+        query: {
+          useLastMonthBalance: this.useLastMonthBalance,
+        },
+      });
     },
     useLastMonthBalance(value) {
       this.$router.push({
@@ -147,11 +161,11 @@ export default {
     },
   },
   created() {
-    this.fetchData();
     const { useLastMonthBalance } = this.$route.query;
     if (useLastMonthBalance === 'true') {
-      this.useLastMonthBalance = Boolean(useLastMonthBalance);
+      this.$store.commit('dates/setUseLastMonthBalance', Boolean(useLastMonthBalance));
     }
+    this.fetchData();
   },
   methods: {
     fetchData() {
