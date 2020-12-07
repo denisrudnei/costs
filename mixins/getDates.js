@@ -27,9 +27,11 @@ export default {
         fetchPolicy: 'no-cache',
       })
       .then((response) => {
-        const years = response.data.GetUsedDates.years.sort((a, b) => (a > b ? 1 : -1));
+        const years = response.data.GetUsedDates.years.sort((a, b) => (a.value > b.value ? 1 : -1));
+        const { year } = this.$route.params;
+        const findYear = years.find((y) => y.value === Number(year));
         this.$store.commit('dates/setYears', years);
-        if (years.length > 0) this.$store.commit('dates/setYear', years[0]);
+        if (years.length > 0) this.$store.commit('dates/setYear', findYear || years[0]);
         if (this.year && this.year.months.length > 0) {
           this.$store.commit(
             'dates/setMonths',

@@ -138,9 +138,20 @@ export default {
     month() {
       this.fetchData();
     },
+    useLastMonthBalance(value) {
+      this.$router.push({
+        query: {
+          useLastMonthBalance: value,
+        },
+      });
+    },
   },
   created() {
     this.fetchData();
+    const { useLastMonthBalance } = this.$route.query;
+    if (useLastMonthBalance === 'true') {
+      this.useLastMonthBalance = Boolean(useLastMonthBalance);
+    }
   },
   methods: {
     fetchData() {
