@@ -5,6 +5,7 @@ import CostType from '../enums/CostType';
 import { CostEditInput } from '../inputs/CostEditInput';
 import { User } from '../models/User';
 import { Cost } from '~/models/Cost';
+import { CostPagination } from '../types/costs/CostPagination';
 
 class CostService {
   public static getAllCosts(userId: User['id']): Promise<Cost[]> {
@@ -12,6 +13,31 @@ class CostService {
       where: {
         user: userId,
       },
+    });
+  }
+
+  public static async getPagination(page: number = 1, limit: CostPagination['limit'] = 10, userId: User['id']) {
+    const total = await Cost.count({
+      where: {
+        user: userId,
+      },
+    });
+    const pages = total / limit;
+    const costs = await Cost.find({
+      where: {
+        user: userId,
+      },
+      order: {
+        date: 'DESC',
+      },
+      take: limit,
+      skip: (limit * page) - 1,
+    });
+    return new CostPagination({
+      page,
+      pages,
+      limit,
+      costs,
     });
   }
 

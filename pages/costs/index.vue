@@ -45,14 +45,17 @@
         </v-col>
       </v-row>
     </v-col>
+    <v-col>
+      <v-pagination v-model="page" :length="pages" :total-visible="10" />
+    </v-col>
   </v-row>
 </template>
 
 <script>
 import { format, isAfter, parse } from 'date-fns';
-import costs from '@/graphql/query/costs';
 import refetch from '@/graphql/query/refetch';
 import removeCost from '@/graphql/mutation/removeCost';
+import { CostPagination } from '~/graphql/query/getCostPagination';
 
 export default {
   data() {
@@ -62,6 +65,8 @@ export default {
       orderOptions: ['type', 'name', 'value'],
       search: '',
       costs: [],
+      page: 1,
+      pages: 0,
     };
   },
   computed: {
@@ -76,19 +81,33 @@ export default {
       return this.groupCosts(costs);
     },
   },
+  watch: {
+    page() {
+      this.fetchData();
+    },
+  },
   created() {
-    this.$apollo
-      .query({
-        query: costs,
-      })
-      .then((response) => {
-        const { Costs } = response.data;
-        this.costs = this.groupCosts(Costs);
-      });
+    this.fetchData();
     const { search } = this.$route.query;
     if (search) this.search = search;
   },
   methods: {
+    fetchData() {
+      this.$apollo
+        .query({
+          query: CostPagination,
+          variables: {
+            page: this.page,
+            limit: 10,
+          },
+        })
+        .then((response) => {
+          const { costs } = response.data.CostPagination;
+          this.costs = this.groupCosts(costs);
+          this.page = response.data.CostPagination.page;
+          this.pages = response.data.CostPagination.pages;
+        });
+    },
     groupCosts(costs) {
       const result = [];
 

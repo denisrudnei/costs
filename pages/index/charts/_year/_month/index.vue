@@ -23,7 +23,7 @@
       />
     </v-col>
     <v-col cols="12" md="4">
-      <v-select v-model="selectedType" :items="types" filled label="Type" />
+      <v-select v-model="options.type" :items="types" filled label="Type" />
     </v-col>
     <v-col cols="12">
       <v-row>
@@ -53,7 +53,7 @@
             <v-card-text>
               <client-only>
                 <apexchart
-                  :type="selectedType"
+                  :type="options.type"
                   :options="mixedOptions"
                   :series="series"
                   width="100%"
@@ -71,7 +71,7 @@
             <v-card-text>
               <client-only>
                 <apexchart
-                  :type="selectedType"
+                  :type="options.type"
                   :options="mixedOptions"
                   :series="dayByDaySeries"
                   width="100%"
@@ -89,7 +89,7 @@
             <v-card-text>
               <client-only>
                 <apexchart
-                  :type="selectedType"
+                  :type="options.type"
                   :options="spendingOptions"
                   :series="spendigs"
                   width="100%"
@@ -107,7 +107,7 @@
             <v-card-text>
               <client-only>
                 <apexchart
-                  :type="selectedType"
+                  :type="options.type"
                   :options="profitsOptions"
                   :series="profits"
                   width="100%"
