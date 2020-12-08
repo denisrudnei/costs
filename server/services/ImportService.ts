@@ -1,5 +1,5 @@
 import { Formats } from '@/enums/ImportFile/Formats';
-import { parse } from 'date-fns';
+import { parse, isSameDay } from 'date-fns';
 import { UploadedFile } from 'express-fileupload';
 import { Cost } from '~/models/Cost';
 
@@ -22,14 +22,14 @@ export class ImportService {
     separator = Separators.SEMICOLON,
     merge = false,
   ) {
-    let data;
+    let data: string[][];
     if ('length' in files) {
       data = files.flatMap((file) => this.convertToTable(file, separator));
     } else {
       data = this.convertToTable(files, separator);
     }
 
-    const costs = data.map((item) => {
+    const values = data.map((item) => {
       const [date, name, value] = item;
       const newValue = parseFloat(value.replace(',', '.'));
       const cost = new Cost({
@@ -41,6 +41,15 @@ export class ImportService {
       });
 
       return cost;
+    });
+
+    const costs: Cost[] = [];
+
+    values.forEach((cost) => {
+      const found = costs.find((item) => item.name === cost.name
+        && isSameDay(item.date, cost.date)
+        && item.value === cost.value);
+      if (!found) costs.push(cost);
     });
 
     let saveAll;
