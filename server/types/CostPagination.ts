@@ -1,5 +1,5 @@
 import { Field, ObjectType, Int } from 'type-graphql';
-import { Cost } from '~/server/models/Cost';
+import { Cost } from '../../server/models/Cost';
 
 @ObjectType()
 export class CostPagination {

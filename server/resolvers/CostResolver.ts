@@ -6,7 +6,7 @@ import CostService from '~/services/CostService';
 
 import { CostCreateInput } from '../inputs/CostCreateInput';
 import { CostEditInput } from '../inputs/CostEditInput';
-import { CostPagination } from '../types/costs/CostPagination';
+import { CostPagination } from '../types/CostPagination';
 import { CustomExpressContext } from '../types/CustomSession';
 
 @Resolver()

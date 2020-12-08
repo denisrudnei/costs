@@ -5,7 +5,7 @@ import CostType from '../enums/CostType';
 import { CostEditInput } from '../inputs/CostEditInput';
 import { User } from '../models/User';
 import { Cost } from '~/models/Cost';
-import { CostPagination } from '../types/costs/CostPagination';
+import { CostPagination } from '../types/CostPagination';
 
 class CostService {
   public static getAllCosts(userId: User['id']): Promise<Cost[]> {
