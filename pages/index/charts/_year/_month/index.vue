@@ -248,6 +248,10 @@ export default {
         labels: { formatter: fmt },
       };
 
+      this.options.dataLabels = {
+        formatter: fmt,
+      };
+
       Object.assign(this.mixedOptions, this.options);
 
       Object.assign(this.spendingOptions, this.options);

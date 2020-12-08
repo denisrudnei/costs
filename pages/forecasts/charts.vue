@@ -182,6 +182,9 @@ export default {
         formatter: fmt,
       },
     };
+    this.chartOptions.dataLabels = {
+      formatter: fmt,
+    };
     this.end = addMonths(this.start, 12);
     this.$apollo.query({
       query: GetForecast,

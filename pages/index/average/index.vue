@@ -109,6 +109,11 @@ export default {
         formatter: fmt,
       },
     };
+    this.options.dataLabels = {
+      position: 'bottom',
+      horizontal: false,
+      formatter: fmt,
+    };
     this.fetchData();
   },
   methods: {
