@@ -18,4 +18,7 @@ export class CostPagination {
 
   @Field(() => Int)
   public limit: 5 | 10 | 15 | 20 | 25 = 10
+
+  @Field(() => Int)
+  public total!: number
 }

@@ -16,7 +16,7 @@
     <v-col md="2" cols="12">
       <v-checkbox v-model="asc" filled label="Asc" />
     </v-col>
-    <v-col v-for="item in costsFiltred" :key="item.date" cols="12">
+    <v-col v-for="item in costs" :key="item.date" cols="12">
       <v-row>
         <v-col cols="12">
           <h3>Month - Year: {{ item.date }}</h3>
@@ -69,20 +69,17 @@ export default {
       pages: 0,
     };
   },
-  computed: {
-    costsFiltred() {
-      const sort = this.asc
-        ? (a, b) => (a[this.order] > b[this.order] ? 1 : -1)
-        : (a, b) => (a[this.order] > b[this.order] ? -1 : 1);
-      const costs = this.costs
-        .flatMap((item) => item.costs)
-        .filter((cost) => cost.name.toLowerCase().includes(this.search.toLowerCase()))
-        .sort(sort);
-      return this.groupCosts(costs);
-    },
-  },
   watch: {
     page() {
+      this.fetchData();
+    },
+    search() {
+      this.fetchData();
+    },
+    asc() {
+      this.fetchData();
+    },
+    order() {
       this.fetchData();
     },
   },
@@ -97,7 +94,10 @@ export default {
         .query({
           query: CostPagination,
           variables: {
+            search: this.search,
             page: this.page,
+            type: this.order,
+            order: this.asc ? 'ASC' : 'DESC',
             limit: 10,
           },
         })

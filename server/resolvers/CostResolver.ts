@@ -2,7 +2,7 @@ import {
   Arg, Authorized, Ctx, ID, Int, Mutation, Query, Resolver,
 } from 'type-graphql';
 import { Cost } from '~/models/Cost';
-import CostService from '~/services/CostService';
+import CostService, { PaginationOptions } from '~/services/CostService';
 
 import { CostCreateInput } from '../inputs/CostCreateInput';
 import { CostEditInput } from '../inputs/CostEditInput';
@@ -21,12 +21,17 @@ class CostResolver {
   @Query(() => CostPagination)
   @Authorized('user')
   CostPagination(
-    @Arg('page', () => Int, { defaultValue: 1, nullable: true }) page: number,
-    @Arg('limit', () => Int, { defaultValue: 10, nullable: true }) limit: CostPagination['limit'],
+    @Arg('search', () => String, { defaultValue: '', nullable: true }) search: PaginationOptions['search'],
+    @Arg('page', () => Int, { defaultValue: 1, nullable: true }) page: PaginationOptions['page'],
+    @Arg('limit', () => Int, { defaultValue: 10, nullable: true }) limit: PaginationOptions['limit'],
+    @Arg('type', () => String, { defaultValue: 'type', nullable: true }) type: PaginationOptions['type'],
+    @Arg('order', () => String, { defaultValue: 'DESC', nullable: true }) order: PaginationOptions['order'],
     @Ctx() { req }: CustomExpressContext,
   ) {
     const { id } = req.session!.authUser!;
-    return CostService.getPagination(page, limit, id);
+    return CostService.getPagination({
+      search, page, limit, type, order,
+    }, id);
   }
 
   @Query(() => Cost)

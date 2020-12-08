@@ -1,11 +1,19 @@
 import { isSameDay } from 'date-fns';
 
-import { In } from 'typeorm';
+import { In, Raw } from 'typeorm';
 import CostType from '../enums/CostType';
 import { CostEditInput } from '../inputs/CostEditInput';
 import { User } from '../models/User';
 import { Cost } from '~/models/Cost';
 import { CostPagination } from '../types/CostPagination';
+
+export type PaginationOptions = {
+  search: string
+  page: number
+  limit: CostPagination['limit']
+  type: 'name' | 'type' | 'value'
+  order: 'ASC' | 'DESC'
+}
 
 class CostService {
   public static getAllCosts(userId: User['id']): Promise<Cost[]> {
@@ -16,28 +24,34 @@ class CostService {
     });
   }
 
-  public static async getPagination(page: number = 1, limit: CostPagination['limit'] = 10, userId: User['id']) {
+  public static async getPagination(options: PaginationOptions, userId: User['id']) {
+    const {
+      search, limit, page, type, order,
+    } = options;
     const total = await Cost.count({
       where: {
+        name: Raw((alias) => `${alias} ILIKE '%${search}%'`),
         user: userId,
       },
     });
     const pages = Math.round(total / limit);
     const costs = await Cost.find({
       where: {
+        name: Raw((alias) => `${alias} ILIKE '%${search}%'`),
         user: userId,
       },
       order: {
-        date: 'DESC',
+        [type]: order,
       },
       take: limit,
-      skip: (limit * page) - 1,
+      skip: (page - 1) * limit,
     });
     return new CostPagination({
       page,
       pages,
       limit,
       costs,
+      total,
     });
   }
 
