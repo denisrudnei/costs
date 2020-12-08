@@ -22,7 +22,7 @@ class CostService {
         user: userId,
       },
     });
-    const pages = total / limit;
+    const pages = Math.round(total / limit);
     const costs = await Cost.find({
       where: {
         user: userId,
