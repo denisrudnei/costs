@@ -5,15 +5,7 @@ import CostType from '../enums/CostType';
 import { CostEditInput } from '../inputs/CostEditInput';
 import { User } from '../models/User';
 import { Cost } from '~/models/Cost';
-import { CostPagination } from '../types/CostPagination';
-
-export type PaginationOptions = {
-  search: string
-  page: number
-  limit: CostPagination['limit']
-  type: 'name' | 'type' | 'value'
-  order: 'ASC' | 'DESC'
-}
+import { CostPagination, PaginationOptions } from '../types/CostPagination';
 
 class CostService {
   public static getAllCosts(userId: User['id']): Promise<Cost[]> {

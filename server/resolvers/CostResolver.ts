@@ -2,11 +2,13 @@ import {
   Arg, Authorized, Ctx, ID, Int, Mutation, Query, Resolver,
 } from 'type-graphql';
 import { Cost } from '~/models/Cost';
-import CostService, { PaginationOptions } from '~/services/CostService';
+import CostService from '~/services/CostService';
 
 import { CostCreateInput } from '../inputs/CostCreateInput';
 import { CostEditInput } from '../inputs/CostEditInput';
-import { CostPagination } from '../types/CostPagination';
+import {
+  CostPagination, SortType, OrderType, PaginationOptions,
+} from '../types/CostPagination';
 import { CustomExpressContext } from '../types/CustomSession';
 
 @Resolver()
@@ -24,8 +26,8 @@ class CostResolver {
     @Arg('search', () => String, { defaultValue: '', nullable: true }) search: PaginationOptions['search'],
     @Arg('page', () => Int, { defaultValue: 1, nullable: true }) page: PaginationOptions['page'],
     @Arg('limit', () => Int, { defaultValue: 10, nullable: true }) limit: PaginationOptions['limit'],
-    @Arg('type', () => String, { defaultValue: 'type', nullable: true }) type: PaginationOptions['type'],
-    @Arg('order', () => String, { defaultValue: 'DESC', nullable: true }) order: PaginationOptions['order'],
+    @Arg('type', () => SortType, { defaultValue: 'type', nullable: true }) type: PaginationOptions['type'],
+    @Arg('order', () => OrderType, { defaultValue: 'DESC', nullable: true }) order: PaginationOptions['order'],
     @Ctx() { req }: CustomExpressContext,
   ) {
     const { id } = req.session!.authUser!;

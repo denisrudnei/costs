@@ -1,5 +1,35 @@
-import { Field, ObjectType, Int } from 'type-graphql';
+import {
+  Field, ObjectType, Int, registerEnumType,
+} from 'type-graphql';
 import { Cost } from '../../server/models/Cost';
+
+export enum SortType {
+  NAME = 'name',
+  TYPE = 'type',
+  VALUE = 'value',
+  DATE = 'date'
+}
+
+export enum OrderType {
+  ASC = 'ASC',
+  DESC = 'DESC'
+}
+
+export type PaginationOptions = {
+  search: string
+  page: number
+  limit: CostPagination['limit']
+  type: keyof typeof SortType
+  order: keyof typeof OrderType
+}
+
+registerEnumType(SortType, {
+  name: 'SortType',
+});
+
+registerEnumType(OrderType, {
+  name: 'OrderType',
+});
 
 @ObjectType()
 export class CostPagination {

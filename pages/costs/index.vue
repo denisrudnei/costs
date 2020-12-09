@@ -62,7 +62,7 @@ export default {
     return {
       asc: true,
       order: 'type',
-      orderOptions: ['type', 'name', 'value'],
+      orderOptions: ['Type', 'Name', 'Value', 'Date'],
       search: '',
       costs: [],
       page: 1,
@@ -96,7 +96,7 @@ export default {
           variables: {
             search: this.search,
             page: this.page,
-            type: this.order,
+            type: this.order.toUpperCase(),
             order: this.asc ? 'ASC' : 'DESC',
             limit: 10,
           },
