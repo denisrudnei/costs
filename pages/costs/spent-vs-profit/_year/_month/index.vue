@@ -98,6 +98,8 @@ import getDates from '@/mixins/getDates';
 import removeCost from '@/graphql/mutation/removeCost';
 import basicSummary from '@/graphql/query/basicSummary';
 import refetch from '@/graphql/query/refetch';
+import { CostPagination } from '@/graphql/query/getCostPagination';
+import { mapGetters } from 'vuex';
 
 export default {
   mixins: [getDates],
@@ -131,6 +133,9 @@ export default {
     };
   },
   computed: {
+    ...mapGetters({
+      paginationOptions: 'cost/getPagination',
+    }),
     useLastMonthBalance: {
       get() {
         return this.$store.getters['dates/getUseLastMonthBalance'];
@@ -203,6 +208,12 @@ export default {
           refetchQueries: [
             {
               query: refetch,
+            },
+            {
+              query: CostPagination,
+              variables: {
+                ...this.paginationOptions,
+              },
             },
           ],
         })

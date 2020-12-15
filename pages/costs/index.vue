@@ -55,19 +55,63 @@
 import { format, isAfter, parse } from 'date-fns';
 import refetch from '@/graphql/query/refetch';
 import removeCost from '@/graphql/mutation/removeCost';
+import { mapGetters } from 'vuex';
 import { CostPagination } from '~/graphql/query/getCostPagination';
 
 export default {
   data() {
     return {
       asc: true,
-      order: 'type',
-      orderOptions: ['Type', 'Name', 'Value', 'Date'],
-      search: '',
+      orderOptions: [
+        {
+          text: 'Type',
+          value: 'TYPE',
+        },
+        {
+          text: 'Name',
+          value: 'NAME',
+        },
+        {
+          text: 'Value',
+          value: 'VALUE',
+        },
+        {
+          text: 'Date',
+          value: 'DATE',
+        },
+      ],
       costs: [],
-      page: 1,
       pages: 0,
     };
+  },
+  computed: {
+    ...mapGetters({
+      paginationOptions: 'cost/getPagination',
+    }),
+    search: {
+      get() {
+        return this.$store.getters['cost/getSearch'];
+      },
+      set(value) {
+        this.$store.commit('cost/setSearch', value);
+      },
+    },
+    order: {
+      get() {
+        return this.$store.getters['cost/getType'];
+      },
+      set(value) {
+        this.$store.commit('cost/setType', value);
+      },
+    },
+    page: {
+      get() {
+        return this.$store.getters['cost/getPage'];
+      },
+      set(value) {
+        this.$store.commit('cost/setPage', value);
+      },
+    },
   },
   watch: {
     page() {
@@ -76,7 +120,8 @@ export default {
     search() {
       this.fetchData();
     },
-    asc() {
+    asc(value) {
+      this.$store.commit('cost/setOrder', value ? 'ASC' : 'DESC');
       this.fetchData();
     },
     order() {
@@ -94,11 +139,7 @@ export default {
         .query({
           query: CostPagination,
           variables: {
-            search: this.search,
-            page: this.page,
-            type: this.order.toUpperCase(),
-            order: this.asc ? 'ASC' : 'DESC',
-            limit: 10,
+            ...this.paginationOptions,
           },
         })
         .then((response) => {
@@ -143,6 +184,12 @@ export default {
           refetchQueries: [
             {
               query: refetch,
+            },
+            {
+              query: CostPagination,
+              variables: {
+                ...this.paginationOptions,
+              },
             },
           ],
         })

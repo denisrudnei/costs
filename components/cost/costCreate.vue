@@ -27,6 +27,7 @@
             </v-card-title>
             <v-card-text>
               <v-date-picker
+                full-width
                 :value="getIsoDate(date)"
                 placeholder="Date"
                 filled

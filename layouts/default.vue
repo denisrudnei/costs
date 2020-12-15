@@ -51,7 +51,7 @@
       </v-container>
     </v-main>
     <v-footer fixed app>
-      <span>&copy; {{ new Date().getFullYear() }}</span>
+      <span>&copy; 2020</span>
     </v-footer>
   </v-app>
 </template>
@@ -90,6 +90,11 @@ export default {
           icon: 'mdi-currency-usd',
           title: 'Loans',
           to: '/loans',
+        },
+        {
+          icon: 'mdi-table-clock',
+          title: 'Work Schedule',
+          to: '/work-schedule',
         },
         {
           icon: 'mdi-cog',
