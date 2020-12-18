@@ -147,6 +147,7 @@ export default {
           this.costs = this.groupCosts(costs);
           this.page = response.data.CostPagination.page;
           this.pages = response.data.CostPagination.pages;
+          if (this.page > this.pages) this.page = 1;
         });
     },
     groupCosts(costs) {

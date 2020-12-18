@@ -79,8 +79,17 @@
         Save
       </v-btn>
     </v-col>
-    <v-dialog v-model="importModal" width="95%" scrollable>
+    <v-dialog v-model="importModal" fullscreen>
       <v-card>
+        <v-toolbar fixed>
+          <v-toolbar-items>
+            <v-btn icon @click="importModal = false">
+              <v-icon>
+                mdi-close
+              </v-icon>
+            </v-btn>
+          </v-toolbar-items>
+        </v-toolbar>
         <v-card-title>
           <v-text-field v-model="search" filled label="Search" />
         </v-card-title>
@@ -88,18 +97,21 @@
           <v-row>
             <v-col>
               <v-row>
-                <v-col v-for="cost in costs" :key="cost.id" md="3" cols="12">
-                  <v-card>
+                <v-col v-for="cost in costs" :key="cost.id" md="2" cols="12">
+                  <v-card elevation="5" tile color="accent">
                     <v-card-title>
                       <span>
                         <v-checkbox
                           v-model="selectedToImport"
+                          class="black--text"
+                          color="black"
+                          colo
                           :value="cost.id"
                           :label="cost.name"
                         />
                       </span>
                     </v-card-title>
-                    <v-card-text>
+                    <v-card-text class="black--text">
                       <h2>
                         Type: {{ cost.type }}
                       </h2>
@@ -111,11 +123,11 @@
               </v-row>
             </v-col>
             <v-col v-if="selectedToImport && getSelected(selectedToImport)" md="4" cols="12">
-              <v-card>
-                <v-card-title>
+              <v-card color="accent">
+                <v-card-title class="black--text">
                   {{ getSelected(selectedToImport).name }}
                 </v-card-title>
-                <v-card-text>
+                <v-card-text class="black--text">
                   <h2>
                     Type: {{ getSelected(selectedToImport).type }}
                   </h2>
@@ -127,9 +139,16 @@
           </v-row>
         </v-card-text>
         <v-card-actions>
-          <v-btn :disabled="!getSelected(selectedToImport)" @click="importSelected">
-            Import
-          </v-btn>
+          <v-row>
+            <v-col cols="12">
+              <v-pagination v-model="page" :length="pages" :total-visible="10" />
+            </v-col>
+            <v-col cols="12">
+              <v-btn :disabled="!getSelected(selectedToImport)" @click="importSelected">
+                Import
+              </v-btn>
+            </v-col>
+          </v-row>
         </v-card-actions>
       </v-card>
     </v-dialog>
@@ -140,7 +159,8 @@ import {
   parse, format, isAfter, addMonths,
 } from 'date-fns';
 import forecasts from '@/mixins/forecasts';
-import costs from '@/graphql/query/costs';
+import { mapGetters } from 'vuex';
+import { CostPagination } from '~/graphql/query/getCostPagination';
 
 export default {
   mixins: [forecasts],
@@ -161,8 +181,8 @@ export default {
     return {
       menuStart: false,
       menuEnd: false,
+      pages: 0,
       costsData: [],
-      search: '',
       selectedToImport: undefined,
       importModal: false,
       types: ['PROFIT', 'SPENT'],
@@ -177,6 +197,9 @@ export default {
     };
   },
   computed: {
+    ...mapGetters({
+      paginationOptions: 'cost/getPagination',
+    }),
     start() {
       return this.forecast.start.toISOString().substr(0, 10);
     },
@@ -207,6 +230,30 @@ export default {
         Object.assign(this.value, value);
       },
     },
+    page: {
+      get() {
+        return this.$store.getters['cost/getPage'];
+      },
+      set(value) {
+        this.$store.commit('cost/setPage', value);
+      },
+    },
+    search: {
+      get() {
+        return this.$store.getters['cost/getSearch'];
+      },
+      set(value) {
+        this.$store.commit('cost/setSearch', value);
+      },
+    },
+  },
+  watch: {
+    page() {
+      this.fetchData();
+    },
+    search() {
+      this.fetchData();
+    },
   },
   methods: {
     updateStart(value) {
@@ -222,10 +269,20 @@ export default {
     },
     showImportModal() {
       this.importModal = true;
+      this.fetchData();
+    },
+    fetchData() {
       this.$apollo.query({
-        query: costs,
+        query: CostPagination,
+        variables: {
+          ...this.paginationOptions,
+        },
       }).then((response) => {
-        this.costsData = response.data.Costs;
+        const { CostPagination } = response.data;
+        this.pages = CostPagination.pages;
+        this.page = CostPagination.page;
+        this.costsData = CostPagination.costs;
+        if (this.page > this.pages) this.page = 1;
       });
     },
     setIndeterminate(value) {
@@ -255,3 +312,8 @@ export default {
   },
 };
 </script>
+<style scoped>
+.black--text /deep/ label {
+    color: black;
+}
+</style>
