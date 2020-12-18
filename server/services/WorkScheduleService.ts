@@ -1,3 +1,4 @@
+import consolaGlobalInstance from 'consola';
 import {
   lastDayOfMonth, parse, differenceInHours, getMonth, getYear, addHours, addMinutes,
 } from 'date-fns';
@@ -78,9 +79,23 @@ export class WorkScheduleService {
         0,
       );
 
+    const workedDays = await getConnection()
+      .createQueryBuilder()
+      .select('EXTRACT(day from day) as singleDay')
+      .from(WorkDay, 'work_day')
+      .where('day BETWEEN :start AND :finish', {
+        start: startDay,
+        finish: lastDay,
+      })
+      .andWhere('work_day.user = :userId', {
+        userId,
+      })
+      .groupBy('singleDay')
+      .getRawMany();
+
     return {
       workDays: result,
-      workedDays: result.length,
+      workedDays: workedDays.length,
       workedHours,
     };
   }
