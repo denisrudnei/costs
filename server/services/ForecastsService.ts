@@ -2,7 +2,7 @@
 import {
   addMonths, differenceInMonths, isBefore, isWithinInterval,
 } from 'date-fns';
-import { In, Raw } from 'typeorm';
+import { getConnection, In, Raw } from 'typeorm';
 
 import CostType from '../enums/CostType';
 import { Forecast } from '../models/Forecast';
@@ -48,6 +48,22 @@ export class ForecastService {
     Object.assign(forecast, forecastToEdit);
     await forecast.save();
     return forecast;
+  }
+
+  public static async getPeriod(start: Date, finish: Date, userId: User['id']) {
+    const forecasts = await getConnection()
+      .createQueryBuilder()
+      .select('*')
+      .from(Forecast, 'forecast')
+      .where('start BETWEEN :start AND :finish', {
+        start,
+        finish,
+      })
+      .andWhere('forecast.user = :userId', {
+        userId,
+      })
+      .getRawMany();
+    return forecasts;
   }
 
   public static async forecastInMonths(ids: Forecast['id'][], userId: User['id'], numberOfMonths: number = 12) {

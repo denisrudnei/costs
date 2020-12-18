@@ -1,6 +1,6 @@
 import { isSameDay } from 'date-fns';
 
-import { In, Raw } from 'typeorm';
+import { getConnection, In, Raw } from 'typeorm';
 import CostType from '../enums/CostType';
 import { CostEditInput } from '../inputs/CostEditInput';
 import { User } from '../models/User';
@@ -59,6 +59,26 @@ class CostService {
     });
     if (!cost) throw new Error('Cost not found');
     return cost;
+  }
+
+  public static async getPeriod(
+    start: Date,
+    finish: Date,
+    userId: User['id'],
+  ): Promise<Cost[]> {
+    const costs = await getConnection()
+      .createQueryBuilder()
+      .select('*')
+      .from(Cost, 'cost')
+      .where('date BETWEEN :start AND :finish', {
+        start,
+        finish,
+      })
+      .andWhere('cost.user = :userId', {
+        userId,
+      })
+      .getRawMany();
+    return costs;
   }
 
   public static async edit(

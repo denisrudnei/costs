@@ -85,6 +85,22 @@ export class WorkScheduleService {
     };
   }
 
+  public static async getPeriod(start: Date, finish: Date, userId: User['id']) {
+    const result = await getConnection()
+      .createQueryBuilder()
+      .select('*')
+      .from(WorkDay, 'work_day')
+      .where('day BETWEEN :start AND :finish', {
+        start,
+        finish,
+      })
+      .andWhere('work_day.user = :userId', {
+        userId,
+      })
+      .getRawMany();
+    return result;
+  }
+
   public static async remove(id: WorkDay['id'], userId: User['id']) {
     const workDay = await WorkDay.findOne({
       where: {

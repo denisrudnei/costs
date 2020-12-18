@@ -1,3 +1,4 @@
+import { getConnection } from 'typeorm';
 import { Loan } from '../models/Loan';
 import { User } from '../models/User';
 import { Portion } from '../types/Portion';
@@ -61,6 +62,22 @@ export class LoanService {
     loanToEdit.id = id;
 
     return loanToEdit.save();
+  }
+
+  public static async getPeriod(start: Date, finish: Date, userId: User['id']) {
+    const result = await getConnection()
+      .createQueryBuilder()
+      .select('*')
+      .from(Loan, 'loan')
+      .where('date BETWEEN :start AND :finish', {
+        start,
+        finish,
+      })
+      .andWhere('loan.user = :userId', {
+        userId,
+      })
+      .getRawMany();
+    return result;
   }
 
   public static async getPortions(id: Loan['id'], userId: User['id']) {

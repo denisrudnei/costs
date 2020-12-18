@@ -48,12 +48,19 @@
         </v-col>
       </v-row>
     </v-col>
-
+    <v-col cols="12">
+      <v-btn @click="exportinfoDialog = true">
+        Export data
+      </v-btn>
+    </v-col>
     <v-col cols="12">
       <v-btn @click="save">
         Save
       </v-btn>
     </v-col>
+    <v-dialog v-model="exportinfoDialog" width="75%">
+      <export-info />
+    </v-dialog>
   </v-row>
 </template>
 
@@ -64,10 +71,15 @@ import { format, parse } from 'date-fns';
 import values from './settings-values.json';
 import { Separators } from '~/server/enums/ImportFile/Separators';
 import { Formats } from '~/server/enums/ImportFile/Formats';
+import ExportInfo from '~/components/exportInfo.vue';
 
 export default {
+  components: {
+    ExportInfo,
+  },
   data() {
     return {
+      exportinfoDialog: false,
       file: null,
       currencies: [],
       separator: Separators.COMMA,

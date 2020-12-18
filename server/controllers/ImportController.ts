@@ -1,29 +1,14 @@
 import { Router } from 'express';
-import jwt from 'jsonwebtoken';
 
-import { User } from '../models/User';
 import { ImportService } from '../services/ImportService';
+import { getUser } from '../util';
 
 const router = Router();
 
-type info = {
-  id: User['id'],
-  email: User['email'],
-  name: User['name']
-}
-
 router.use('/import', async (req, res) => {
-  const jwtString = req.headers.authorization!.replace('Bearer ', '');
-
-  const { email } = (jwt.decode(jwtString) as info);
+  const user = await getUser(req);
 
   const { separator, format, merge } = req.body;
-
-  const user = await User.findOne({
-    where: {
-      email,
-    },
-  });
 
   if (!user) {
     return res.status(403).json({
