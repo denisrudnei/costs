@@ -73,7 +73,7 @@ export default {
       }).then((response) => {
         const a = document.createElement('a');
         a.setAttribute('download', `${this.type}-${new Date().toISOString().substr(0, 10)}.txt`);
-        a.setAttribute('href', `data:/text/plain.chartset=utf-8,${encodeURIComponent(response.data)}`);
+        a.setAttribute('href', `data:text/plain;chartset=utf-8,${encodeURIComponent(response.data)}`);
         document.querySelector('body').appendChild(a);
         a.click();
       });
