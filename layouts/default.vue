@@ -4,10 +4,14 @@
       <v-btn icon @click="toggleDrawer">
         <v-icon>mdi-menu</v-icon>
       </v-btn>
+      <v-btn v-if="drawer" icon @click="toggleMini">
+        <v-icon>{{ mini ? 'mdi-chevron-right' : 'mdi-chevron-left' }}</v-icon>
+      </v-btn>
     </v-app-bar>
     <v-navigation-drawer
       v-if="logged"
-      :mini-variant="drawer"
+      v-model="drawer"
+      :mini-variant="mini"
       app
       clipped
       fixed
@@ -125,6 +129,9 @@ export default {
   methods: {
     toggleDrawer() {
       this.$store.commit('screen/setDrawer', !this.drawer);
+    },
+    toggleMini() {
+      this.$store.commit('screen/setMini', !this.mini);
     },
     logout() {
       this.$auth.logout();

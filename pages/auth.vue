@@ -1,6 +1,6 @@
 <template>
   <v-row>
-    <v-navigation-drawer v-model="drawer" app clipped>
+    <v-navigation-drawer v-model="drawer" :mini-variant="mini" app clipped>
       <v-list>
         <v-list-item v-for="link in pages" :key="link.link" :to="link.link">
           <v-list-item-icon>
