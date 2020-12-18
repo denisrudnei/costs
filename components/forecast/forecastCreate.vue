@@ -187,7 +187,7 @@ export default {
       menuStart: false,
       menuEnd: false,
       pages: 0,
-      costsData: [],
+      costs: [],
       selectedToImport: undefined,
       importModal: false,
       types: ['PROFIT', 'SPENT'],
@@ -219,10 +219,6 @@ export default {
     },
     months() {
       return this.getMonths(this.start, this.end);
-    },
-    costs() {
-      return this.costsData
-        .filter((cost) => cost.name.toLowerCase().includes(this.search.toLowerCase()));
     },
     total() {
       return this.forecast.value * this.months;
@@ -286,7 +282,7 @@ export default {
         const { CostPagination } = response.data;
         this.pages = CostPagination.pages;
         this.page = CostPagination.page;
-        this.costsData = CostPagination.costs;
+        this.costs = CostPagination.costs;
         if (this.page > this.pages) this.page = 1;
       });
     },
