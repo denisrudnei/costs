@@ -7,7 +7,7 @@
     </v-app-bar>
     <v-navigation-drawer
       v-if="logged"
-      :value="drawer"
+      :mini-variant="drawer"
       app
       clipped
       fixed
