@@ -82,7 +82,7 @@ export default {
       exportinfoDialog: false,
       file: null,
       currencies: [],
-      separator: Separators.COMMA,
+      separator: Separators.SEMICOLON,
       formats: Object.values(Formats).map((item) => ({
         text: item,
         value: item,
