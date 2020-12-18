@@ -97,7 +97,12 @@
           <v-row>
             <v-col>
               <v-row>
-                <v-col v-for="cost in costs" :key="cost.id" md="2" cols="12">
+                <v-col
+                  v-for="cost in costs"
+                  :key="cost.id"
+                  md="4"
+                  cols="12"
+                >
                   <v-card elevation="5" tile color="accent">
                     <v-card-title>
                       <span>
