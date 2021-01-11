@@ -68,7 +68,7 @@ class SummaryService {
 
       total += result.total;
       lastMonthBalance = new Cost({
-        name: `Balance in ${format(targetDate, 'MM/dd/yyyy')}`,
+        name: `Balance in ${format(targetDate, 'dd/MM/yyyy')}`,
         type: CostType.CONSOLIDATED,
         value: result.total,
         date: targetDate,

@@ -2,6 +2,7 @@
   <v-row>
     <v-dialog v-model="displayCreate" width="75%">
       <v-card>
+        <v-card-title>Add hours</v-card-title>
         <v-card-text>
           <create @input="createWorkDay" />
         </v-card-text>
