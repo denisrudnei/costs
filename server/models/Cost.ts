@@ -36,6 +36,10 @@ export class Cost extends BaseEntity {
   @Field(() => Number)
   public value: number = 0
 
+  @Column({ default: false })
+  @Field()
+  public imported: boolean = false
+
   @ManyToOne(() => User)
   public user!: User
 

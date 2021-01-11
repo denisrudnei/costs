@@ -35,6 +35,7 @@ export class ImportService {
       const cost = new Cost({
         name,
         value: newValue,
+        imported: true,
         type: newValue < 0 ? CostType.SPENT : CostType.PROFIT,
         date: parse(date, format, new Date()),
         user,
