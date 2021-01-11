@@ -138,7 +138,6 @@ export default {
   mixins: [getDates],
   data() {
     return {
-      useLastMonthBalance: false,
       types: ['bar', 'line', 'area'],
       selectedType: 'area',
       mixedOptions: {
@@ -224,10 +223,20 @@ export default {
       dayByDaySeries: [],
     };
   },
-  computed: mapGetters({
-    currency: 'settings/getCurrency',
-    locale: 'settings/getLocale',
-  }),
+  computed: {
+    useLastMonthBalance: {
+      get() {
+        return this.$store.getters['dates/getUseLastMonthBalance'];
+      },
+      set(value) {
+        this.$store.commit('dates/setUseLastMonthBalance', value);
+      },
+    },
+    ...mapGetters({
+      currency: 'settings/getCurrency',
+      locale: 'settings/getLocale',
+    }),
+  },
   watch: {
     month() {
       this.fetchData();
