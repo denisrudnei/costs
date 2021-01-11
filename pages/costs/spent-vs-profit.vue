@@ -10,6 +10,8 @@
           {{ year.value }}
         </v-tab>
       </v-tabs>
+    </v-col>
+    <v-col cols="12">
       <nuxt-child />
     </v-col>
   </v-row>
