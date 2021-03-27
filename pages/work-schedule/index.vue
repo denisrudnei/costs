@@ -33,7 +33,15 @@
                 :events="days"
                 :type="type"
                 @click:event="showEvent"
-              />
+              >
+                <template #day="{ date }">
+                  <v-btn icon @click="addHours(date)">
+                    <v-icon>
+                      mdi-plus
+                    </v-icon>
+                  </v-btn>
+                </template>
+              </v-calendar>
               <v-menu v-model="selectedOpen" :activator="selectedElement" min-width="300px">
                 <v-card v-if="selectedEvent">
                   <v-card-title>
@@ -96,7 +104,7 @@
 
 <script>
 import {
-  getYear, getMonth, differenceInHours, parse,
+  getYear, getMonth, differenceInHours, parse, set,
 } from 'date-fns';
 import create from '@/components/workSchedule/createWorkSchedule';
 import { RemoveWorkDay } from '../../graphql/mutation/removeWorkDay';
@@ -177,6 +185,16 @@ export default {
     createWorkDay() {
       this.displayCreate = false;
       this.fetchData();
+    },
+    addHours(date) {
+      const value = parse(date, 'yyyy-MM-dd', new Date());
+      const newDate = set(value, {
+        hours: 0,
+        minutes: 0,
+        seconds: 0,
+      });
+      this.$store.commit('workDay/setDay', newDate);
+      this.displayCreate = true;
     },
     showEvent({ nativeEvent, event }) {
       const open = () => {

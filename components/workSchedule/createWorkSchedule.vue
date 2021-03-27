@@ -50,12 +50,19 @@ export default {
       dayMenu: false,
       startMenu: false,
       finishMenu: false,
-      day: new Date(),
       start: '',
       finish: '',
     };
   },
   computed: {
+    day: {
+      get() {
+        return this.$store.getters['workDay/getDay'];
+      },
+      set(value) {
+        this.$store.commit('workDay/setDay', value);
+      },
+    },
     dayValue() {
       return format(this.day, 'dd/MM/yyyy');
     },
