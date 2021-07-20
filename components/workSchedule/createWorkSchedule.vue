@@ -9,28 +9,10 @@
       </v-menu>
     </v-col>
     <v-col cols="12">
-      <v-menu v-model="startMenu" :close-on-content-click="false" max-width="290px" offset-y>
-        <template v-slot:activator="{ on }">
-          <v-text-field label="Start" filled readonly :value="start" v-on="on" />
-        </template>
-        <v-time-picker
-          :value="start"
-          @input="setTime($event, 'start')"
-          @change="closeTime('start')"
-        />
-      </v-menu>
+      <v-text-field v-model="start" v-mask="'##:##'" label="Start" filled />
     </v-col>
     <v-col cols="12">
-      <v-menu v-model="finishMenu" :close-on-content-click="false" max-width="290px" offset-y>
-        <template v-slot:activator="{ on }">
-          <v-text-field label="Finish" filled readonly :value="finish" v-on="on" />
-        </template>
-        <v-time-picker
-          :value="finish"
-          @input="setTime($event, 'finish')"
-          @change="closeTime('finish')"
-        />
-      </v-menu>
+      <v-text-field v-model="finish" v-mask="'##:##'" label="Finish" filled />
     </v-col>
     <v-col cols="12">
       <v-btn :disabled="disabled" @click="save">
@@ -41,15 +23,18 @@
 </template>
 
 <script>
+import { TheMask } from 'vue-the-mask';
 import { format, parse } from 'date-fns';
 import { CreateWorkDay } from '../../graphql/mutation/createWorkDay';
 
 export default {
+  directives: {
+    TheMask,
+  },
   data() {
     return {
       dayMenu: false,
-      startMenu: false,
-      finishMenu: false,
+
       start: '',
       finish: '',
     };
@@ -74,12 +59,6 @@ export default {
     setDate(value) {
       this.day = parse(value, 'yyyy-MM-dd', new Date());
       this.dayMenu = false;
-    },
-    setTime(value, type) {
-      this[type] = value;
-    },
-    closeTime(type) {
-      this[`${type}Menu`] = false;
     },
     save() {
       this.$apollo.mutate({
