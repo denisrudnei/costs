@@ -1,26 +1,24 @@
+import Bull from 'bull';
 import {
-  Authorized,
-  PubSub,
-  PubSubEngine,
-  Query, Resolver, Root, Subscription,
+  Authorized, PubSub, PubSubEngine, Query, Resolver, Root, Subscription,
 } from 'type-graphql';
 
-import Bull from 'bull';
-import { SystemInfo } from '../types/systemInfo/SystemInfo';
+import { Role } from '../enums/Role';
 import { SystemInfoService } from '../services/SystemInfoService';
+import { SystemInfo } from '../types/systemInfo/SystemInfo';
 
 @Resolver(() => SystemInfo)
 export class SystemInfoResolver {
   public static queue = new Bull<null>('getSystemInfo', process.env.REDIS_URL || 'redis://127.0.0.1:6379');
 
   @Query(() => SystemInfo)
-  @Authorized('admin')
+  @Authorized(Role.ADMIN)
   public GetSystemInfo() {
     return SystemInfoService.getInfo();
   }
 
   @Query(() => SystemInfo)
-  @Authorized('admin')
+  @Authorized(Role.ADMIN)
   public async StartGetInfo(@PubSub() pubSub: PubSubEngine) {
     const workers = await SystemInfoResolver.queue.getWorkers();
     if (workers.length === 0) {

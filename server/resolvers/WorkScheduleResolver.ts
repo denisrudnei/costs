@@ -1,9 +1,10 @@
 import { validate } from 'class-validator';
 import {
-  Arg, ID, Int, Mutation, Query, Resolver, Ctx, Authorized,
+  Arg, Authorized, Ctx, ID, Int, Mutation, Query, Resolver,
 } from 'type-graphql';
 
 import { WorkDayCreateInput } from '../inputs/WorkDayCreateInput';
+import { Role } from '../enums/Role';
 import { WorkDay } from '../models/WorkDay';
 import { WorkSchedule } from '../models/WorkSchedule';
 import { WorkScheduleService } from '../services/WorkScheduleService';
@@ -12,7 +13,7 @@ import { CustomExpressContext } from '../types/CustomSession';
 @Resolver()
 export class WorkScheduleResolver {
   @Query(() => [WorkDay])
-  @Authorized('user')
+  @Authorized(Role.USER)
   public GetWorkDay(
     @Ctx() { req }: CustomExpressContext,
     @Arg('year', () => Int, { nullable: true }) year?: number,
@@ -23,14 +24,14 @@ export class WorkScheduleResolver {
   }
 
   @Query(() => WorkSchedule)
-  @Authorized('user')
+  @Authorized(Role.USER)
   public GetWorkSchedule(@Arg('year', () => Int) year: number, @Arg('month', () => Int) month: number, @Ctx() { req }: CustomExpressContext) {
     const { id } = req.session!.authUser!;
     return WorkScheduleService.getSchedule(year, month, id);
   }
 
   @Mutation(() => WorkDay)
-  @Authorized('user')
+  @Authorized(Role.USER)
   public async CreateWorkDay(@Arg('workDay', () => WorkDayCreateInput) workDay: WorkDay, @Ctx() { req }: CustomExpressContext) {
     const { id } = req.session!.authUser!;
     const errors = await validate(new WorkDay(workDay));
@@ -43,7 +44,7 @@ export class WorkScheduleResolver {
   }
 
   @Mutation(() => Boolean)
-  @Authorized('user')
+  @Authorized(Role.USER)
   public RemoveWorkDay(@Arg('id', () => ID) workDayId: WorkDay['id'], @Ctx() { req }: CustomExpressContext) {
     const { id } = req.session!.authUser!;
     return WorkScheduleService.remove(workDayId, id);

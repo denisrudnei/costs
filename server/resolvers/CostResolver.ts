@@ -6,22 +6,23 @@ import CostService from '~/services/CostService';
 
 import { CostCreateInput } from '../inputs/CostCreateInput';
 import { CostEditInput } from '../inputs/CostEditInput';
+import { Role } from '../enums/Role';
 import {
-  CostPagination, SortType, OrderType, PaginationOptions,
+  CostPagination, OrderType, PaginationOptions, SortType,
 } from '../types/CostPagination';
 import { CustomExpressContext } from '../types/CustomSession';
 
 @Resolver()
 class CostResolver {
   @Query(() => [Cost])
-  @Authorized('user')
+  @Authorized(Role.USER)
   Costs(@Ctx() { req }: CustomExpressContext) {
     const { id } = req.session!.authUser!;
     return CostService.getAllCosts(id);
   }
 
   @Query(() => CostPagination)
-  @Authorized('user')
+  @Authorized(Role.USER)
   CostPagination(
     @Arg('search', () => String, { defaultValue: '', nullable: true }) search: PaginationOptions['search'],
     @Arg('page', () => Int, { defaultValue: 1, nullable: true }) page: PaginationOptions['page'],
@@ -37,7 +38,7 @@ class CostResolver {
   }
 
   @Query(() => Cost)
-  @Authorized('user')
+  @Authorized(Role.USER)
   GetOneCost(
     @Arg('id', () => ID) id: Cost['id'],
     @Ctx() { req }: CustomExpressContext,
@@ -47,7 +48,7 @@ class CostResolver {
   }
 
   @Mutation(() => Cost)
-  @Authorized('user')
+  @Authorized(Role.USER)
   EditCost(
     @Arg('id', () => ID) id: Cost['id'],
     @Arg('cost') cost: CostEditInput,
@@ -58,7 +59,7 @@ class CostResolver {
   }
 
   @Query(() => [Cost])
-  @Authorized('user')
+  @Authorized(Role.USER)
   GetProfits(@Ctx() { req }: CustomExpressContext) {
     const { id } = req.session!.authUser!;
 
@@ -66,21 +67,21 @@ class CostResolver {
   }
 
   @Query(() => [Cost])
-  @Authorized('user')
+  @Authorized(Role.USER)
   GetSpending(@Ctx() { req }: CustomExpressContext) {
     const { id } = req.session!.authUser!;
     return CostService.getSpending(id);
   }
 
   @Query(() => [Cost])
-  @Authorized('user')
+  @Authorized(Role.USER)
   CostsByDate(@Arg('date') date: Date, @Ctx() { req }: CustomExpressContext) {
     const { id } = req.session!.authUser!;
     return CostService.getCostsByDate(date, id);
   }
 
   @Mutation(() => Boolean)
-  @Authorized('user')
+  @Authorized(Role.USER)
   RemoveCost(
     @Arg('id', () => ID) id: Cost['id'],
     @Ctx() { req }: CustomExpressContext,
@@ -90,7 +91,7 @@ class CostResolver {
   }
 
   @Mutation(() => Cost)
-  @Authorized('user')
+  @Authorized(Role.USER)
   CreateNewCost(
     @Arg('cost', () => CostCreateInput) cost: CostCreateInput,
     @Ctx() { req }: CustomExpressContext,

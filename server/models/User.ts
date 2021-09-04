@@ -15,6 +15,8 @@ import {
 
 import { Cost } from './Cost';
 import { UserSettings } from './UserSettings';
+import { BankAccount } from './BankAccount';
+import { Role } from '../enums/Role';
 
 @Entity()
 @ObjectType()
@@ -27,8 +29,8 @@ export class User extends BaseEntity {
   @Field()
   public name!: string
 
-  @Column({ default: 'USER' })
-  public role: 'ADMIN' | 'USER' = 'USER'
+  @Column({ default: Role.USER })
+  public role: Role = Role.USER
 
   @Column({ unique: true })
   @Field()
@@ -48,6 +50,15 @@ export class User extends BaseEntity {
   @JoinColumn()
   @Field(() => UserSettings)
   public settings!: UserSettings
+
+  @OneToOne(() => BankAccount)
+  @JoinColumn()
+  @Field(() => BankAccount)
+  public defaultBankAccount?: BankAccount
+
+  @OneToMany(() => BankAccount, (bankAccount) => bankAccount.user)
+  @Field(() => [BankAccount])
+  public bankAccounts!: BankAccount[]
 
   @AfterLoad()
   checkPasswordChanged() {

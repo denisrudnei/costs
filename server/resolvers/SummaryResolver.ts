@@ -1,18 +1,19 @@
 import {
-  Query, Resolver, Authorized, Ctx, Int, Arg,
+  Arg, Authorized, Ctx, Int, Query, Resolver,
 } from 'type-graphql';
 
-import { CustomExpressContext } from '../types/CustomSession';
+import { Role } from '../enums/Role';
 import SummaryService from '../services/SummaryService';
-import { SummaryTotalByMonth } from '../types/SummaryTotalByMonth';
-import { SummaryGroupedByDate } from '../types/SummaryGroupedByDate';
 import { BasicSummary } from '../types/BasicSummary';
+import { CustomExpressContext } from '../types/CustomSession';
+import { SummaryGroupedByDate } from '../types/SummaryGroupedByDate';
+import { SummaryTotalByMonth } from '../types/SummaryTotalByMonth';
 import { SummaryDayByDay } from '../types/SummaryTotalDayByDay';
 
 @Resolver()
 class SummaryResolver {
   @Query(() => BasicSummary)
-  @Authorized('user')
+  @Authorized(Role.USER)
   BasicSummary(
     @Ctx() { req }: CustomExpressContext,
     @Arg('month', () => Int, { nullable: true }) month?: number,
@@ -26,7 +27,7 @@ class SummaryResolver {
   }
 
   @Query(() => SummaryGroupedByDate)
-  @Authorized('user')
+  @Authorized(Role.USER)
   SummaryGroupedByDate(
     @Ctx() { req }: CustomExpressContext,
     @Arg('month', () => Int, { nullable: true }) month?: number,
@@ -37,14 +38,14 @@ class SummaryResolver {
   }
 
   @Query(() => [SummaryTotalByMonth])
-  @Authorized('user')
+  @Authorized(Role.USER)
   SummaryTotalByMonth(@Ctx() { req }: CustomExpressContext) {
     const { id } = req.session!.authUser!;
     return SummaryService.summaryTotalByMonth(id);
   }
 
   @Query(() => [SummaryDayByDay])
-  @Authorized('user')
+  @Authorized(Role.USER)
   SummaryDayByDay(
     @Ctx() { req }: CustomExpressContext,
     @Arg('year', () => Int, { nullable: true }) year?: number,

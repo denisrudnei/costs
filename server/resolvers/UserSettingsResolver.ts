@@ -5,18 +5,19 @@ import { CustomExpressContext } from '../types/CustomSession';
 import { UserSettingsInput } from '../inputs/UserSettingsInput';
 import UserSettingsService from '~/services/UserSettingsService';
 import { UserSettings } from '~/models/UserSettings';
+import { Role } from '../enums/Role';
 
 @Resolver()
 class UserSettingsResolver {
   @Query(() => UserSettings)
-  @Authorized('user')
+  @Authorized(Role.USER)
   UserSettings(@Ctx() { req }: CustomExpressContext) {
     const { id } = req.session!.authUser!;
     return UserSettingsService.getUserSettings(id);
   }
 
   @Mutation(() => UserSettings)
-  @Authorized('user')
+  @Authorized(Role.USER)
   CreateUserSettings(
     @Arg('userSettings') userSettings: UserSettingsInput,
     @Ctx() { req }: CustomExpressContext,

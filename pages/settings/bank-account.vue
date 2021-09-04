@@ -1,12 +1,12 @@
 <template>
   <v-row>
-    <v-col>
+    <v-col cols="12">
       <v-tabs>
-        <v-tab to="/settings/import-export">
-          Import / Export
+        <v-tab to="/settings/bank-account/create">
+          Create
         </v-tab>
-        <v-tab to="/settings/bank-account">
-          Bank account
+        <v-tab to="/settings/bank-account/list">
+          List
         </v-tab>
       </v-tabs>
     </v-col>
