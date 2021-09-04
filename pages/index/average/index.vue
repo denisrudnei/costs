@@ -8,9 +8,9 @@
           </v-card-title>
           <v-card-text>
             <apexchart
-              :options="options"
+              :options="spendingOptions"
               :series="spendingSeries"
-              :type="options.type"
+              :type="spendingOptions.type"
               height="350px"
             />
           </v-card-text>
@@ -25,9 +25,9 @@
         <client-only>
           <v-card-text>
             <apexchart
-              :options="options"
+              :options="profitsOptions"
               :series="profitsSeries"
-              :type="options.type"
+              :type="profitsOptions.type"
               height="350px"
             />
           </v-card-text>
@@ -39,8 +39,8 @@
 
 <script>
 import { parse } from 'date-fns';
-import summaryTotalByMonth from '@/graphql/query/summaryTotalByMonth';
 import { mapGetters } from 'vuex';
+import summaryTotalByMonth from '@/graphql/query/summaryTotalByMonth';
 import { dineroFormatter } from '~/plugins/filters';
 
 export default {
@@ -49,8 +49,8 @@ export default {
   },
   data() {
     return {
-      options: {
-        type: 'bar',
+      spendingOptions: {
+        type: 'area',
         chart: {
           foreColor: '#fff',
           toolbar: {
@@ -59,13 +59,8 @@ export default {
         },
         xaxis: {
           type: 'datetime',
-          axisTicks: {
-            color: '#333',
-          },
-          axisBorder: {
-            color: '#333',
-          },
         },
+        colors: ['#ff0000', '#ff0000', '#fff'],
         grid: {
           borderColor: '#40475D',
         },
@@ -75,22 +70,26 @@ export default {
             format: 'dd MM yyyy',
           },
         },
-        plotOptions: {
-          bar: {
-            colors: {
-              ranges: [
-                {
-                  from: 0,
-                  to: Infinity,
-                  color: '#008000',
-                },
-                {
-                  from: -Infinity,
-                  to: 0,
-                  color: '#ff0000',
-                },
-              ],
-            },
+      },
+      profitsOptions: {
+        type: 'area',
+        chart: {
+          foreColor: '#fff',
+          toolbar: {
+            show: true,
+          },
+        },
+        xaxis: {
+          type: 'datetime',
+        },
+        colors: ['#008000'],
+        grid: {
+          borderColor: '#40475D',
+        },
+        tooltip: {
+          theme: 'dark',
+          xaxis: {
+            format: 'dd MM yyyy',
           },
         },
       },
@@ -103,20 +102,25 @@ export default {
     locale: 'settings/getLocale',
   }),
   mounted() {
-    const fmt = (value) => dineroFormatter(value, this.currency, this.locale);
-    this.options.yaxis = {
-      labels: {
-        formatter: fmt,
-      },
-    };
-    this.options.dataLabels = {
-      position: 'bottom',
-      horizontal: false,
-      formatter: fmt,
-    };
+    this.updateOptions(['spendingOptions', 'profitsOptions']);
     this.fetchData();
   },
   methods: {
+    updateOptions(options) {
+      const fmt = (value) => dineroFormatter(value, this.currency, this.locale);
+      options.forEach((option) => {
+        this[option].yaxis = {
+          labels: {
+            formatter: fmt,
+          },
+        };
+        this[option].dataLabels = {
+          position: 'bottom',
+          horizontal: false,
+          formatter: fmt,
+        };
+      });
+    },
     fetchData() {
       this.$apollo
         .query({
