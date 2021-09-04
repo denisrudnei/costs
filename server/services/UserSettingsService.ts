@@ -2,6 +2,17 @@ import { User } from '../models/User';
 import { UserSettings } from '../models/UserSettings';
 
 class UserSettingsService {
+  public static async getDefault(userId: User['id']) {
+    const user = await User.findOne(userId, { relations: ['settings'] });
+    if (!user) throw new Error('User not found');
+    if (user.settings) return user.settings;
+    const defaultUserSettings = UserSettings.create();
+    defaultUserSettings.currency = 'USD';
+    defaultUserSettings.locale = 'en-US';
+    defaultUserSettings.user = user;
+    return defaultUserSettings.save();
+  }
+
   public static async create(
     userSettings: UserSettings,
     userId: User['id'],
@@ -29,6 +40,7 @@ class UserSettingsService {
       relations: ['settings'],
     });
     if (!user) throw new Error('User not found');
+    if (!user.settings) return this.getDefault(user.id);
     return user.settings;
   }
 }
