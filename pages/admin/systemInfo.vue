@@ -10,7 +10,7 @@
           </template>
         </v-card-title>
         <v-card-text>
-          <no-ssr>
+          <client-only>
             <apexcharts
               ref="chart"
               height="200"
@@ -18,7 +18,7 @@
               :options="chartOptions"
               :series="series"
             />
-          </no-ssr>
+          </client-only>
         </v-card-text>
       </v-card>
     </v-col>
@@ -28,14 +28,14 @@
           Used memory
         </v-card-title>
         <v-card-text>
-          <no-ssr>
+          <client-only>
             <apexcharts
               :options="chartMemory"
               :type="chartMemory.type"
               :series="memorySeries"
               height="250"
             />
-          </no-ssr>
+          </client-only>
         </v-card-text>
       </v-card>
     </v-col>
