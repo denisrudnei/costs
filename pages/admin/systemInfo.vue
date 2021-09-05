@@ -44,7 +44,6 @@
 
 <script>
 import { GetEverySecond } from '../../graphql/subscriptions/GetEverySecond';
-import { StartGetInfo } from '../../graphql/query/startGetInfo';
 
 export default {
   components: {
@@ -133,13 +132,6 @@ export default {
       memorySeries: [],
       series: [],
     };
-  },
-  created() {
-    this.$apollo.query({
-      query: StartGetInfo,
-    }).then((response) => {
-      this.info = response.data.StartGetInfo;
-    });
   },
   apollo: {
     $subscribe: {

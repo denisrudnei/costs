@@ -10,6 +10,7 @@ import { buildSchema } from 'type-graphql';
 import customAuthChecker from './customAuthChecker';
 import Connection from './db/Connection';
 import routes from './routes';
+import { SystemInfoService } from './services/SystemInfoService';
 
 async function main() {
   await Connection;
@@ -17,10 +18,13 @@ async function main() {
 
   const pubSub = new PubSub();
 
+  await SystemInfoService.start(pubSub);
+
   const server = new ApolloServer({
     schema: await buildSchema({
       resolvers: [path.resolve(__dirname, 'resolvers/**/*')],
       authChecker: customAuthChecker,
+      pubSub,
     }),
     playground: {
       endpoint: '/graphql',
