@@ -11,7 +11,7 @@ import { UsedDates } from '../types/UsedDates';
 class DateResolver {
   @Query(() => UsedDates)
   @Authorized(Role.USER)
-  GetUsedDates(@Ctx() { req }: CustomExpressContext) {
+  public GetUsedDates(@Ctx() { req }: CustomExpressContext) {
     const { id } = req.session!.authUser!;
     return DateService.getUsedDates(id);
   }

@@ -11,6 +11,7 @@ import {
 
 import CostType from '../enums/CostType';
 import { User } from './User';
+import { BankAccount } from './BankAccount';
 
 @ObjectType()
 @Entity()
@@ -42,6 +43,10 @@ export class Cost extends BaseEntity {
 
   @ManyToOne(() => User)
   public user!: User
+
+  @ManyToOne(() => BankAccount)
+  @Field(() => BankAccount, { nullable: true, description: 'Origin from value' })
+  public bankAccount?: BankAccount
 
   @Column({ type: 'enum', enum: CostType })
   @Field(() => CostType)

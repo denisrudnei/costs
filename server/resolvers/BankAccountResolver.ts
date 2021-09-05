@@ -10,14 +10,14 @@ import { CustomExpressContext } from '../types/CustomSession';
 
 @Resolver()
 export class BankAccountResolver {
-  @Query(() => [BankAccount])
+  @Query(() => [BankAccount], { description: 'Return all bank accounts for the logged user' })
   @Authorized(Role.USER)
   public GetBankAccounts(@Ctx() { req }: CustomExpressContext) {
     const { id } = req.session.authUser!;
     return BankAccountService.getBankAccounts(id);
   }
 
-  @Query(() => BankAccount)
+  @Query(() => BankAccount, { description: 'Return default account for the logged user' })
   @Authorized(Role.USER)
   public GetDefaultBankAccount(@Ctx() { req }: CustomExpressContext) {
     const { id } = req.session.authUser!;

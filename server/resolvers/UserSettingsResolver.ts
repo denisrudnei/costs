@@ -11,14 +11,14 @@ import { Role } from '../enums/Role';
 class UserSettingsResolver {
   @Query(() => UserSettings)
   @Authorized(Role.USER)
-  UserSettings(@Ctx() { req }: CustomExpressContext) {
+  public UserSettings(@Ctx() { req }: CustomExpressContext) {
     const { id } = req.session!.authUser!;
     return UserSettingsService.getUserSettings(id);
   }
 
   @Mutation(() => UserSettings)
   @Authorized(Role.USER)
-  CreateUserSettings(
+  public CreateUserSettings(
     @Arg('userSettings') userSettings: UserSettingsInput,
     @Ctx() { req }: CustomExpressContext,
   ) {

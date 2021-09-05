@@ -4,7 +4,7 @@
       <v-text-field v-model="bankAccount.name" filled label="Name" />
     </v-col>
     <v-col cols="12">
-      <v-text-field v-model="bankAccount.agency" filled label="Bank agency" />
+      <v-text-field v-model="bankAccount.agency" filled label="Agency" />
     </v-col>
     <v-col cols="12">
       <v-text-field v-model="bankAccount.account" filled label="Account" />

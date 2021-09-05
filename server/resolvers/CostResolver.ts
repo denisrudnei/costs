@@ -1,5 +1,5 @@
 import {
-  Arg, Authorized, Ctx, ID, Int, Mutation, Query, Resolver,
+  Arg, Authorized, Ctx, FieldResolver, ID, Int, Mutation, Query, Resolver, Root,
 } from 'type-graphql';
 import { Cost } from '~/models/Cost';
 import CostService from '~/services/CostService';
@@ -11,19 +11,20 @@ import {
   CostPagination, OrderType, PaginationOptions, SortType,
 } from '../types/CostPagination';
 import { CustomExpressContext } from '../types/CustomSession';
+import { BankAccount } from '../models/BankAccount';
 
-@Resolver()
+@Resolver(() => Cost)
 class CostResolver {
   @Query(() => [Cost])
   @Authorized(Role.USER)
-  Costs(@Ctx() { req }: CustomExpressContext) {
+  public Costs(@Ctx() { req }: CustomExpressContext) {
     const { id } = req.session!.authUser!;
     return CostService.getAllCosts(id);
   }
 
   @Query(() => CostPagination)
   @Authorized(Role.USER)
-  CostPagination(
+  public CostPagination(
     @Arg('search', () => String, { defaultValue: '', nullable: true }) search: PaginationOptions['search'],
     @Arg('page', () => Int, { defaultValue: 1, nullable: true }) page: PaginationOptions['page'],
     @Arg('limit', () => Int, { defaultValue: 10, nullable: true }) limit: PaginationOptions['limit'],
@@ -39,7 +40,7 @@ class CostResolver {
 
   @Query(() => Cost)
   @Authorized(Role.USER)
-  GetOneCost(
+  public GetOneCost(
     @Arg('id', () => ID) id: Cost['id'],
     @Ctx() { req }: CustomExpressContext,
   ) {
@@ -49,7 +50,7 @@ class CostResolver {
 
   @Mutation(() => Cost)
   @Authorized(Role.USER)
-  EditCost(
+  public EditCost(
     @Arg('id', () => ID) id: Cost['id'],
     @Arg('cost') cost: CostEditInput,
     @Ctx() { req }: CustomExpressContext,
@@ -60,7 +61,7 @@ class CostResolver {
 
   @Query(() => [Cost])
   @Authorized(Role.USER)
-  GetProfits(@Ctx() { req }: CustomExpressContext) {
+  public GetProfits(@Ctx() { req }: CustomExpressContext) {
     const { id } = req.session!.authUser!;
 
     return CostService.getProfits(id);
@@ -68,21 +69,21 @@ class CostResolver {
 
   @Query(() => [Cost])
   @Authorized(Role.USER)
-  GetSpending(@Ctx() { req }: CustomExpressContext) {
+  public GetSpending(@Ctx() { req }: CustomExpressContext) {
     const { id } = req.session!.authUser!;
     return CostService.getSpending(id);
   }
 
   @Query(() => [Cost])
   @Authorized(Role.USER)
-  CostsByDate(@Arg('date') date: Date, @Ctx() { req }: CustomExpressContext) {
+  public CostsByDate(@Arg('date') date: Date, @Ctx() { req }: CustomExpressContext) {
     const { id } = req.session!.authUser!;
     return CostService.getCostsByDate(date, id);
   }
 
   @Mutation(() => Boolean)
   @Authorized(Role.USER)
-  RemoveCost(
+  public RemoveCost(
     @Arg('id', () => ID) id: Cost['id'],
     @Ctx() { req }: CustomExpressContext,
   ) {
@@ -92,12 +93,18 @@ class CostResolver {
 
   @Mutation(() => Cost)
   @Authorized(Role.USER)
-  CreateNewCost(
+  public CreateNewCost(
     @Arg('cost', () => CostCreateInput) cost: CostCreateInput,
     @Ctx() { req }: CustomExpressContext,
   ) {
     const { id } = req.session!.authUser!;
     return CostService.createCost(new Cost(cost), id);
+  }
+
+  @FieldResolver()
+  public async bankAccount(@Root() root: Cost): Promise<BankAccount | undefined> {
+    const { bankAccount } = await Cost.findOne(root.id, { relations: ['bankAccount'] }) as Cost;
+    return bankAccount;
   }
 }
 

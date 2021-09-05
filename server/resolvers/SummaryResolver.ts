@@ -14,7 +14,7 @@ import { SummaryDayByDay } from '../types/SummaryTotalDayByDay';
 class SummaryResolver {
   @Query(() => BasicSummary)
   @Authorized(Role.USER)
-  BasicSummary(
+  public BasicSummary(
     @Ctx() { req }: CustomExpressContext,
     @Arg('month', () => Int, { nullable: true }) month?: number,
     @Arg('year', () => Int, { nullable: true }) year?: number,
@@ -28,7 +28,7 @@ class SummaryResolver {
 
   @Query(() => SummaryGroupedByDate)
   @Authorized(Role.USER)
-  SummaryGroupedByDate(
+  public SummaryGroupedByDate(
     @Ctx() { req }: CustomExpressContext,
     @Arg('month', () => Int, { nullable: true }) month?: number,
     @Arg('year', () => Int, { nullable: true }) year?: number,
@@ -39,14 +39,14 @@ class SummaryResolver {
 
   @Query(() => [SummaryTotalByMonth])
   @Authorized(Role.USER)
-  SummaryTotalByMonth(@Ctx() { req }: CustomExpressContext) {
+  public SummaryTotalByMonth(@Ctx() { req }: CustomExpressContext) {
     const { id } = req.session!.authUser!;
     return SummaryService.summaryTotalByMonth(id);
   }
 
   @Query(() => [SummaryDayByDay])
   @Authorized(Role.USER)
-  SummaryDayByDay(
+  public SummaryDayByDay(
     @Ctx() { req }: CustomExpressContext,
     @Arg('year', () => Int, { nullable: true }) year?: number,
     @Arg('month', () => Int, { nullable: true }) month?: number,
