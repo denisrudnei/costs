@@ -2,7 +2,7 @@
   <v-row>
     <v-col cols="12">
       <v-menu v-model="dayMenu" :close-on-content-click="false" max-width="290px">
-        <template v-slot:activator="{ on }">
+        <template #activator="{ on }">
           <v-text-field label="Day" filled readonly :value="dayValue" v-on="on" />
         </template>
         <v-date-picker @change="setDate" />

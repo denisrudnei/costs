@@ -15,14 +15,6 @@ export enum OrderType {
   DESC = 'DESC'
 }
 
-export type PaginationOptions = {
-  search: string
-  page: number
-  limit: CostPagination['limit']
-  type: keyof typeof SortType
-  order: keyof typeof OrderType
-}
-
 registerEnumType(SortType, {
   name: 'SortType',
 });
@@ -51,4 +43,12 @@ export class CostPagination {
 
   @Field(() => Int)
   public total!: number
+}
+
+export type PaginationOptions = {
+  search: string
+  page: number
+  limit: CostPagination['limit']
+  type: keyof typeof SortType
+  order: keyof typeof OrderType
 }

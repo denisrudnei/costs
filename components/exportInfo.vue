@@ -10,7 +10,7 @@
         </v-col>
         <v-col cols="12">
           <v-menu v-model="startMenu" max-width="290px" :close-on-content-click="false">
-            <template v-slot:activator="{ on }">
+            <template #activator="{ on }">
               <v-text-field filled label="Start" readonly :value="formatDate(start)" v-on="on" />
             </template>
             <v-date-picker @change="setDate($event, 'start')" />
@@ -18,7 +18,7 @@
         </v-col>
         <v-col cols="12">
           <v-menu v-model="finishMenu" max-width="290px" :close-on-content-click="false">
-            <template v-slot:activator="{ on }">
+            <template #activator="{ on }">
               <v-text-field filled label="Finish" readonly :value="formatDate(finish)" v-on="on" />
             </template>
             <v-date-picker @change="setDate($event, 'finish')" />

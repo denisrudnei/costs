@@ -4,7 +4,7 @@
       <v-row>
         <v-col cols="12" md="6">
           <v-menu v-model="startMenu" :close-on-content-click="false" max-width="290px">
-            <template v-slot:activator="{ on }">
+            <template #activator="{ on }">
               <v-text-field filled label="Start" :value="getStart" v-on="on" />
             </template>
             <v-date-picker @change="updateDate($event, 'start')" />
@@ -12,7 +12,7 @@
         </v-col>
         <v-col cols="12" md="6">
           <v-menu v-model="endMenu" :close-on-content-click="false" max-width="290px">
-            <template v-slot:activator="{ on }">
+            <template #activator="{ on }">
               <v-text-field filled label="End" :value="getEnd" v-on="on" />
             </template>
             <v-date-picker @change="updateDate($event, 'end')" />

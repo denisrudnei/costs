@@ -25,13 +25,13 @@
             :headers="headers"
             :search="spendingSearch"
           >
-            <template v-slot:item.value="{ item }">
+            <template #item.value="{ item }">
               {{ item.value | dinero }}
             </template>
-            <template v-slot:item.date="{ item }">
+            <template #item.date="{ item }">
               {{ item.date | date }}
             </template>
-            <template v-slot:item.actions="{ item }">
+            <template #item.actions="{ item }">
               <v-btn icon :to="`/costs/edit/${item.id}`">
                 <v-icon> mdi-clipboard-edit </v-icon>
               </v-btn>
@@ -56,13 +56,13 @@
             :headers="headers"
             :search="profitsSearch"
           >
-            <template v-slot:item.value="{ item }">
+            <template #item.value="{ item }">
               {{ item.value | dinero }}
             </template>
-            <template v-slot:item.date="{ item }">
+            <template #item.date="{ item }">
               {{ item.date | date }}
             </template>
-            <template v-slot:item.actions="{ item }">
+            <template #item.actions="{ item }">
               <v-btn icon :to="`/costs/edit/${item.id}`">
                 <v-icon> mdi-clipboard-edit </v-icon>
               </v-btn>

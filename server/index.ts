@@ -1,10 +1,14 @@
 import 'reflect-metadata';
 
-import { ApolloServer, PubSub } from 'apollo-server-express';
+import { ApolloServerPluginDrainHttpServer } from 'apollo-server-core';
+import { ApolloServer } from 'apollo-server-express';
 import consola from 'consola';
 import express from 'express';
+import { execute, subscribe } from 'graphql';
+import { PubSub } from 'graphql-subscriptions';
 import http from 'http';
 import path from 'path';
+import { SubscriptionServer } from 'subscriptions-transport-ws';
 import { buildSchema } from 'type-graphql';
 
 import customAuthChecker from './customAuthChecker';
@@ -20,23 +24,38 @@ async function main() {
 
   await SystemInfoService.start(pubSub);
 
+  const schema = await buildSchema({
+    resolvers: [path.resolve(__dirname, 'resolvers/**/*')],
+    authChecker: customAuthChecker,
+    pubSub,
+  });
+
+  const httpServer = http.createServer(app);
+
+  const subscriptionServer = SubscriptionServer.create({
+    schema,
+    execute,
+    subscribe,
+  }, {
+    server: httpServer,
+    path: '/subscriptions',
+  });
+
   const server = new ApolloServer({
-    schema: await buildSchema({
-      resolvers: [path.resolve(__dirname, 'resolvers/**/*')],
-      authChecker: customAuthChecker,
-      pubSub,
-    }),
-    playground: {
-      endpoint: '/graphql',
-    },
+    schema,
+    plugins: [
+      ApolloServerPluginDrainHttpServer({ httpServer }),
+      {
+        async serverWillStart() {
+          return {
+            async drainServer() {
+              subscriptionServer.close();
+            },
+          };
+        },
+      },
+    ],
     introspection: true,
-    subscriptions: {
-      path: '/subscriptions',
-    },
-    uploads: {
-      maxFileSize: 10_000_000,
-      maxFiles: 5,
-    },
     context: (context) => ({
       req: context.req,
       res: context.res,
@@ -44,12 +63,11 @@ async function main() {
     }),
   });
 
-  const httpServer = http.createServer(app);
-
   app.use(routes);
 
-  server.applyMiddleware({ app });
-  server.installSubscriptionHandlers(httpServer);
+  await server.start();
+
+  server.applyMiddleware({ app, path: '/graphql', cors: false });
 
   app.use('*', (_, res) => {
     res.status(404).json({

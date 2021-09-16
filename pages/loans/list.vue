@@ -2,10 +2,10 @@
   <v-row>
     <v-col>
       <v-data-table :items="items" :headers="headers">
-        <template v-slot:item.total="{ item }">
+        <template #item.total="{ item }">
           {{ item.total | dinero }}
         </template>
-        <template v-slot:item.actions="{ item }">
+        <template #item.actions="{ item }">
           <v-btn :to="`/loans/details/${item.id}`" icon>
             <v-icon>
               mdi-book-information-variant

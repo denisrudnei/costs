@@ -2,7 +2,7 @@
   <v-row>
     <v-col>
       <v-data-table :items="items" :headers="headers">
-        <template v-slot:item.start="{ item }">
+        <template #item.start="{ item }">
           <v-menu :close-on-content-click="false">
             <v-date-picker :value="item.start.substr(0, 10)" readonly />
             <template #activator="{on}">
@@ -12,7 +12,7 @@
             </template>
           </v-menu>
         </template>
-        <template v-slot:item.end="{ item }">
+        <template #item.end="{ item }">
           <v-menu :close-on-content-click="false">
             <v-date-picker :value="item.end.substr(0, 10)" readonly />
             <template #activator="{on}">
@@ -22,19 +22,19 @@
             </template>
           </v-menu>
         </template>
-        <template v-slot:item.months="{ item }">
+        <template #item.months="{ item }">
           {{ months(item.start, item.end) }}
         </template>
-        <template v-slot:item.value="{ item }">
+        <template #item.value="{ item }">
           {{ item.value | dinero }}
         </template>
-        <template v-slot:item.total="{ item }">
+        <template #item.total="{ item }">
           {{ (months(item.start, item.end) * item.value) | dinero }}
         </template>
-        <template v-slot:item.indeterminate="{ item }">
+        <template #item.indeterminate="{ item }">
           <v-checkbox readonly :input-value="item.indeterminate" />
         </template>
-        <template v-slot:item.actions="{ item }">
+        <template #item.actions="{ item }">
           <v-btn :to="`/forecasts/details/${item.id}`" icon>
             <v-icon>
               mdi-book-information-variant

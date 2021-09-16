@@ -2,19 +2,19 @@
   <v-row>
     <v-col cols="12" md="8">
       <v-data-table :items="items" :headers="headers">
-        <template v-slot:item.portion="{ item }">
+        <template #item.portion="{ item }">
           {{ item.portion | dinero }}
         </template>
-        <template v-slot:item.restValue="{ item }">
+        <template #item.restValue="{ item }">
           {{ item.restValue | dinero }}
         </template>
-        <template v-slot:item.paidValue="{ item }">
+        <template #item.paidValue="{ item }">
           {{ item.paidValue | dinero }}
         </template>
-        <template v-slot:item.interest="{ item }">
+        <template #item.interest="{ item }">
           {{ item.interest | dinero }}
         </template>
-        <template v-slot:item.amortizationValue="{ item }">
+        <template #item.amortizationValue="{ item }">
           {{ item.amortizationValue | dinero }}
         </template>
       </v-data-table>
