@@ -6,7 +6,7 @@
     "dev:client": "nuxt-ts --port 4000",
     "dev:server": "ts-node-dev --respawn -r tsconfig-paths/register server/index.ts",
     "build": "nuxt-ts build",
-    "start": "nuxt-ts start -p 4000",
+    "start": "nuxt-ts start",
     "heroku-postbuild": "npm run build-server",
     "start-server": "node -r tsconfig-paths/register dist/server/index.js",
     "build-server": "tsc -p tsconfig-build.json",
