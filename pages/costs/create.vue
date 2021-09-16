@@ -3,12 +3,12 @@
 </template>
 
 <script>
+import { mapGetters } from 'vuex';
 import create from '@/components/cost/costCreate';
 import createNewCost from '@/graphql/mutation/createNewCost';
 import profits from '@/graphql/query/profits';
 import costs from '@/graphql/query/costs';
 import spending from '@/graphql/query/spending';
-import { mapGetters } from 'vuex';
 import { CostPagination } from '~/graphql/query/getCostPagination';
 
 export default {

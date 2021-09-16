@@ -1,10 +1,9 @@
-import consolaGlobalInstance from 'consola';
 import {
-  lastDayOfMonth, parse, differenceInHours, getMonth, getYear, addHours, addMinutes,
+  addHours, addMinutes, differenceInHours, getMonth, getYear, lastDayOfMonth, parse,
 } from 'date-fns';
 import { getConnection } from 'typeorm';
-import { User } from '../models/User';
 
+import { User } from '../models/User';
 import { WorkDay } from '../models/WorkDay';
 
 export class WorkScheduleService {

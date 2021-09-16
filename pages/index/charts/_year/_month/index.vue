@@ -124,10 +124,10 @@
 
 <script>
 import { mapGetters } from 'vuex';
+import { format } from 'date-fns';
 import getDates from '@/mixins/getDates';
 import summaryGroupedByDate from '@/graphql/query/summaryGroupedByDate';
 import summaryDayByDay from '@/graphql/query/summaryDayByDay';
-import { format } from 'date-fns';
 import basicSummary from '@/graphql/query/basicSummary';
 import { dineroFormatter } from '~/plugins/filters';
 

@@ -53,9 +53,9 @@
 
 <script>
 import { format, isAfter, parse } from 'date-fns';
+import { mapGetters } from 'vuex';
 import refetch from '@/graphql/query/refetch';
 import removeCost from '@/graphql/mutation/removeCost';
-import { mapGetters } from 'vuex';
 import { CostPagination } from '~/graphql/query/getCostPagination';
 
 export default {

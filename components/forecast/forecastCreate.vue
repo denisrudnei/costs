@@ -163,8 +163,8 @@
 import {
   parse, format, isAfter, addMonths,
 } from 'date-fns';
-import forecasts from '@/mixins/forecasts';
 import { mapGetters } from 'vuex';
+import forecasts from '@/mixins/forecasts';
 import { CostPagination } from '~/graphql/query/getCostPagination';
 
 export default {

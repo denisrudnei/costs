@@ -18,8 +18,8 @@
 </template>
 
 <script>
-import getDates from '@/mixins/getDates';
 import { mapGetters } from 'vuex';
+import getDates from '@/mixins/getDates';
 
 export default {
   mixins: [getDates],

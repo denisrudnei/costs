@@ -99,11 +99,11 @@
 </template>
 
 <script>
-import forecasts from '@/mixins/forecasts';
 import {
   addMonths, addYears, format, parse, subYears,
 } from 'date-fns';
 import { mapGetters } from 'vuex';
+import forecasts from '@/mixins/forecasts';
 import { GetForecast } from '../../graphql/query/getForecast';
 import { ForecastsInMonths } from '../../graphql/query/forecastsInMonths';
 import { TotalForecastInMonths } from '../../graphql/query/totalForecastInMonths';
