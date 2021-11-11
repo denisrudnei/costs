@@ -47,6 +47,10 @@ export default {
    */
   modules: ['@nuxtjs/apollo', '@nuxtjs/toast', '@nuxtjs/auth', '@nuxtjs/axios'],
 
+  env: {
+    URL: process.env.URL,
+  },
+
   axios: {
     baseURL: process.env.API,
   },

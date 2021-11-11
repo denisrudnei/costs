@@ -105,6 +105,11 @@ export default {
           title: 'Settings',
           to: '/settings',
         },
+        {
+          icon: 'mdi-connection',
+          title: 'Connection',
+          to: '/connection',
+        },
       ],
       miniVariant: false,
     };
