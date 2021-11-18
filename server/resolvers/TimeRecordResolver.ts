@@ -1,5 +1,5 @@
 import {
-  Arg, Authorized, Ctx, ID, Mutation, Query, Resolver,
+  Arg, Authorized, Ctx, FieldResolver, ID, Mutation, Query, Resolver, Root,
 } from 'type-graphql';
 
 import { Role } from '../enums/Role';
@@ -8,7 +8,7 @@ import { TimeRecord } from '../models/TimeRecord';
 import { TimeRecordService } from '../services/TimeRecordService';
 import { CustomExpressContext } from '../types/CustomSession';
 
-@Resolver()
+@Resolver(() => TimeRecord)
 export class TimeRecordResolver {
   @Query(() => [TimeRecord])
   @Authorized(Role.USER)
@@ -36,5 +36,11 @@ export class TimeRecordResolver {
   public RegisterManualTimeRecord(@Arg('date', () => Date) date: Date, @Ctx() { req }: CustomExpressContext) {
     const { id } = req.session.authUser!;
     return TimeRecordService.registerManualTimeRecord(date, id);
+  }
+
+  @FieldResolver()
+  public async user(@Root() root: TimeRecord) {
+    const { user } = await TimeRecord.findOne(root.id, { relations: ['user'] }) as TimeRecord;
+    return user;
   }
 }
