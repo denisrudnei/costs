@@ -76,4 +76,16 @@ export class TimeRecordService {
 
     return newTimeRecord;
   }
+
+  public static async remove(id: TimeRecord['id'], userId: User['id']) {
+    const timeRecord = await TimeRecord.findOne({
+      where: {
+        id,
+        user: userId,
+      },
+    });
+    if (!timeRecord) throw new Error('Time record not found');
+    await TimeRecord.remove(timeRecord);
+    return true;
+  }
 }

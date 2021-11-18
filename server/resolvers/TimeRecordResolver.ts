@@ -38,6 +38,13 @@ export class TimeRecordResolver {
     return TimeRecordService.registerManualTimeRecord(date, id);
   }
 
+  @Mutation(() => Boolean)
+  @Authorized(Role.USER)
+  public RemoveTimeRecord(@Arg('time', () => ID) time: TimeRecord['id'], @Ctx() { req }: CustomExpressContext) {
+    const { id } = req.session.authUser!;
+    return TimeRecordService.remove(time, id);
+  }
+
   @FieldResolver()
   public async user(@Root() root: TimeRecord) {
     const { user } = await TimeRecord.findOne(root.id, { relations: ['user'] }) as TimeRecord;
