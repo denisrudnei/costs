@@ -1,22 +1,26 @@
 import bcrypt from 'bcryptjs';
 import { Field, ID, ObjectType } from 'type-graphql';
 import {
+  AfterLoad,
   BaseEntity,
   BeforeInsert,
   BeforeUpdate,
   Column,
   Entity,
   JoinColumn,
+  JoinTable,
+  ManyToMany,
   OneToMany,
   OneToOne,
   PrimaryGeneratedColumn,
-  AfterLoad,
 } from 'typeorm';
 
-import { Cost } from './Cost';
-import { UserSettings } from './UserSettings';
-import { BankAccount } from './BankAccount';
 import { Role } from '../enums/Role';
+import { BankAccount } from './BankAccount';
+import { Cost } from './Cost';
+import { Team } from './Team';
+import { TimeRecord } from './TimeRecord';
+import { UserSettings } from './UserSettings';
 
 @Entity()
 @ObjectType()
@@ -45,6 +49,20 @@ export class User extends BaseEntity {
   @OneToMany(() => Cost, (Cost) => Cost.user)
   @Field(() => [Cost])
   public costs!: Cost[]
+
+  @OneToMany(() => TimeRecord, (time) => time.user)
+  @Field(() => [TimeRecord])
+  public timeRecords!: TimeRecord[]
+
+  @OneToMany(() => Team, (team) => team.leader)
+  @Field(() => [Team])
+  @JoinColumn()
+  public leaderOf!: Team[]
+
+  @ManyToMany(() => Team, (team) => team.members)
+  @Field(() => [Team])
+  @JoinTable()
+  public memberOf!: Team[]
 
   @OneToOne(() => UserSettings, (UserSettings) => UserSettings.user)
   @JoinColumn()

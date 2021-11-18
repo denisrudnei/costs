@@ -11,6 +11,7 @@ import path from 'path';
 import { SubscriptionServer } from 'subscriptions-transport-ws';
 import { buildSchema } from 'type-graphql';
 
+import { ApolloServerPluginLandingPageGraphQLPlayground } from 'apollo-server-core/dist/plugin/landingPage/graphqlPlayground';
 import customAuthChecker from './customAuthChecker';
 import Connection from './db/Connection';
 import routes from './routes';
@@ -44,6 +45,7 @@ async function main() {
   const server = new ApolloServer({
     schema,
     plugins: [
+      ApolloServerPluginLandingPageGraphQLPlayground(),
       ApolloServerPluginDrainHttpServer({ httpServer }),
       {
         async serverWillStart() {
