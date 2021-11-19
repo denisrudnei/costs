@@ -5,6 +5,12 @@
         <v-tab to="/admin/dashboard">
           Dashboard
         </v-tab>
+        <v-tab to="/admin/teams">
+          Teams
+          <v-icon right>
+            mdi-account-group
+          </v-icon>
+        </v-tab>
         <v-tab to="/admin/users">
           Users
         </v-tab>
