@@ -28,8 +28,8 @@ export class TimeRecordService {
       .andWhere('team."leaderId" = :leaderId', {
         leaderId: user,
       })
+      .andWhere('tr.id is not null')
       .getRawMany();
-
     return result.map(async (item) => ({
       id: item.id,
       date: item.date,
