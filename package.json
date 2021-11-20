@@ -10,7 +10,7 @@
     "heroku-postbuild": "npm run build-server",
     "start-server": "node -r tsconfig-paths/register dist/server/index.js",
     "build-server": "tsc -p tsconfig-build.json",
-    "generate": "nuxt-ts generate",
+    "generate": "nuxt generate",
     "lint:js": "eslint --ext .js,.vue,.ts --ignore-path .gitignore . --fix",
     "lint": "npm run lint:js"
   },
@@ -74,6 +74,7 @@
     "@types/lodash": "^4.14.173",
     "@types/nodemailer": "^6.4.4",
     "@types/qrcode": "^1.4.1",
+    "@types/validator": "^13.7.0",
     "@types/vue-the-mask": "^0.11.1",
     "babel-eslint": "^10.1.0",
     "eslint": "^7.32.0",
