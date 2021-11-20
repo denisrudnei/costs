@@ -3,10 +3,10 @@
   "version": "1.0.0",
   "private": true,
   "scripts": {
-    "dev:client": "nuxt-ts --port 4000",
+    "dev:client": "nuxt --port 4000",
     "dev:server": "ts-node-dev --respawn -r tsconfig-paths/register server/index.ts",
-    "build": "nuxt-ts build",
-    "start": "nuxt-ts start",
+    "build": "nuxt build",
+    "start": "nuxt start",
     "heroku-postbuild": "npm run build-server",
     "start-server": "node -r tsconfig-paths/register dist/server/index.js",
     "build-server": "tsc -p tsconfig-build.json",
@@ -23,7 +23,6 @@
     }
   },
   "dependencies": {
-    "@nuxt/typescript-runtime": "^2.1.0",
     "@nuxtjs/apollo": "^4.0.1-rc.5",
     "@nuxtjs/auth": "^4.9.1",
     "@nuxtjs/axios": "^5.13.6",
