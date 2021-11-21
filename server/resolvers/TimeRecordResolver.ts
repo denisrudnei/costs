@@ -12,16 +12,16 @@ import { CustomExpressContext } from '../types/CustomSession';
 export class TimeRecordResolver {
   @Query(() => [TimeRecord])
   @Authorized(Role.USER)
-  public GetTimeRecords(@Ctx() { req }: CustomExpressContext) {
+  public GetTimeRecords(@Arg('date', () => Date, { nullable: true, defaultValue: new Date() }) date: Date, @Ctx() { req }: CustomExpressContext) {
     const { id } = req.session.authUser!;
-    return TimeRecordService.getForUser(id);
+    return TimeRecordService.getForUser(id, date);
   }
 
   @Query(() => [TimeRecord])
   @Authorized(Role.USER)
-  public GetTimeRecordsForTeam(@Arg('team', () => ID) teamId: Team['id'], @Ctx() { req }: CustomExpressContext) {
+  public GetTimeRecordsForTeam(@Arg('team', () => ID) teamId: Team['id'], @Arg('date', () => Date, { nullable: true, defaultValue: new Date() }) date: Date, @Ctx() { req }: CustomExpressContext) {
     const { id } = req.session.authUser!;
-    return TimeRecordService.getForTeam(teamId, id);
+    return TimeRecordService.getForTeam(teamId, id, date);
   }
 
   @Mutation(() => TimeRecord)

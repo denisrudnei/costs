@@ -1,4 +1,5 @@
-import { getConnection } from 'typeorm';
+import { getDate, lastDayOfMonth, set } from 'date-fns';
+import { Between, getConnection } from 'typeorm';
 
 import { Team } from '../models/Team';
 import { TimeRecord } from '../models/TimeRecord';
@@ -9,15 +10,44 @@ export class TimeRecordService {
     return TimeRecord.find();
   }
 
-  public static getForUser(userId: User['id']) {
+  public static getForUser(userId: User['id'], yearAndMonth: Date = new Date()) {
+    const start = set(yearAndMonth, {
+      date: 1,
+      hours: 0,
+      minutes: 0,
+      seconds: 0,
+      milliseconds: 0,
+    });
+    const end = set(yearAndMonth, {
+      date: getDate(lastDayOfMonth(yearAndMonth)),
+      hours: 23,
+      minutes: 59,
+      seconds: 59,
+      milliseconds: 999,
+    });
     return TimeRecord.find({
       where: {
         user: userId,
+        date: Between(start, end),
       },
     });
   }
 
-  public static async getForTeam(teamId: Team['id'], user: User['id']) {
+  public static async getForTeam(teamId: Team['id'], user: User['id'], yearAndMonth: Date = new Date()) {
+    const start = set(yearAndMonth, {
+      date: 1,
+      hours: 0,
+      minutes: 0,
+      seconds: 0,
+      milliseconds: 0,
+    });
+    const end = set(yearAndMonth, {
+      date: getDate(lastDayOfMonth(yearAndMonth)),
+      hours: 23,
+      minutes: 59,
+      seconds: 59,
+      milliseconds: 999,
+    });
     const result = await getConnection()
       .createQueryBuilder()
       .select('tr.id, tr.date, tr.manual, tr."createdAt", tr."updatedAt", tr."deletedAt", team.id as team, umot."userId" as user')
@@ -29,6 +59,10 @@ export class TimeRecordService {
         leaderId: user,
       })
       .andWhere('tr.id is not null')
+      .andWhere('tr.date between :start and :end', {
+        start,
+        end,
+      })
       .getRawMany();
     return result.map(async (item) => ({
       id: item.id,
