@@ -56,6 +56,13 @@ export class TeamService {
     return team.save();
   }
 
+  public static async updateName(id: Team['id'], name: string) {
+    const team = await Team.findOne(id);
+    if (!team) throw new Error('Team not found');
+    team.name = name;
+    return team.save();
+  }
+
   public static async addUser(id: Team['id'], userId: User['id']) {
     const team = await Team.findOne(id, { relations: ['members'] });
     if (!team) throw new Error('Team not found');

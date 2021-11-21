@@ -6,10 +6,10 @@
           {{ item.leader.name }}
         </template>
         <template #item.actions="{ item }">
-          <v-btn icon class="primary">
+          <v-btn icon class="primary" :to="`/admin/teams/view/${item.id}`">
             <v-icon>mdi-dots-horizontal</v-icon>
           </v-btn>
-          <v-btn icon class="primary">
+          <v-btn icon class="primary" :to="`/admin/teams/edit/${item.id}`">
             <v-icon>mdi-pencil</v-icon>
           </v-btn>
         </template>

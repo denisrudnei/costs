@@ -44,6 +44,12 @@ export class TeamResolver {
 
   @Mutation(() => Team)
   @Authorized(Role.ADMIN)
+  public UpdateTeamName(@Arg('team', () => ID) id: Team['id'], @Arg('name') name: string) {
+    return TeamService.updateName(id, name);
+  }
+
+  @Mutation(() => Team)
+  @Authorized(Role.ADMIN)
   public AddUserInTeam(@Arg('team', () => ID) id: Team['id'], @Arg('user', () => ID) userId: User['id']) {
     return TeamService.addUser(id, userId);
   }
