@@ -53,7 +53,7 @@
     "subscriptions-transport-ws": "^0.9.19",
     "tsconfig-paths": "^3.11.0",
     "type-graphql": "^1.1.1",
-    "typeorm": "^0.2.37",
+    "typeorm": "^0.3.0",
     "vue-apexcharts": "^1.6.2",
     "vue-the-mask": "^0.11.1"
   },
