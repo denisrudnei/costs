@@ -5,7 +5,7 @@ WORKDIR /opt/costs
 COPY ./ ./
 
 RUN apt-get update
-RUN apt-get install g++ build-essential
+RUN apt-get install g++ build-essential -yf
 
 RUN npm install --legacy-peer-deps
 
