@@ -51,7 +51,7 @@
     "qrcode": "^1.4.4",
     "reflect-metadata": "^0.1.13",
     "subscriptions-transport-ws": "^0.9.19",
-    "tsconfig-paths": "^3.11.0",
+    "tsconfig-paths": "^4.0.0",
     "type-graphql": "^1.1.1",
     "typeorm": "^0.2.37",
     "vue-apexcharts": "^1.6.2",
